@@ -1,0 +1,5 @@
+export {default as Search} from "./Search"
+export {default as HeaderProperties} from "./HeaderProperties"
+export {default as AllProperties} from "./AllProperties"
+export {default as OurTeam} from "./OurTeam"
+export {default as AvailableOptions} from "./AvailableOptions"

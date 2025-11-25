@@ -1,0 +1,5 @@
+export {default as Hero} from "./Hero"
+export {default as ServicesAgency} from "./ServicesAgency"
+export {default as AllServices} from "./AllServices"
+export {default as ExploreBox} from "./ExploreBox"
+export {default as OurChannel} from "./OurChannel"

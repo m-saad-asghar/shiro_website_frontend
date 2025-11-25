@@ -1,0 +1,106 @@
+import imgExplorePropertyCard from "../assets/Images/Home/ExploreProperty/img-card.webp";
+import imgExplorePropertyCard2 from "../assets/Images/Home/ExploreProperty/img-card-2.webp";
+import imgcustomerServices1 from "../assets/Images/Home/CustomerService/customerServices1.svg";
+import imgcustomerServices2 from "../assets/Images/Home/CustomerService/customerServices2.svg";
+import imgcustomerServices3 from "../assets/Images/Home/CustomerService/customerServices3.svg";
+import imgcustomerServices4 from "../assets/Images/Home/CustomerService/customerServices4.svg";
+import imgBox1 from "../assets/Images/Home/Box/imgBox1.webp";
+import imgPartners1 from "../assets/Images/Home/Partners/partner1.png";
+import imgPartners2 from "../assets/Images/Home/Partners/partner2.png";
+import imgPartners3 from "../assets/Images/Home/Partners/Partner3.png";
+import imgPartners4 from "../assets/Images/Home/Partners/Partner4.png";
+import imgPartners5 from "../assets/Images/Home/Partners/Partner5.png";
+import imgPartners6 from "../assets/Images/Home/Partners/Partner6.png";
+import imgPartners7 from "../assets/Images/Home/Partners/Partner7.png";
+import imgPartners8 from "../assets/Images/Home/Partners/Partner8.png";
+import imgPartners9 from "../assets/Images/Home/Partners/Partner9.png";
+import imgPartners10 from "../assets/Images/Home/Partners/Partner10.png";
+import imgShiro from "../assets/Images/Footer/Certificate.png";
+import Logo from "../assets/Images/logo.png";
+import imgHeader1 from "../assets/Images/Header/imgHeader1.webp";
+import itemHeader1 from "../assets/Images/Header/itemHeader1.webp";
+import itemHeader2 from "../assets/Images/Header/itemHeader2.webp";
+import itemHeader3 from "../assets/Images/Header/itemHeader3.webp";
+import itemHeader4 from "../assets/Images/Header/itemHeader4.webp";
+import itemHeader5 from "../assets/Images/Header/itemHeader5.webp";
+import itemHeader6 from "../assets/Images/Header/itemHeader6.webp";
+import imgPremierMarketplace1 from "../assets/Images/Home/PremierMarketplace/imgPremierMarketplace1.svg";
+import imgPremierMarketplace2 from "../assets/Images/Home/PremierMarketplace/imgPremierMarketplace2.svg";
+import imgPremierMarketplace3 from "../assets/Images/Home/PremierMarketplace/imgPremierMarketplace3.svg";
+import imgOurClient1 from "../assets/Images/Home/OurClients/imgOurClient1.webp";
+import imgOurTeam1 from "../assets/Images/Buy/OurTeam/imgOurTeam1.webp";
+import imgHeroServices from "../assets/Images/Services/HeroServices.webp";
+import imgAllServices from "../assets/Images/Services/imgAllServices.webp";
+import imgExploreBox from "../assets/Images/Services/imgExploreBox.webp";
+import imgOurChannel from "../assets/Images/Services/imgOurChannel.webp";
+import imgFalgAr from "../assets/Images/Header/flagArabic.svg";
+import imgFalgEn from "../assets/Images/Header/flagEnglish.svg";
+import bgLogin from "../assets/Images/Login/bg-login.jpg";
+import BedsIcons from "../assets/Images/Property/Beds.svg";
+import ArrowIcons from "../assets/Images/Property/Arrow.svg";
+import BathIcons from "../assets/Images/Property/Bath.svg";
+import ImgDeveloper from "../assets/Images/Developer/ImgDeveloper.webp";
+import logoDeveloper from "..//assets/Images/Developer/logoDeveloper.webp";
+import imgMeetOurTeam from "../assets/Images/MeetOurTeam/meetOurTeam.webp";
+import imgBlog from "../assets/Images/Blog/imgBlog.webp";
+import imgServices from "../assets/Images/ContactUs/services.webp";
+import imgTeam from "../assets/Images/ContactUs/team.webp";
+import imgFind from "../assets/Images/ContactUs/find.webp";
+import imgCareer from "../assets/Images/ContactUs/career.webp";
+import imgServicesSecond from "../assets/Images/Services/services-second-img.webp";
+import logoLight from "../assets/Images/logo-light.png";
+import unknownPerson from "../assets/Images/testimonials/Unknown_person.webp";
+export default {
+  Logo,
+  imgExplorePropertyCard,
+  imgcustomerServices1,
+  imgcustomerServices2,
+  imgcustomerServices3,
+  imgcustomerServices4,
+  imgBox1,
+  imgPartners1,
+  imgPartners2,
+  imgPartners3,
+  imgPartners4,
+  imgPartners5,
+  imgPartners6,
+  imgPartners7,
+  imgPartners8,
+  imgPartners9,
+  imgPartners10,
+  imgShiro,
+  imgHeader1,
+  itemHeader1,
+  itemHeader2,
+  itemHeader3,
+  itemHeader4,
+  itemHeader5,
+  itemHeader6,
+  imgPremierMarketplace1,
+  imgPremierMarketplace2,
+  imgPremierMarketplace3,
+  imgOurClient1,
+  imgExplorePropertyCard2,
+  imgOurTeam1,
+  imgHeroServices,
+  imgServicesSecond,
+  imgAllServices,
+  imgExploreBox,
+  imgOurChannel,
+  imgFalgAr,
+  imgFalgEn,
+  bgLogin,
+  BedsIcons,
+  ArrowIcons,
+  BathIcons,
+  ImgDeveloper,
+  logoDeveloper,
+  imgMeetOurTeam,
+  imgBlog,
+  imgServices,
+  imgTeam,
+  imgFind,
+  imgCareer,
+  logoLight,
+  unknownPerson,
+};

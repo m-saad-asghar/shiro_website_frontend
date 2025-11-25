@@ -1,0 +1,28 @@
+export { default as Home } from "./Home";
+export { default as Buy } from "./Buy";
+export { default as Rent } from "./Rent";
+export { default as Projects } from "./Projects";
+// export {default as Sell} from "./Sell"
+export { default as Services } from "./Services";
+export { default as AboutUs } from "./AboutUs";
+export { default as Login } from "./Login";
+export { default as SignUp } from "./SignUp";
+export { default as ForgotPassword } from "./ForgotPassword";
+export { default as SingleProperty } from "./SingleProperty ";
+export { default as SingleProject } from "./SingleProject";
+export { default as Devleoper } from "./Devleoper";
+export { default as Area } from "./Area";
+export { default as MyProperty } from "./MyProperty";
+export { default as SingleArea } from "./SingleArea";
+export { default as MeetOurTeam } from "./MeetOurTeam";
+export { default as ContactUs } from "./ContactUs";
+export { default as ListYourProperty } from "./ListYourProperty";
+export { default as FAQs } from "./FAQs";
+export { default as Blog } from "./Blog";
+export { default as SingleBlog } from "./SingleBlog";
+export { default as PrivacyPolicy } from "./PrivacyPolicy";
+export { default as TermsConditions } from "./TermsConditions";
+export { default as Reviews } from "./Reviews";
+export { default as AgentDetails } from "./AgentDetails";
+export { default as TeamMemberDetails } from "./TeamMemberDetails";
+export { default as SingleService } from "./SingleService";

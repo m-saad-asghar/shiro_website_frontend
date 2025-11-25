@@ -1,0 +1,1 @@
+export {default as AllOurTeam} from "./AllOurTeam"

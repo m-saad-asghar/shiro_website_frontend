@@ -1,0 +1,27 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://shiroestate.ae/sitemap.xml
+
+# Disallow admin and login pages
+Disallow: /admin/
+Disallow: /login
+Disallow: /dashboard
+Disallow: /myproperty
+Disallow: /signup
+Disallow: /forgot-password
+
+# Allow all other pages
+Allow: /buy
+Allow: /rent
+Allow: /projects
+Allow: /developers
+Allow: /areas
+Allow: /blog
+Allow: /about
+Allow: /contact
+Allow: /services
+
+# Crawl delay (optional)
+Crawl-delay: 1

@@ -1,0 +1,289 @@
+{
+  "missing_keys_for_both_languages": {
+    "description": "These keys need to be added to both en/translation.json and ar/translation.json",
+    "keys": {
+      "Language": {
+        "en": "Language",
+        "ar": "اللغة"
+      },
+      "Call": {
+        "en": "Call",
+        "ar": "اتصال"
+      },
+      "No images available": {
+        "en": "No images available",
+        "ar": "لا توجد صور متاحة"
+      },
+      "Bedrooms": {
+        "en": "Bedrooms",
+        "ar": "غرف النوم"
+      },
+      "Bathrooms": {
+        "en": "Bathrooms",
+        "ar": "الحمامات"
+      },
+      "Studio": {
+        "en": "Studio",
+        "ar": "ستوديو"
+      },
+      "Remove from favorites": {
+        "en": "Remove from favorites",
+        "ar": "إزالة من المفضلة"
+      },
+      "Add to favorites": {
+        "en": "Add to favorites",
+        "ar": "إضافة للمفضلة"
+      },
+      "Weak": {
+        "en": "Weak",
+        "ar": "ضعيفة"
+      },
+      "Medium": {
+        "en": "Medium",
+        "ar": "متوسطة"
+      },
+      "Strong": {
+        "en": "Strong",
+        "ar": "قوية"
+      },
+      "None": {
+        "en": "None",
+        "ar": "غير محدد"
+      },
+      "Password Strength": {
+        "en": "Password Strength",
+        "ar": "قوة كلمة المرور"
+      },
+      "Weak password. For better security, please meet all requirements.": {
+        "en": "Weak password. For better security, please meet all requirements.",
+        "ar": "كلمة المرور ضعيفة. لحماية أفضل، يرجى استيفاء جميع المتطلبات."
+      },
+      "Excellent! Your password is strong and secure.": {
+        "en": "Excellent! Your password is strong and secure.",
+        "ar": "ممتاز! كلمة المرور قوية وآمنة."
+      },
+      "No properties found": {
+        "en": "No properties found",
+        "ar": "لم يتم العثور على عقارات"
+      },
+      "Try adjusting your search criteria or browse all properties": {
+        "en": "Try adjusting your search criteria or browse all properties",
+        "ar": "حاول تعديل معايير البحث أو تصفح جميع العقارات"
+      },
+      "Clear Filters": {
+        "en": "Clear Filters",
+        "ar": "مسح الفلاتر"
+      },
+      "results": {
+        "en": "results",
+        "ar": "نتيجة"
+      },
+      "View as": {
+        "en": "View as",
+        "ar": "عرض كـ"
+      },
+      "Grid": {
+        "en": "Grid",
+        "ar": "شبكة"
+      },
+      "List": {
+        "en": "List",
+        "ar": "قائمة"
+      },
+      "Download Brochure": {
+        "en": "Download Brochure",
+        "ar": "تحميل الكتيب"
+      },
+      "Register Interest": {
+        "en": "Register Interest",
+        "ar": "تسجيل الاهتمام"
+      },
+      "Under Construction": {
+        "en": "Under Construction",
+        "ar": "تحت الإنشاء"
+      },
+      "Project Description": {
+        "en": "Project Description",
+        "ar": "وصف المشروع"
+      },
+      "Project Specifications": {
+        "en": "Project Specifications",
+        "ar": "مواصفات المشروع"
+      },
+      "Starting Price": {
+        "en": "Starting Price",
+        "ar": "السعر الابتدائي"
+      },
+      "Handover Year": {
+        "en": "Handover Year",
+        "ar": "سنة التسليم"
+      },
+      "Payment Plan": {
+        "en": "Payment Plan",
+        "ar": "خطة الدفع"
+      },
+      "Property Mix": {
+        "en": "Property Mix",
+        "ar": "مزيج العقارات"
+      },
+      "Completion Date": {
+        "en": "Completion Date",
+        "ar": "تاريخ الإنجاز"
+      },
+      "Project Gallery": {
+        "en": "Project Gallery",
+        "ar": "معرض المشروع"
+      },
+      "Unique Points": {
+        "en": "Unique Points",
+        "ar": "نقاط مميزة"
+      },
+      "Floor Plans": {
+        "en": "Floor Plans",
+        "ar": "مخططات الطوابق"
+      },
+      "Nearby Places": {
+        "en": "Nearby Places",
+        "ar": "الأماكن القريبة"
+      },
+      "Payment Schedule": {
+        "en": "Payment Schedule",
+        "ar": "جدول الدفع"
+      },
+      "Frequently Asked Questions": {
+        "en": "Frequently Asked Questions",
+        "ar": "الأسئلة الشائعة"
+      },
+      "Open in Google Maps": {
+        "en": "Open in Google Maps",
+        "ar": "فتح في خرائط جوجل"
+      },
+      "Get Directions": {
+        "en": "Get Directions",
+        "ar": "الحصول على الاتجاهات"
+      },
+      "Trusted Developer": {
+        "en": "Trusted Developer",
+        "ar": "مطور موثوق"
+      },
+      "Get In Touch": {
+        "en": "Get In Touch",
+        "ar": "تواصل معنا"
+      }
+    }
+  },
+  "missing_in_english_only": {
+    "description": "These keys exist in ar/translation.json but missing in en/translation.json",
+    "keys": {
+      "shiro is proud to announce that we are now officially certified as a Great Place to Work®": "shiro is proud to announce that we are now officially certified as a Great Place to Work®"
+    }
+  },
+  "inconsistent_case": {
+    "description": "These keys have inconsistent capitalization",
+    "issues": [
+      {
+        "key": "sq ft",
+        "used_as": "Sq Ft",
+        "recommendation": "Add 'Sq Ft' as separate key or ensure consistent usage"
+      },
+      {
+        "key": "sq m",
+        "used_as": "Sq M",
+        "recommendation": "Add 'Sq M' as separate key or ensure consistent usage"
+      }
+    ]
+  },
+  "hardcoded_texts_by_file": {
+    "src/Components/Header.tsx": [
+      "Login (line 388)",
+      "Language (line 176)",
+      "العربية (line 191)",
+      "English (line 224)",
+      "Sq Ft (line 261)",
+      "Sq M (line 291)"
+    ],
+    "src/Components/Home/ExploreProperty/Card.tsx": [
+      "Call (line 100)",
+      "WhatsApp (line 100)",
+      "Email (line 113)",
+      "No images available (line 171)",
+      "Studio (lines 267, 308)",
+      "Bedrooms (line 269)",
+      "Bathrooms (line 282)",
+      "Area (line 295)",
+      "Remove from favorites (line 132)",
+      "Add to favorites (line 133)"
+    ],
+    "src/Components/Property/PropertyCard.tsx": [
+      "Call",
+      "WhatsApp",
+      "Email",
+      "No images available",
+      "Studio",
+      "Bedrooms",
+      "Bathrooms",
+      "Area",
+      "Remove from favorites",
+      "Add to favorites"
+    ],
+    "src/Components/MyProperty/FavoriteCard.tsx": [
+      "Call",
+      "WhatsApp",
+      "Email",
+      "No images available",
+      "Studio",
+      "Bedrooms",
+      "Bathrooms",
+      "Area"
+    ],
+    "src/Components/PasswordStrengthIndicator.tsx": [
+      "Weak (line 45)",
+      "Medium (line 47)",
+      "Strong (line 49)",
+      "None (line 51)",
+      "Password Strength (line 72)",
+      "Weak password message (lines 183-186)",
+      "Strong password message (lines 204-207)"
+    ],
+    "src/Pages/Buy.tsx": [
+      "No properties found (line 391)",
+      "Try adjusting your search criteria (line 394)",
+      "Clear Filters (line 428)",
+      "results (line 442)",
+      "Sort (line 451)",
+      "View as (line 550)",
+      "Grid (line 553)",
+      "List (line 553)"
+    ],
+    "src/Pages/Rent.tsx": ["Same issues as Buy.tsx"],
+    "src/Pages/Projects.tsx": ["No Properties Found", "Clear Filters"],
+    "src/Pages/SingleProject.tsx": [
+      "Download Brochure (line 191)",
+      "Register Interest (line 206)",
+      "Under Construction (line 274)",
+      "Project Description (line 295)",
+      "Project Specifications (line 309)",
+      "Starting Price (line 316)",
+      "Handover Year (line 330)",
+      "Payment Plan (line 342)",
+      "Property Mix (line 354)",
+      "Completion Date (line 366)",
+      "Project Gallery (line 458)",
+      "Unique Points (line 513)",
+      "Floor Plans (line 547)",
+      "Nearby Places (line 614)",
+      "Payment Schedule (line 653)",
+      "Frequently Asked Questions (line 700)",
+      "Open in Google Maps (line 802)",
+      "Get Directions (line 842)",
+      "Trusted Developer (line 869)",
+      "Get In Touch (line 958)"
+    ]
+  },
+  "statistics": {
+    "total_missing_keys": 43,
+    "files_with_hardcoded_texts": 15,
+    "priority": "HIGH",
+    "estimated_time_to_fix": "4-6 hours"
+  }
+}

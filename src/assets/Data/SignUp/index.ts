@@ -1,0 +1,1 @@
+export {default as ArrayInputSignUp} from "./ArrayInputSignUp"
