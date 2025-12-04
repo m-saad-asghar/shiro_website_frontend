@@ -17,7 +17,7 @@ const Select: FC<SelectProps> = ({ input }) => {
   return (
     <div className="w-full h-fit">
       {input?.label && (
-        <label className="text-[12px] text-dark capitalize font-NeueHaasGrotesk font-[600] ">
+        <label className="font-bold text-primary text-[14px]">
           {t(input?.label)}
         </label>
       )}
@@ -25,10 +25,10 @@ const Select: FC<SelectProps> = ({ input }) => {
         as="select"
         name={input?.name}
         required={input.required}
-        className="w-full h-[48px] border border-gray outline-none px-[12px] text-[15px] cursor-pointer"
+        className="w-full h-[48px] border border-gray-300 change_border  outline-none px-[12px] text-[16px] cursor-pointer min-h-[56px] text-[#5E5C59]"
       >
         <option disabled value="" hidden>
-          {t("Select")}
+          {t("Select Preferred Language")}
         </option>
         {renderOptions}
       </Field>

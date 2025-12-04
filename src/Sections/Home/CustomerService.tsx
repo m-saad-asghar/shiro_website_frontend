@@ -6,18 +6,17 @@ const CustomerService = () => {
   const { t } = useTranslation();
 
   const renderCard = DataCustomerServices().map((item) => (
-    <div key={item.id} className="transition-all duration-300">
+    <div key={item.id} className="transition-all duration-300 cards_styling">
       <Card item={item} />
     </div>
   ));
 
   return (
     <section className="w-full py-12 md:py-2 lg:py-4">
-      <div className="container mx-auto px-4">
-        <h2 className="text-[24px] md:text-[32px] text-primary font-[600] text-center">
-          {t("Dubai real estate solutions focused around excellent")}
-          <br className=" hidden lg:flex" /> {t("customer service.")}
-        </h2>
+      <div className="custom_container mx-auto px-4">
+         <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+             {t("Dubai real estate solutions focused around excellent")}
+          </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-[25px] gap-[20px] lg:mt-[50px] ">
           {renderCard}
         </div>

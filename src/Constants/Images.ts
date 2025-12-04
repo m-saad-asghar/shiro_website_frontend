@@ -50,7 +50,19 @@ import imgCareer from "../assets/Images/ContactUs/career.webp";
 import imgServicesSecond from "../assets/Images/Services/services-second-img.webp";
 import logoLight from "../assets/Images/logo-light.png";
 import unknownPerson from "../assets/Images/testimonials/Unknown_person.webp";
+import ExploreGreen from "../assets/Images/CustomImages/explore_green.svg";
+import ExploreGreenGold from "../assets/Images/CustomImages/explore_green_gold.svg";
+import ExploreGold from "../assets/Images/CustomImages/explore_gold.svg";
+import ListingGreen from "../assets/Images/CustomImages/listing_green.svg";
+import SpecialistGreen from "../assets/Images/CustomImages/specialist_green.svg";
+import VisionGreen from "../assets/Images/CustomImages/vision_green.svg";
 export default {
+  ExploreGreen,
+  ExploreGold,
+  ExploreGreenGold,
+  ListingGreen,
+  SpecialistGreen,
+  VisionGreen,
   Logo,
   imgExplorePropertyCard,
   imgcustomerServices1,

@@ -11,7 +11,7 @@ const Input: FC<InputProps> = ({ input }) => {
   return (
     <div className="w-full h-fit">
       {input?.label && (
-        <label className="text-[12px] text-dark capitalize font-NeueHaasGrotesk font-[600]">
+        <label className="font-bold text-primary text-[14px]">
           {t(input?.label)}
         </label>
       )}
@@ -22,7 +22,7 @@ const Input: FC<InputProps> = ({ input }) => {
           type={input.type}
           required={input.required}
           placeholder={t(input.placeholder)}
-          className="w-full h-full outline-none px-[16px] text-[15px] text-dark"
+          className="flex-1 h-full text-[#5E5C59] placeholder-gray-400 placeholder-16 input_text focus:outline-none bg-transparent w-[100%]"
         />
         {input?.isIcons && (
           <div className=" absolute top-[22%] rtl:left-[14px] ltr:right-[14px] w-[20px] h-[20px]">

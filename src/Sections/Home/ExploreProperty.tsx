@@ -6,6 +6,11 @@ const Card = lazy(() =>
     default: module.Card,
   }))
 );
+const CardUpdated = lazy(() =>
+  import("../../Components/Home/ExploreProperty/CardUpdated").then((module) => ({
+    default: module.default,
+  }))
+);
 
 // Lazy load the ProjectCard component
 const ProjectCard = lazy(() => import("../../Components/Property/ProjectCard"));
@@ -44,7 +49,7 @@ const ExploreProperty = () => {
         onClick={() => setId(item?.id)}
         key={item?.id}
         className={`
-          px-6 py-3 rounded-xl font-semibold text-sm md:text-base transition-all duration-200 
+          px-6 py-3 change_border font-semibold text-sm md:text-base transition-all duration-200 
           border-2 hover:scale-105 active:scale-95 cursor-pointer
                      ${
                        item?.id === id
@@ -81,7 +86,7 @@ const ExploreProperty = () => {
   const renderSkelton = useMemo(() => {
     return [...Array(3)].map((_, index: number) => (
       <Skeleton
-        className="h-[46px] w-[88px] md:w-[120px] rounded-xl bg-gray-200"
+        className="h-[46px] w-[88px] md:w-[120px] change_border bg-gray-200"
         key={index}
       />
     ));
@@ -90,7 +95,7 @@ const ExploreProperty = () => {
   const renderSkeltonCard = useMemo(() => {
     return [...Array(3)].map((_, index: number) => (
       <CarouselItem className="md:basis-1/2 lg:basis-1/3" key={index}>
-        <Skeleton className="w-full h-[320px] md:h-[450px] rounded-xl bg-gray-200" />
+        <Skeleton className="w-full h-[320px] md:h-[450px] change_border bg-gray-200" />
       </CarouselItem>
     ));
   }, []);
@@ -158,7 +163,7 @@ const ExploreProperty = () => {
             {isOffPlan ? (
               <ProjectCard item={item} viewMode="grid" />
             ) : (
-              <Card item={item} />
+              <CardUpdated item={item} />
             )}
           </CarouselItem>
         );
@@ -167,36 +172,37 @@ const ExploreProperty = () => {
   }, [AllProperties, t]);
 
   return (
-    <section className="w-full py-12 md:py-4 lg:py-6">
-      <div className="container mx-auto px-4">
-        <div className="max-w-6xl mx-auto">
+    <section className="w-full py-12 md:py-4 lg:py-6 explore_properties_styling">
+      <div className="custom_container mx-auto px-4">
+        <div className="mx-auto">
           {/* Header Section */}
-          <div className="mb-8 md:mb-12">
-            <div className="inline-flex items-center gap-2 bg-[#d3c294]/20 border border-[#d3c294]/30 rounded-full px-6 py-3 mb-6">
+          <div className="mb-8 md:mb-8">
+            {/* <div className="inline-flex items-center gap-2 bg-[#d3c294]/20 border border-[#d3c294]/30 rounded-full px-6 py-3 mb-6">
               <div className="w-2 h-2 bg-[#094834] rounded-full"></div>
               <span className="text-[#094834] font-medium text-sm">
                 {t("Property Search")}
               </span>
-            </div>
+            </div> */}
 
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-6 md:mb-8">
+            {/* <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-6 md:mb-8">
               {t("Explore Property in Dubai.")}
-            </h2>
+            </h2> */}
+             <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+            {t("Featured Properties")}
+          </h1>
 
-            {/* Buttons Section */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6">
-              {/* Filter Buttons */}
+            
+            {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6">
               <div className="flex flex-wrap gap-3 w-full sm:w-auto">
                 {status === "pending" || status === "error"
                   ? renderSkelton
                   : renderTypes}
               </div>
 
-              {/* View More Button */}
               <div className="hidden md:block">
                 <button
                   onClick={onSubmit}
-                  className="inline-flex items-center justify-center px-8 py-3 bg-[#094834] text-white font-semibold rounded-xl hover:bg-[#9f8151] transition-all duration-[.4s] cursor-pointer"
+                  className="inline-flex items-center justify-center px-8 py-3 bg-[#094834] text-white font-semibold change_border hover:bg-[#9f8151] transition-all duration-[.4s] cursor-pointer"
                 >
                   <span className="flex items-center gap-2">
                     {id ? t("View more") : t("View all properties")}
@@ -216,7 +222,7 @@ const ExploreProperty = () => {
                   </span>
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Carousel Section */}
@@ -237,14 +243,33 @@ const ExploreProperty = () => {
               </CarouselContent>
 
               {/* Custom Navigation Buttons - Optimized */}
-              <CarouselNext
-                className="hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white border-2 border-[#094834]/30 text-[#094834] hover:bg-[#094834] hover:text-white hover:border-[#094834] rounded-full shadow-lg transition-all duration-200 cursor-pointer z-10"
-                aria-label="Next properties"
-              />
-              <CarouselPrevious
-                className="hidden md:flex absolute -left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white border-2 border-[#094834]/30 text-[#094834] hover:bg-[#094834] hover:text-white hover:border-[#094834] rounded-full shadow-lg transition-all duration-200 cursor-pointer z-10"
-                aria-label="Previous properties"
-              />
+                           {/* Custom Navigation Buttons - wrapped to block clicks from reaching cards */}
+              <div
+                className="hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2 z-20"
+                onClick={(e) => {
+                  // Always stop click from reaching card behind
+                  e.stopPropagation();
+                }}
+              >
+                <CarouselNext
+                  className="w-12 h-12 bg-white border-2 border-[#094834]/30 text-[#094834] hover:bg-[#094834] hover:text-white hover:border-[#094834] rounded-full shadow-lg transition-all duration-200 cursor-pointer"
+                  aria-label="Next properties"
+                />
+              </div>
+
+              <div
+                className="hidden md:flex absolute -left-4 top-1/2 -translate-y-1/2 z-20"
+                onClick={(e) => {
+                  // Always stop click from reaching card behind
+                  e.stopPropagation();
+                }}
+              >
+                <CarouselPrevious
+                  className="w-12 h-12 bg-white border-2 border-[#094834]/30 text-[#094834] hover:bg-[#094834] hover:text-white hover:border-[#094834] rounded-full shadow-lg transition-all duration-200 cursor-pointer"
+                  aria-label="Previous properties"
+                />
+              </div>
+
             </Carousel>
           </div>
         </div>

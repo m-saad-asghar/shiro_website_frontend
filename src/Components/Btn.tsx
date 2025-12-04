@@ -23,7 +23,7 @@ const Btn: FC<BtnPropos> = ({
   return (
     <button
       className={twMerge(
-        `${
+        `search_btn_styling h-12 md:h-10 px-6 bg-primary hover:bg-[#9f8151] text-white font-semibold change_border transition-all duration-[.4s] flex items-center justify-center gap-2 ${
           type == "primary"
             ? "bg-primary hover:bg-[#9f8151] rounded-[4px]"
             : type == "secandry"
@@ -31,7 +31,7 @@ const Btn: FC<BtnPropos> = ({
             : type == "outLine"
             ? "bg-transparent border border-light rounded-[8px] hover:bg-[#9f8151]"
             : ""
-        } text-light w-full px-[16px] font-NeueHaasGrotesk text-[12px] md:text-[14px] font-[400] capitalize flex-center gap-[6px] h-[38px] md:h-[46px] cursor-pointer transition-all duration-[.4s] disabled:opacity-30 disabled:cursor-not-allowed`,
+        } text-light w-full px-[16px] font-NeueHaasGrotesk !text-[16px] md:text-[14px] font-[400] capitalize flex-center gap-[6px] h-[38px] md:h-[46px] cursor-pointer transition-all duration-[.4s]`,
         conClass
       )}
       onClick={onclick}

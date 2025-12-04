@@ -11,53 +11,58 @@ const Hero = () => {
   const [isVideoError, setIsVideoError] = useState(false);
 
   return (
-    <div className="w-full h-[430px] md:h-[555px] lg:h-[705px] relative flex flex-col overflow-visible mt-[70px] md:mt-0">
-      {/* Loading Placeholder */}
-      {!isVideoLoaded && !isVideoError && (
-        <div className="absolute inset-0 bg-gradient-to-br from-[#094834] to-[#d3c294] animate-pulse" />
-      )}
-
-      {/* Error Fallback */}
-      {isVideoError && (
-        <div className="absolute inset-0 bg-gradient-to-br from-[#094834] to-[#d3c294]" />
-      )}
-
-      {/* Video Player */}
-      <Suspense
-        fallback={
+    // Hero takes full viewport height minus the header (≈70px)
+    <div className="w-full h-[calc(100vh-70px)] relative overflow-hidden mt-[70px] md:mt-0">
+      {/* Background video layer */}
+      <div className="absolute inset-0">
+        {/* Loading Placeholder */}
+        {!isVideoLoaded && !isVideoError && (
           <div className="absolute inset-0 bg-gradient-to-br from-[#094834] to-[#d3c294] animate-pulse" />
-        }
-      >
-        <ReactPlayer
-          playing
-          onReady={() => setIsVideoLoaded(true)}
-          onError={() => setIsVideoError(true)}
-          wrapper={({ children }: { children: React.ReactNode }) => (
-            <div className="w-full h-full">{children}</div>
-          )}
-          loop
-          muted={true}
-          width="100%"
-          height="100%"
-          url={Video}
-          config={{
-            file: {
-              attributes: {
-                autoPlay: true,
-                muted: true,
-                loop: true,
-                playsInline: true,
-                preload: "metadata", // Load metadata only
+        )}
+
+        {/* Error Fallback */}
+        {isVideoError && (
+          <div className="absolute inset-0 bg-gradient-to-br from-[#094834] to-[#d3c294]" />
+        )}
+
+        {/* Video Player */}
+        <Suspense
+          fallback={
+            <div className="absolute inset-0 bg-gradient-to-br from-[#094834] to-[#d3c294] animate-pulse" />
+          }
+        >
+          <ReactPlayer
+            playing
+            onReady={() => setIsVideoLoaded(true)}
+            onError={() => setIsVideoError(true)}
+            wrapper={({ children }: { children: React.ReactNode }) => (
+              <div className="w-full h-full">{children}</div>
+            )}
+            loop
+            muted
+            width="100%"
+            height="100%"
+            url={Video}
+            config={{
+              file: {
+                attributes: {
+                  autoPlay: true,
+                  muted: true,
+                  loop: true,
+                  playsInline: true,
+                  preload: "metadata",
+                },
               },
-            },
-          }}
-        />
-      </Suspense>
+            }}
+          />
+        </Suspense>
 
-      {/* Overlay Layer for Darkening */}
-      <div className="absolute inset-0 bg-black/40 z-10" />
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
 
-      <div className="container relative z-20">
+      {/* FOREGROUND CONTENT – CENTERED BOTH WAYS */}
+      <div className="relative z-20 h-full flex items-center justify-center">
         <MultiSearch />
       </div>
     </div>

@@ -3,7 +3,7 @@ import Images from "../Constants/Images";
 import HoverCardBox from "./HoverCardBox";
 import { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import Icons from "@/Constants/Icons";
+// import Icons from "@/Constants/Icons";
 import { useMediaQuery } from "react-responsive";
 import HeaderForSmallScreen from "./HeaderForSmallScreen";
 import MainDropdown from "./MainDropdown";
@@ -13,29 +13,29 @@ import StaticServices from "@/Services/StaticServices";
 import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 import i18nn from "../i18n";
-import { useAreaUnit } from "@/Context/AreaUnitContext";
+// import { useAreaUnit } from "@/Context/AreaUnitContext";
 import { motion } from "framer-motion";
 
 const Header = () => {
   // For btn my property page
-  const isAuthenticated = !!Cookies.get("token");
+  // const isAuthenticated = !!Cookies.get("token");
 
   // Translation
   const { t, i18n } = useTranslation();
-  const { currentUnit, setCurrentUnit } = useAreaUnit();
+  // const { currentUnit, setCurrentUnit } = useAreaUnit();
 
-  const changeLanguage = (lang: string) => {
-    window.localStorage.setItem("lang", lang);
-    setCurrentLanguage(lang);
-    window.location.reload();
-  };
-  useEffect(() => {
-    document.body.dir = i18n.language == "en" ? "ltr" : "rtl";
-    document.body.classList.add(i18n.language);
-    const lang: string = localStorage.getItem("lang") || "en";
-    i18nn.changeLanguage(lang);
-    setCurrentLanguage(lang);
-  }, [i18nn.language]);
+  // const changeLanguage = (lang: string) => {
+  //   window.localStorage.setItem("lang", lang);
+  //   setCurrentLanguage(lang);
+  //   window.location.reload();
+  // };
+  // useEffect(() => {
+  //   document.body.dir = i18n.language == "en" ? "ltr" : "rtl";
+  //   document.body.classList.add(i18n.language);
+  //   const lang: string = localStorage.getItem("lang") || "en";
+  //   i18nn.changeLanguage(lang);
+  //   setCurrentLanguage(lang);
+  // }, [i18nn.language]);
   // currency
   const { data: AllCurrency } = useQueryGet(
     ["currency"],
@@ -50,7 +50,7 @@ const Header = () => {
   }, [AllCurrency]);
 
   // language
-  const [currentLanguage, setCurrentLanguage] = useState("En");
+  // const [currentLanguage, setCurrentLanguage] = useState("En");
   // for small screen and tablet
   const isDesktopOrLaptop = useMediaQuery({
     query: "(max-width: 1024px)",
@@ -148,7 +148,7 @@ const Header = () => {
         <div className="w-full fixed z-[9999]">
           <div
             style={{ opacity: onScroll ? 1 : 1, transitionDuration: ".5s" }}
-            className={`bg-white/95 backdrop-blur-md text-gray-900 max-w-[1520px] w-[calc(100%-32px)] h-[87.2px] mx-auto px-[48px] flex items-center justify-between rounded-xl my-2 shadow-xl overflow-hidden`}
+            className={`bg-white/95 backdrop-blur-md text-gray-900 w-[calc(100%)] h-[87.2px] mx-auto px-[120px] flex items-center justify-between shadow-xl overflow-hidden`}
           >
             <NavLink to="/">
               <div className="md:w-[120px] md:h-[50px] flex-center cursor-pointer">
@@ -160,18 +160,18 @@ const Header = () => {
               </div>
             </NavLink>
             <div className="flex items-center">
-              <ul className="flex items-center gap-8">{renderHeaderItem}</ul>
+              {/* <ul className="flex items-center gap-8">{renderHeaderItem}</ul> */}
             </div>
 
-            <div className="flex items-center gap-3">
-              <div>
+            <div className="flex items-center gap-8">
+              <ul className="flex items-center gap-4">{renderHeaderItem}</ul>
+              {/* <div>
                 <MainDropdown
                   title={<Icons.IoSettingsOutline size={20} />}
                   showIcon={true}
                   triggerClass={`text-gray-700 border-gray-200 hover:bg-gray-100 bg-white/90 font-semibold rounded-xl px-3 py-2 text-sm border transition-all duration-200`}
                 >
                   <DropdownMenuItem className="bg-white rounded-xl p-2">
-                    {/* Language Settings */}
                     <div className="mb-4">
                       <h3 className="text-sm font-semibold text-gray-900 mb-3 px-2">
                         {t("Language")}
@@ -244,7 +244,6 @@ const Header = () => {
                       </motion.div>
                     </div>
 
-                    {/* Area Unit Settings */}
                     <div className="mb-4">
                       <h3 className="text-sm font-semibold text-gray-900 mb-3 px-2">
                         {t("Area Unit")}
@@ -312,7 +311,7 @@ const Header = () => {
                     </div>
                   </DropdownMenuItem>
                 </MainDropdown>
-              </div>
+              </div> */}
 
               {/* Currency Dropdown */}
               <div>
@@ -373,7 +372,7 @@ const Header = () => {
                 </MainDropdown>
               </div>
 
-              {isAuthenticated ? (
+              {/* {isAuthenticated ? (
                 <button
                   className="transition-all duration-[.4s] cursor-pointer text-white bg-[#094834] border-[#094834] hover:bg-[#9f8151] font-semibold rounded-xl px-3 py-2 text-sm border flex items-center justify-center"
                   onClick={() => navigate("/myproperty")}
@@ -387,7 +386,7 @@ const Header = () => {
                 >
                   <span>{t("login")}</span>
                 </button>
-              )}
+              )} */}
             </div>
           </div>
         </div>

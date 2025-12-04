@@ -45,17 +45,17 @@ const Home = () => {
           <CustomerService />
         </Suspense>
 
-        <Suspense fallback={<LoadingSkeleton />}>
+        {/* <Suspense fallback={<LoadingSkeleton />}>
           <Box />
-        </Suspense>
+        </Suspense> */}
 
         <Suspense fallback={<LoadingSkeleton />}>
           <ExploreProperty />
         </Suspense>
 
-        <Suspense fallback={<LoadingSkeleton />}>
+        {/* <Suspense fallback={<LoadingSkeleton />}>
           <SummaryBlog />
-        </Suspense>
+        </Suspense> */}
 
         <Suspense fallback={<LoadingSkeleton />}>
           <ContactForm />
@@ -65,13 +65,13 @@ const Home = () => {
           <PremierMarketplace />
         </Suspense>
 
-        <Suspense fallback={<LoadingSkeleton />}>
+        {/* <Suspense fallback={<LoadingSkeleton />}>
           <OurClients />
-        </Suspense>
+        </Suspense> */}
 
-        <Suspense fallback={<LoadingSkeleton />}>
+        {/* <Suspense fallback={<LoadingSkeleton />}>
           <StayInTheLoop />
-        </Suspense>
+        </Suspense> */}
       </div>
     </>
   );

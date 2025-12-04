@@ -49,7 +49,7 @@ const Form = () => {
         arrayOnInputs={ArrayInputsContact()}
         schema={contactFormValidationSchema}
         btnClass="w-full bg-[#094834] hover:bg-[#073a2a] text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
-        btnText={t("submit details")}
+        btnText={t("Submit")}
       />
     </div>
   );

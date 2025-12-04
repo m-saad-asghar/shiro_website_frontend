@@ -49,11 +49,11 @@ const FormikContainer: FC<FormikContainerProps> = ({
             <>
               <Form className={conClassName}>{renderInputs()}</Form>
               {children}
-              <div className="mt-4">
+              <div className="mt-4" style={{display: "flex", justifyContent: "center"}}>
                 <Btn
                   type="primary"
                   text={btnText}
-                  conClass="w-full flex-center"
+                  conClass="search_btn_styling h-12 md:h-10 px-6 bg-primary hover:bg-[#9f8151] text-white font-semibold change_border transition-all duration-[.4s] flex items-center justify-center gap-2 flex-center w-fit min-h-[50px] min-w-[200px]"
                   onclick={formik.submitForm}
                   disabled={formik.isSubmitting || !formik.isValid}
                 />

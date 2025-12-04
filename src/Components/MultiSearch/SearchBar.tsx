@@ -70,8 +70,8 @@ export const SearchBar = ({
           value={values?.search || ""}
           placeholder={
             valueSearch && valueSearch.length > 0
-              ? t("Add more...")
-              : t("Search by beds, type or price")
+              ? t("Add More...")
+              : t("Search By Properties...")
           }
           onChange={onSearch}
           className="flex-1 h-8 text-gray-900 placeholder-gray-500 placeholder:text-center text-sm focus:outline-none bg-transparent min-w-[200px] pl-8"

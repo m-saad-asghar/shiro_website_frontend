@@ -23,7 +23,7 @@ const Card: FC<CardProps> = ({ item }) => {
         className="lg:hidden w-full h-[280px] perspective-1000 cursor-pointer"
         onClick={handleClick}
       >
-        <div className="relative w-full h-full p-[24px] border border-primary/20 rounded-2xl shadow-xl flex items-center justify-center backdrop-blur-md">
+        <div className="relative w-full h-full p-[24px] border border-primary/20 change_border shadow-xl flex items-center justify-center backdrop-blur-md">
           <div className="h-full flex flex-col justify-center items-center text-center">
             <div className="w-[48px] h-[48px] mb-4">
               <img
@@ -63,7 +63,7 @@ const Card: FC<CardProps> = ({ item }) => {
         >
           {/* Front Side */}
           <div
-            className="absolute inset-0 w-full h-full p-[24px] border border-white/20 rounded-2xl shadow-xl flex items-center justify-center backdrop-blur-md"
+            className="absolute inset-0 w-full h-full p-[24px] border border-white/20 change_border shadow-xl flex items-center justify-center backdrop-blur-md"
             style={{ backfaceVisibility: "hidden" }}
           >
             <div className="w-[80px] h-[80px] transition-all duration-300">
@@ -77,7 +77,7 @@ const Card: FC<CardProps> = ({ item }) => {
 
           {/* Back Side */}
           <div
-            className="absolute inset-0 w-full h-full p-[24px] border border-primary/20 rounded-2xl shadow-xl backdrop-blur-md"
+            className="absolute inset-0 w-full h-full p-[24px] border border-primary/20 change_border shadow-xl backdrop-blur-md"
             style={{
               backfaceVisibility: "hidden",
               transform: "rotateY(180deg)",
@@ -91,10 +91,10 @@ const Card: FC<CardProps> = ({ item }) => {
                   alt={item.title || "Service icon"}
                 />
               </div>
-              <h3 className="text-[16px] text-primary font-[600] mb-3">
+              <h3 className="text-[16px] text-primary font-[600] mb-3 !text-[#9f8151]">
                 {item.title}
               </h3>
-              <p className="text-[12px] text-dark font-[300] leading-relaxed">
+              <p className="!text-[12px] text-dark font-[600] leading-relaxed !text-[#0b4a35] down_styling">
                 {item.desc}
               </p>
               <div className="mt-4 transition-all duration-300">

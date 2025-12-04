@@ -1,14 +1,10 @@
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+
 import Icons from "@/Constants/Icons";
-// import { InputType } from '@/types/types'
 import { ErrorMessage, Field, type FieldProps } from "formik";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
-import PhoneInput, {
-  formatPhoneNumberIntl,
-  getCountryCallingCode,
-  parsePhoneNumber,
-} from "react-phone-number-input";
-// import ar from 'react-phone-number-input/locale/ar'
 
 type PhoneNumberProps = {
   input: any;
@@ -17,7 +13,6 @@ type PhoneNumberProps = {
 const PhoneNumber: FC<PhoneNumberProps> = ({ input }) => {
   const { t, i18n } = useTranslation();
 
-  // Filter to only show essential countries and set UAE as default
   const essentialCountries = [
     "AE",
     "SA",
@@ -47,63 +42,74 @@ const PhoneNumber: FC<PhoneNumberProps> = ({ input }) => {
     "KR",
     "CN",
   ];
-  const countries = essentialCountries.filter((country) => country !== "IL");
 
-  const customLabels = countries.reduce((acc: any, country) => {
-    const countryName = new Intl.DisplayNames(["en"], { type: "region" }).of(
-      country
-    );
-    const countryCode = getCountryCallingCode(country as any);
-    acc[country] = `${countryName} (+${countryCode})`;
-    return acc;
-  }, {});
+  const onlyCountries = essentialCountries.map((c) => c.toLowerCase());
+
   return (
-    <div className="w-full h-fit ">
+    <div className="w-full h-fit">
       {input?.label && (
-        <label className="text-[12px] text-dark capitalize font-NeueHaasGrotesk font-[600] ">
+        <label className="font-bold text-primary text-[14px]">
           {t(input?.label)}
         </label>
       )}
+
       <div
-        className={`flex items-center gap-x-[10px] relative ${input.className}`}
+        className={`flex items-center gap-x-[10px] relative mt-1 ${input.className}`}
       >
         {input.icon}
+
         <Field name={input.name}>
-          {({ form }: FieldProps) => (
-            <PhoneInput
-              className={`${
-                i18n.language === "ar"
-                  ? "direction-rtl phone-number"
-                  : "direction-ltr"
-              } h-10`}
-              defaultCountry="AE"
-              countries={countries as any}
-              addInternationalOption={false}
-              labels={customLabels}
-              internationalIcon={() => <Icons.GiWorld />}
-              placeholder={"123 45 500"}
-              required={input.required}
-              international={true}
-              countryCallingCodeEditable={false}
-              value={
-                form.values[input.name]
-                  ? formatPhoneNumberIntl(
-                      form.values["prefix"] + form.values[input.name]
-                    )
-                  : ""
-              }
-              onChange={(value) => {
-                if (value) {
-                  const phoneNumber = parsePhoneNumber(value);
-                  const countryCode = phoneNumber?.countryCallingCode;
-                  const nationalNumber = phoneNumber?.nationalNumber;
-                  form.setFieldValue(input.name, nationalNumber);
-                  form.setFieldValue("prefix", countryCode);
-                }
-              }}
-            />
-          )}
+          {({ form }: FieldProps) => {
+            const prefix = form.values["prefix"] || "";
+            const national = form.values[input.name] || "";
+            // const fullValue = `${prefix}${national}`;
+            const fullValue = `${prefix}${national}`;
+
+            return (
+              <PhoneInput
+  country={"ae"}
+  // onlyCountries={onlyCountries}
+  enableSearch
+  searchPlaceholder="Search Country..."
+  disableSearchIcon
+  dropdownStyle={{ maxHeight: "300px", overflowY: "auto" }}
+  placeholder="50 123 4567"
+  value={fullValue}
+  inputStyle={{ minHeight: 56, fontSize: 16 }}
+  countryCodeEditable={false}   // 🔥 <— ADD THIS LINE
+  // main wrapper
+  containerClass={`w-full flex-1 ${
+    i18n.language === "ar"
+      ? "direction-rtl phone-number"
+      : "direction-ltr"
+  }`}
+  // input field (force Tailwind over library defaults)
+  inputClass="!w-full !h-11 !border !border-gray-300 change_border !pl-12 !pr-3 !bg-white text-[#5E5C59] placeholder-gray-500 text-base"
+  // country button next to input
+  buttonClass="!border !border-gray-300 !rounded-l-md !bg-white"
+  // dropdown list
+  dropdownClass="!bg-white !border !border-gray-200 !shadow-lg !text-sm !z-50"
+  onChange={(value, data: any) => {
+    const dialCode = data?.dialCode || "";
+    let nationalNumber = value || "";
+
+    if (dialCode && nationalNumber.startsWith(dialCode)) {
+      nationalNumber = nationalNumber.slice(dialCode.length);
+    }
+
+    form.setFieldValue("prefix", dialCode);
+    form.setFieldValue(input.name, nationalNumber);
+  }}
+  inputProps={{
+    name: input.name,
+    required: input.required,
+  }}
+/>
+
+            );
+          }}
         </Field>
+
         <ErrorMessage name={input.name} />
       </div>
     </div>

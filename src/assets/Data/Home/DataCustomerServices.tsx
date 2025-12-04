@@ -18,7 +18,7 @@ const DataCustomerServices = () => {
     () => [
       {
         id: 1,
-        img: Images.imgcustomerServices1,
+        img: Images.SpecialistGreen,
         title: t("Connect with a Specialist"),
         desc: t(
           "Access our dedicated team of over 400+ expert agents ready to assist you."
@@ -27,7 +27,7 @@ const DataCustomerServices = () => {
       },
       {
         id: 2,
-        img: Images.imgcustomerServices2,
+        img: Images.ListingGreen,
         title: t("List Your Property"),
         desc: t(
           "Achieve optimal value by listing your property with our expert marketing strategies"
@@ -37,7 +37,7 @@ const DataCustomerServices = () => {
       },
       {
         id: 3,
-        img: Images.imgcustomerServices3,
+        img: Images.VisionGreen,
         title: t("Check Our Vision"),
         desc: t(
           "Learn how our vision is redefining real estate with innovation and long-term value"
@@ -52,7 +52,7 @@ const DataCustomerServices = () => {
       },
       {
         id: 4,
-        img: Images.imgcustomerServices4,
+        img: Images.ExploreGreenGold,
         title: t("Explore Dubai Projects"),
         desc: t(
           "Browse and find your ideal property from our extensive portfolio of Dubai projects."

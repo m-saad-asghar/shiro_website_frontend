@@ -228,6 +228,11 @@ Table of Content
   background: #000;
 }
 
+.custom_container {
+  padding-left: 120px;
+  padding-right: 120px;
+}
+
 .owl-custom-carousel .owl-video-play-icon {
   position: absolute;
   height: 80px;
@@ -9489,7 +9494,7 @@ input::-ms-input-placeholder, textarea::-ms-input-placeholder {
   opacity: 1; /* 1 */
   color: #9ca3af; /* 2 */
 }
-input::placeholder,
+/* input::placeholder, */
 textarea::placeholder {
   opacity: 1; /* 1 */
   color: #9ca3af; /* 2 */
