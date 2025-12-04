@@ -1,10 +1,12 @@
 import Icons from "@/Constants/Icons";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import CountUp from "react-countup";
 
 const PremierMarketplace = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
   const stats = [
     {
       number: "20+",
@@ -14,7 +16,7 @@ const PremierMarketplace = () => {
     {
       number: "1000+",
       label: t("Happy Clients"),
-      icon: Icons.IoPerson,
+      icon: Icons.GoPerson,
     },
     {
       number: "500+",
@@ -58,22 +60,21 @@ const PremierMarketplace = () => {
   ];
 
   return (
-    <section className="w-full py-12 md:py-10 lg:py-12 bg-gradient-to-br from-white via-gray-50/30 to-white">
-      <div className="container mx-auto px-4">
+    <section
+      className="w-full py-12 md:py-10 lg:py-12 bg-gradient-to-br from-white via-gray-50/30 to-white"
+      style={{ marginBottom: 45 }}
+    >
+      <div className="custom_container mx-auto px-4">
         {/* Header Section */}
-        <div className="text-center mb-8 md:mb-12">
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-full px-6 py-3 mb-6">
-            <div className="w-2 h-2 bg-primary rounded-full"></div>
-            <span className="text-primary font-semibold text-sm">
-              {t("Premier Real Estate Consultancy")}
-            </span>
-          </div>
-
-          <h2 className="text-[28px] md:text-[36px] lg:text-[48px] text-gray-900 font-bold mb-6 leading-tight">
+        <div className="mb-8 md:mb-12">
+          <h1
+            style={{ paddingBottom: 15 }}
+            className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general"
+          >
             {t("Dubai's Trusted Real Estate Partner")}
-          </h2>
+          </h1>
 
-          <p className="text-[16px] md:text-[18px] text-gray-600 max-w-4xl mx-auto leading-relaxed">
+          <p className="down_styling para_styling">
             {t(
               "A premier real estate consultancy headquartered in Dubai, UAE. With 20 years of unrivaled expertise in the local and international real estate market, we are the trusted partner for individuals and corporations seeking tailored property solutions."
             )}
@@ -84,16 +85,29 @@ const PremierMarketplace = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8 md:mb-12">
           {stats.map((stat, index) => {
             const IconComponent = stat.icon;
+
+            // split "1000+" into 1000 and "+"
+            const numericValue = parseInt(stat.number.replace(/[^\d]/g, ""), 10);
+            const suffix = stat.number.replace(/\d/g, "");
+
             return (
               <div key={index} className="text-center group">
                 <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
                   <div className="text-3xl mb-3 text-primary group-hover:scale-110 transition-transform duration-300">
                     <IconComponent size={32} />
                   </div>
-                  <div className="text-2xl md:text-3xl font-bold text-primary mb-2">
-                    {stat.number}
+
+                  <div className="text-2xl md:text-3xl font-bold text-primary mb-2 !text-[#9f8151]">
+                    <CountUp
+                      end={numericValue}
+                      duration={5}
+                      enableScrollSpy
+                      scrollSpyOnce
+                    />
+                    {suffix}
                   </div>
-                  <div className="text-sm text-gray-600 font-medium">
+
+                  <div className="text-sm text-gray-600 font-medium !text-[#0b4a35] font-semibold">
                     {stat.label}
                   </div>
                 </div>
@@ -112,36 +126,16 @@ const PremierMarketplace = () => {
                   <div className="text-4xl mb-4 text-primary group-hover:scale-110 transition-transform duration-300">
                     <IconComponent size={40} />
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">
+                  <h3 className="text-lg font-bold text-gray-900 mb-3 !text-[#9f8151]">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="down_styling para_styling">
                     {feature.description}
                   </p>
                 </div>
               </div>
             );
           })}
-        </div>
-
-        {/* Bottom CTA */}
-        <div className="text-center mt-8 md:mt-12">
-          <div className="bg-gradient-to-r from-primary to-primary/90 rounded-2xl p-8 md:p-12 text-white">
-            <h3 className="text-2xl md:text-3xl font-bold mb-4">
-              {t("Ready to Start Your Real Estate Journey?")}
-            </h3>
-            <p className="text-white/90 mb-6 max-w-2xl mx-auto">
-              {t(
-                "Let our expert consultants guide you through Dubai's dynamic real estate market with personalized solutions tailored to your needs."
-              )}
-            </p>
-            <button
-              onClick={() => navigate("/contact")}
-              className="bg-white text-primary font-semibold px-8 py-3 rounded-xl hover:bg-[#9f8151] hover:text-white transition-all duration-[.4s] cursor-pointer"
-            >
-              {t("Get Started Today")}
-            </button>
-          </div>
         </div>
       </div>
     </section>

@@ -94,7 +94,7 @@ const Card: FC<CardProps> = ({ item }) => {
               <h3 className="text-[16px] text-primary font-[600] mb-3 !text-[#9f8151]">
                 {item.title}
               </h3>
-              <p className="!text-[12px] text-dark font-[600] leading-relaxed !text-[#0b4a35] down_styling">
+              <p className="!text-[12px] text-dark font-[600] leading-relaxed !text-[#0b4a35] down_styling !leading-normal">
                 {item.desc}
               </p>
               <div className="mt-4 transition-all duration-300">

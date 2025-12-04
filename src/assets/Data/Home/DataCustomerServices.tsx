@@ -18,7 +18,7 @@ const DataCustomerServices = () => {
     () => [
       {
         id: 1,
-        img: Images.SpecialistGreen,
+        img: Images.SpecialistGreenGold,
         title: t("Connect with a Specialist"),
         desc: t(
           "Access our dedicated team of over 400+ expert agents ready to assist you."
@@ -27,7 +27,7 @@ const DataCustomerServices = () => {
       },
       {
         id: 2,
-        img: Images.ListingGreen,
+        img: Images.ListingGreenGold,
         title: t("List Your Property"),
         desc: t(
           "Achieve optimal value by listing your property with our expert marketing strategies"
@@ -37,7 +37,7 @@ const DataCustomerServices = () => {
       },
       {
         id: 3,
-        img: Images.VisionGreen,
+        img: Images.VisionGreenGold,
         title: t("Check Our Vision"),
         desc: t(
           "Learn how our vision is redefining real estate with innovation and long-term value"

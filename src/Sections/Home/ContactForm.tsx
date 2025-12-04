@@ -49,7 +49,7 @@ const ContactForm = () => {
 
   return (
     <section
-      className="w-full py-12 md:py-16 lg:py-20 bg-gradient-to-br from-gray-50 to-white"
+      className="w-full py-12 md:py-16 lg:py-20 bg-gradient-to-br from-gray-50 to-white !pb-5"
       id="ListYourProperty"
     >
       <div className="custom_container mx-auto px-4">

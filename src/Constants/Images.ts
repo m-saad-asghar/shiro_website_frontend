@@ -56,6 +56,9 @@ import ExploreGold from "../assets/Images/CustomImages/explore_gold.svg";
 import ListingGreen from "../assets/Images/CustomImages/listing_green.svg";
 import SpecialistGreen from "../assets/Images/CustomImages/specialist_green.svg";
 import VisionGreen from "../assets/Images/CustomImages/vision_green.svg";
+import ListingGreenGold from "../assets/Images/CustomImages/listing_green_gold.svg";
+import SpecialistGreenGold from "../assets/Images/CustomImages/specialist_green_gold.svg";
+import VisionGreenGold from "../assets/Images/CustomImages/vision_green_gold.svg";
 export default {
   ExploreGreen,
   ExploreGold,
@@ -63,6 +66,9 @@ export default {
   ListingGreen,
   SpecialistGreen,
   VisionGreen,
+  ListingGreenGold,
+  VisionGreenGold,
+  SpecialistGreenGold,
   Logo,
   imgExplorePropertyCard,
   imgcustomerServices1,
