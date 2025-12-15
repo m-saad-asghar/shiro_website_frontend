@@ -92,6 +92,19 @@ h6 {
   font-variant-ligatures: common-ligatures;
 }
 
+.floor_plan_styling {
+  margin-top: 75px;
+  margin-bottom: 75px;
+}
+
+.half_padding_up {
+  margin-top: 75px;
+}
+
+.half_padding_bottom {
+  margin-bottom: 75px;
+}
+
 .heading_space {
   margin-bottom: 30px;
 }

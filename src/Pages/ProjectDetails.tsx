@@ -356,7 +356,7 @@ const ProjectDetails = () => {
 
           {/* FLOOR PLANS */}
         
-             <div id="floorPlans" className="scroll-mt-28 custom_container">
+             <div id="floorPlans" className="scroll-mt-28 custom_container floor_plan_styling">
            <div className="mt-8 mb-8">
              <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
                  {t("Floor Plans")}
@@ -392,7 +392,7 @@ const ProjectDetails = () => {
           </div>
 
             {/* Project Location */}
-         <div id="location" className="scroll-mt-28">
+         <div id="location" className="scroll-mt-28 floor_plan_styling">
            <div className="mt-8">
              <h1 className="custom_container hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
                {projects.name} {t("Location")}
@@ -428,7 +428,7 @@ const ProjectDetails = () => {
           </div>
 
           {/* FAQ */}
-            {projects?.faqs?.length > 0 && (<div id="faq" className="scroll-mt-28 custom_container">
+            {projects?.faqs?.length > 0 && (<div id="faq" className="scroll-mt-28 custom_container half_padding_up">
            <div className="mt-8 mb-8">
              <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
                 {t("Useful Information About ")} {localizedName}
@@ -529,7 +529,9 @@ const ProjectDetails = () => {
           )}
         </section>
 
-        <ContactForm />
+        <div className="half_padding_bottom">
+          <ContactForm />
+        </div>
       </div>
     </>
   );
