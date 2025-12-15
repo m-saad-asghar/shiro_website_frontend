@@ -8,12 +8,12 @@ type CardProps = {
 };
 
 const Card: FC<CardProps> = ({ item }) => {
-  const [isFlipped, setIsFlipped] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(true);
 
   const handleClick = () => {
-    if (item?.onClick) {
-      item.onClick();
-    }
+    // if (item?.onClick) {
+    //   item.onClick();
+    // }
   };
 
   return (
@@ -47,9 +47,9 @@ const Card: FC<CardProps> = ({ item }) => {
 
       {/* Desktop: Show flipcard effect on hover */}
       <div
-        className="hidden lg:block w-full lg:max-w-[255px] h-[280px] perspective-1000 cursor-pointer"
-        onMouseEnter={() => setIsFlipped(true)}
-        onMouseLeave={() => setIsFlipped(false)}
+        className="hidden lg:block w-full h-[280px] perspective-1000 cursor-pointer"
+        // onMouseEnter={() => setIsFlipped(true)}
+        // onMouseLeave={() => setIsFlipped(false)}
         onClick={handleClick}
       >
         <div
@@ -77,13 +77,13 @@ const Card: FC<CardProps> = ({ item }) => {
 
           {/* Back Side */}
           <div
-            className="absolute inset-0 w-full h-full p-[24px] border border-primary/20 change_border shadow-xl backdrop-blur-md"
+            className="absolute inset-0 w-full h-full p-[32px] border border-primary/20 change_border"
             style={{
               backfaceVisibility: "hidden",
               transform: "rotateY(180deg)",
             }}
           >
-            <div className="h-full flex flex-col justify-center items-center text-center">
+            <div className="h-full flex flex-col">
               <div className="w-[48px] h-[48px] mb-4">
                 <img
                   src={item.img}
@@ -91,15 +91,17 @@ const Card: FC<CardProps> = ({ item }) => {
                   alt={item.title || "Service icon"}
                 />
               </div>
-              <h3 className="text-[16px] text-primary font-[600] mb-3 !text-[#9f8151]">
+              <div className="flex mt-8">
+                <h3 className="text-[16px] text-primary font-semibold mb-3 !text-[#9f8151] font-[16px]">
                 {item.title}
               </h3>
-              <p className="!text-[12px] text-dark font-[600] leading-relaxed !text-[#0b4a35] down_styling !leading-normal">
-                {item.desc}
-              </p>
-              <div className="mt-4 transition-all duration-300">
+               <div className="transition-all duration-300 ml-[10px] !text-[#9f8151]">
                 <Icons.RxArrowTopRight />
               </div>
+              </div>
+              <p className="!text-[14px] text-dark leading-relaxed !text-[#0b4a35] down_styling !leading-normal">
+                {item.desc}
+              </p>
             </div>
           </div>
         </div>

@@ -37,6 +37,9 @@ const Search: FC<SearchProps> = ({
   setSearchId,
   options,
 }) => {
+
+ const [isInputFocused, setIsInputFocused] = useState(false);
+
   // Function to handle value change and close dropdown
   const handleValueChange = (updater: (prev: any) => any) => {
     setValues((prev: any) => {
@@ -504,11 +507,11 @@ const Search: FC<SearchProps> = ({
   };
 
   return (
-    <div className="w-full bg-gradient-to-r from-gray-50 via-white to-gray-50 border-b border-gray-200/50">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-7xl mx-auto">
+    <div className="w-full">
+      <div className="custom_container mx-auto">
+        <div className="mx-auto">
           {/* Header */}
-          <div className="text-center mb-8">
+          {/* <div className="text-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
               {t("Find Your Perfect Property")}
             </h2>
@@ -517,190 +520,188 @@ const Search: FC<SearchProps> = ({
                 "Discover the best properties in Dubai with our advanced search"
               )}
             </p>
-          </div>
+          </div> */}
 
           {/* Search Container */}
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* Search Input */}
-              <div className="lg:col-span-4 relative">
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={values?.search || ""}
-                    placeholder={t("Search area, project or community...")}
-                    onChange={onSearchInput}
-                    className="w-full h-14 px-4 pl-12 pr-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300 text-sm md:text-base"
-                  />
-                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                    <Icons.IoIosSearch size={20} className="text-gray-400" />
-                  </div>
+           {/* ================= SEARCH INPUT WITH CHIPS INSIDE ================= */}
+<div className="lg:col-span-4">
+  {/* This wrapper is the positioning reference for the dropdown */}
+  <div className="relative">
 
-                  {/* Search Results Dropdown */}
-                  {values?.search?.length >= 1 && (
-                    <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-xl z-[9999] max-h-80 overflow-y-auto">
-                      {(() => {
-                        // Get already selected items to exclude them
-                        const selectedItems = valueSearch.map(
-                          (item: any) => item.uniqueId
-                        );
+    {/* INPUT + CHIPS */}
+    <div className="flex flex-wrap items-center w-full min-h-[52px] bg-white border border-gray-200 rounded-[14px] px-3 py-2 gap-2">
+      {/* Search Icon */}
+      <div className="flex-shrink-0 text-gray-400 mt-[2px]">
+        <Icons.IoIosSearch size={16} />
+      </div>
 
-                        // Filter regions - exclude already selected
-                        const availableRegions = filteredRegions.filter(
-                          (region: any) =>
-                            !selectedItems.includes(`region_${region.id}`)
-                        );
+      {/* Chips + Input */}
+      <div className="flex flex-wrap items-center gap-2 flex-1 min-w-0">
+        {/* FIRST CHIP */}
+        {valueSearch[0] && (
+          <div
+            className={`flex items-center gap-1.5 px-2.5 py-[3px] rounded-full text-[11px] font-medium border shrink-0 ${
+              valueSearch[0]?.type === "region"
+                ? "bg-[#eef4ff] text-[#2563eb] border-[#dbe7ff]"
+                : "bg-[#eefaf3] text-[#15803d] border-[#d1f5e3]"
+            }`}
+          >
+            <span className="truncate max-w-[120px]">
+              {valueSearch[0]?.title || valueSearch[0]?.name}
+            </span>
 
-                        // Get properties
-                        const searchResults =
-                          searchOptions?.data?.data?.properties ||
-                          options?.data?.data?.properties ||
-                          [];
+            <button onClick={() => deleteSearch(valueSearch[0])}>
+              <Icons.MdClear size={11} />
+            </button>
+          </div>
+        )}
 
-                        // Filter properties - exclude already selected
-                        const filteredProperties = searchResults.filter(
-                          (item: any) => {
-                            const matchesSearch = item?.title
-                              ?.toLowerCase()
-                              .includes(values?.search?.toLowerCase());
-                            const notAlreadySelected = !selectedItems.includes(
-                              `property_${item?.id}`
-                            );
-                            return matchesSearch && notAlreadySelected;
-                          }
-                        );
+        {/* +N COUNTER */}
+        {valueSearch.length > 1 && (
+          <div className="flex items-center gap-1.5 px-2.5 py-[3px] rounded-full text-[11px] font-medium bg-gray-100 text-gray-700 border border-gray-200 shrink-0">
+            +{valueSearch.length - 1} items
+            <button
+              onClick={() => {
+                setValueSearch([]);
+                setSearchId([]);
+                setValues((prev: any) => ({
+                  ...prev,
+                  search: "",
+                  region_name: undefined,
+                  region_names: undefined,
+                  property_ids: undefined,
+                }));
+              }}
+            >
+              <Icons.MdClear size={11} />
+            </button>
+          </div>
+        )}
 
-                        const hasRegions = availableRegions.length > 0;
-                        const hasProperties = filteredProperties.length > 0;
-                        const hasResults = hasRegions || hasProperties;
+        {/* INPUT */}
+        <input
+          type="text"
+          value={values?.search || ""}
+          onChange={onSearchInput}
+          onFocus={() => setIsInputFocused(true)}
+          onBlur={() => setTimeout(() => setIsInputFocused(false), 200)}
+          placeholder={t("Search area, project or community...")}
+          className="flex-1 min-w-[160px] bg-transparent outline-none border-none text-[13px] text-gray-800 placeholder-gray-400 py-1"
+        />
+      </div>
+    </div>
 
-                        return !hasResults ? (
-                          <div className="p-4 text-center text-gray-500">
-                            {t("No results found")}
-                          </div>
-                        ) : (
-                          <>
-                            {/* Regions Section - Show First */}
-                            {hasRegions && (
-                              <div className="region-results">
-                                <div className="px-3 py-2 bg-gray-50 border-b border-gray-200">
-                                  <p className="text-xs font-semibold text-gray-600 uppercase">
-                                    {t("Regions")}
-                                  </p>
-                                </div>
-                                {availableRegions.map((region: any) => (
-                                  <div
-                                    key={`region_${region.id}`}
-                                    className="p-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 transition-colors duration-200 flex items-center gap-3"
-                                    onClick={() =>
-                                      handelAddValue(region, "region")
-                                    }
-                                  >
-                                    <div className="flex-shrink-0">
-                                      <Icons.IoLocationOutline
-                                        size={18}
-                                        className="text-blue-600"
-                                      />
-                                    </div>
-                                    <div className="flex-1">
-                                      <p className="text-sm font-medium text-gray-900">
-                                        {region?.name}
-                                      </p>
-                                      <p className="text-xs text-gray-500">
-                                        {t("Search by region")}
-                                      </p>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
+    {/* DROPDOWN */}
+    {(isInputFocused || values?.search?.length >= 1) && (
+      <div className="absolute left-0 top-full mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-xl z-[9999] max-h-80 overflow-y-auto">
+        {/* Selected items row */}
+        {valueSearch.length > 0 && (
+          <div className="p-3 border-b border-gray-200 flex flex-wrap gap-2 bg-gray-50">
+            {valueSearch.map((item: any) => (
+              <div
+                key={item.uniqueId}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium border ${
+                  item.type === "region"
+                    ? "bg-[#eef4ff] text-[#2563eb] border-[#dbe7ff]"
+                    : "bg-[#eefaf3] text-[#15803d] border-[#d1f5e3]"
+                }`}
+              >
+                <span className="truncate max-w-[120px]">
+                  {item?.title || item?.name}
+                </span>
 
-                            {/* Properties Section - Show Second */}
-                            {hasProperties && (
-                              <div className="property-results">
-                                {hasRegions && (
-                                  <div className="px-3 py-2 bg-gray-50 border-b border-gray-200">
-                                    <p className="text-xs font-semibold text-gray-600 uppercase">
-                                      {t("Properties")}
-                                    </p>
-                                  </div>
-                                )}
-                                {filteredProperties.map((item: any) => (
-                                  <div
-                                    key={`property_${item.id}`}
-                                    className="p-3 hover:bg-green-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors duration-200 flex items-center gap-3"
-                                    onClick={() =>
-                                      handelAddValue(item, "property")
-                                    }
-                                  >
-                                    <div className="flex-shrink-0">
-                                      <Icons.IoBusiness
-                                        size={18}
-                                        className="text-green-600"
-                                      />
-                                    </div>
-                                    <div className="flex-1">
-                                      <p className="text-sm font-medium text-gray-900 capitalize">
-                                        {item?.title}
-                                      </p>
-                                      <p className="text-xs text-gray-500">
-                                        {item?.region?.name}
-                                      </p>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </>
-                        );
-                      })()}
-                    </div>
-                  )}
-
-                  {/* Selected Items */}
-                  {valueSearch.length >= 1 && !values?.search && (
-                    <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-xl z-[9998] p-4">
-                      <div className="flex flex-wrap gap-2">
-                        {valueSearch?.map((item: any) => (
-                          <div
-                            key={item.uniqueId}
-                            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium ${
-                              item.type === "region"
-                                ? "bg-blue-50 text-blue-700 border border-blue-200"
-                                : "bg-green-50 text-green-700 border border-green-200"
-                            }`}
-                          >
-                            {item.type === "region" ? (
-                              <Icons.IoLocationOutline
-                                size={14}
-                                className="flex-shrink-0"
-                              />
-                            ) : (
-                              <Icons.IoBusiness
-                                size={14}
-                                className="flex-shrink-0"
-                              />
-                            )}
-                            <span className="truncate max-w-32">
-                              {item?.title || item?.name}
-                            </span>
-                            <button
-                              onClick={() => deleteSearch(item)}
-                              className={`ml-1 rounded-full p-1 transition-colors duration-200 ${
-                                item.type === "region"
-                                  ? "hover:bg-blue-200"
-                                  : "hover:bg-green-200"
-                              }`}
-                            >
-                              <Icons.MdClear size={14} />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                <button onClick={() => deleteSearch(item)}>
+                  <Icons.MdClear size={11} />
+                </button>
               </div>
+            ))}
+          </div>
+        )}
+
+        {/* Suggestions list */}
+        {(() => {
+          const selectedItems = valueSearch.map((i: any) => i.uniqueId);
+
+          const availableRegions = filteredRegions.filter(
+            (r: any) => !selectedItems.includes(`region_${r.id}`)
+          );
+
+          const searchResults =
+            searchOptions?.data?.data?.properties ||
+            options?.data?.data?.properties ||
+            [];
+
+          const filteredProperties = searchResults.filter((item: any) => {
+            const matches = item?.title
+              ?.toLowerCase()
+              .includes(values?.search?.toLowerCase());
+            const notSelected = !selectedItems.includes(
+              `property_${item?.id}`
+            );
+            return matches && notSelected;
+          });
+
+          if (!availableRegions.length && !filteredProperties.length) {
+            return (
+              <div className="p-4 text-center text-gray-500 text-sm">
+                {t("No results found")}
+              </div>
+            );
+          }
+
+          return (
+            <>
+              {availableRegions.length > 0 && (
+                <>
+                  <div className="px-3 py-2 bg-gray-50 text-[11px] font-semibold">
+                    {t("Properties")} {/* or Regions if you prefer */}
+                  </div>
+                  {availableRegions.map((region: any) => (
+                    <div
+                      key={region.id}
+                      onClick={() => handelAddValue(region, "region")}
+                      className="p-3 hover:bg-blue-50 cursor-pointer flex items-center gap-3 text-sm"
+                    >
+                      <Icons.IoLocationOutline className="text-blue-600" />
+                      {region.name}
+                    </div>
+                  ))}
+                </>
+              )}
+
+              {filteredProperties.length > 0 && (
+                <>
+                  <div className="px-3 py-2 bg-gray-50 text-[11px] font-semibold">
+                    {t("Properties")}
+                  </div>
+                  {filteredProperties.map((item: any) => (
+                    <div
+                      key={item.id}
+                      onClick={() => handelAddValue(item, "property")}
+                      className="p-3 hover:bg-green-50 cursor-pointer flex items-center gap-3 text-sm"
+                    >
+                      <Icons.IoBusiness className="text-green-600" />
+                      {item.title}
+                    </div>
+                  ))}
+                </>
+              )}
+            </>
+          );
+        })()}
+      </div>
+    )}
+  </div>
+</div>
+
+
+
+
+
+
 
               {/* Filters */}
               <div className="lg:col-span-8">

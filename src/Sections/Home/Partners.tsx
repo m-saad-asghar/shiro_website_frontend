@@ -106,6 +106,7 @@ const Partners: React.FC<PartnersProps> = ({ conClass }) => {
             )}
           </p>
         </div>
+      </div>
 
         {/* Two-row auto-moving carousel */}
        <div
@@ -113,7 +114,7 @@ const Partners: React.FC<PartnersProps> = ({ conClass }) => {
   style={{ paddingTop: "50px", paddingBottom: "40px" }} // or className="p-[30px]"
 >
          <div className="min-h-[100px] md:min-h-[120px] relative pb-2 md:pb-4 overflow-hidden">
-          <div className="flex flex-col gap-6 md:gap-12">
+          <div className="flex flex-col gap-1 md:gap-1">
             {/* TOP ROW – moves left ➜ right */}
             <motion.div
               className="flex items-center gap-6 md:gap-10 lg:gap-12 min-w-max"
@@ -158,7 +159,6 @@ const Partners: React.FC<PartnersProps> = ({ conClass }) => {
           </div>
         </div>
        </div>
-      </div>
 
       {/* Schema Markup for SEO */}
       <script

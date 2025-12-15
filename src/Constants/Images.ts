@@ -59,8 +59,10 @@ import VisionGreen from "../assets/Images/CustomImages/vision_green.svg";
 import ListingGreenGold from "../assets/Images/CustomImages/listing_green_gold.svg";
 import SpecialistGreenGold from "../assets/Images/CustomImages/specialist_green_gold.svg";
 import VisionGreenGold from "../assets/Images/CustomImages/vision_green_gold.svg";
+import EmaarDeveloperImage from "../assets/Images/Developer/emaar_developer_image.webp";
 export default {
   ExploreGreen,
+  EmaarDeveloperImage,
   ExploreGold,
   ExploreGreenGold,
   ListingGreen,

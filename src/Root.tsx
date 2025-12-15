@@ -16,22 +16,15 @@ const Root = () => {
   const { isAccessGranted, grantAccess } = usePasswordProtection();
 
   const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-        staleTime: 5 * 60 * 1000, // 5 minutes
-        gcTime: 10 * 60 * 1000, // 10 minutes
-        retry: 1,
-        refetchOnMount: false,
-        refetchOnReconnect: false,
-      },
-      mutations: {
-        retry: 1,
-      },
-    },
+    // ... your existing queryClient options
   });
 
-  // Show password protection if access is not granted
+  const isAuthRoute =
+    location.pathname === "/login" ||
+    location.pathname === "/signup" ||
+    location.pathname === "/forgotpassword" ||
+    location.pathname === "/myproperty";
+
   if (!isAccessGranted) {
     return (
       <QueryClientProvider client={queryClient}>
@@ -49,15 +42,15 @@ const Root = () => {
               <TypesContextProvider>
                 <AreaUnitProvider>
                   <div className="App">
-                    {location.pathname == "/login" ||
-                    location.pathname == "/signup" ||
-                    location.pathname == "/forgotpassword" ||
-                    location.pathname == "/myproperty" ? (
+                    {isAuthRoute ? (
                       <Outlet />
                     ) : (
                       <>
                         <Header />
-                        <Outlet />
+                        {/* push body below header */}
+                       <main className="pt-[0px] md:pt-[80px] lg:pt-[87.2px] sm:pt-[0px]">
+      <Outlet />
+    </main>
                         <Footer />
                       </>
                     )}
@@ -74,5 +67,6 @@ const Root = () => {
     </>
   );
 };
+
 
 export default Root;

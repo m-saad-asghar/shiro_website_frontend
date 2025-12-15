@@ -23,23 +23,23 @@ const Devleoper = () => {
           content="Explore properties from Dubai's leading developers. Browse exclusive projects and developments from trusted real estate developers partnered with Shiro."
         />
       </Helmet>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      <div className="min-h-screen">
         {/* Header Section */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="pt-[120px] md:pt-[140px] lg:pt-[127.2px]"
         >
           <Banner setValue={setValue} />
-        </motion.div>
+        </motion.div> */}
 
         {/* Developers Section */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="py-16 lg:py-20"
+          className="py-10 lg:py-20 pb-10 lg:pb-10"
         >
           {data?.developers?.length === 0 ? (
             <div className="container mx-auto px-4">
@@ -94,20 +94,20 @@ const Devleoper = () => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="bg-white"
+          className="bg-white mb-16"
         >
           <ContactForm />
         </motion.div>
 
         {/* Stay In The Loop Section */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
           className="bg-gray-50"
         >
           <StayInTheLoop />
-        </motion.div>
+        </motion.div> */}
       </div>
     </>
   );

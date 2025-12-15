@@ -164,7 +164,7 @@ const Buy = () => {
   // Show skeleton loading state
   if (status === "pending" || !data) {
     return (
-      <div className="w-full min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      <div className="w-full min-h-screen">
         <div className="pt-[120px] md:pt-[140px] lg:pt-[127.2px]" />
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -200,9 +200,9 @@ const Buy = () => {
           content="Find your dream property in Dubai. Browse luxury apartments, villas, and townhouses for sale. Exclusive listings from Shiro Real Estate with expert guidance."
         />
       </Helmet>
-      <div className="w-full min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      <div className="w-full ">
         {/* Header Spacing */}
-        <div className="pt-[120px] md:pt-[140px] lg:pt-[127.2px]" />
+        {/* <div className="pt-[120px] md:pt-[140px] lg:pt-[127.2px]" /> */}
 
         {status == "error" ? (
           <LoaderPage message="Loading properties..." size="lg" />

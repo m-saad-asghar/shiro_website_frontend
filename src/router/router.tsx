@@ -29,6 +29,9 @@ import {
   TeamMemberDetails,
   TermsConditions,
 } from "../Pages";
+import DeveloperDetails from "@/Pages/DeveloperDetails";
+import ProjectDetails from "@/Pages/ProjectDetails";
+import Communities from "@/Pages/Communities";
 import ProtectedRoute from "./ProtectedRoute";
 import Cookies from "js-cookie";
 const router = createBrowserRouter([
@@ -91,6 +94,18 @@ const router = createBrowserRouter([
       {
         path: "/developers",
         element: <Devleoper />,
+      },
+      {
+        path: "/developers/:slug",
+        element: <DeveloperDetails />,
+      },
+       {
+        path: "/projects/:slug",
+        element: <ProjectDetails />,
+      },
+      {
+        path: "/communities/:slug",
+        element: <Communities />,
       },
       {
         path: "/area-guides",

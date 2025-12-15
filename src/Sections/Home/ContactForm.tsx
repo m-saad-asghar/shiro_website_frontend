@@ -5,6 +5,43 @@ import { Form } from "../../Components/Home";
 const ContactForm = () => {
   const { t } = useTranslation();
 
+ const formatUAEPhone = (number: string | null | undefined): string => {
+  if (!number) return "";
+
+  // Remove spaces, dashes, brackets, etc.
+  let cleaned: string = number.replace(/[^0-9+]/g, "");
+
+  // Ensure it starts with +971
+  if (!cleaned.startsWith("+971")) {
+    cleaned = "+971" + cleaned.replace(/^0/, "");
+  }
+
+  // Get the part after +971
+  const rest = cleaned.replace("+971", "");
+
+  // Mobile: +971 58 888 8461  (9 digits after 971)
+  if (rest.length === 9) {
+    const p1 = rest.slice(0, 2); // 58
+    const p2 = rest.slice(2, 5); // 888
+    const p3 = rest.slice(5);    // 8461
+    return `+971 ${p1} ${p2} ${p3}`;
+  }
+
+  // Landline: +971 4 577 6496 (8 digits after 971)
+  if (rest.length === 8) {
+    const p1 = rest.slice(0, 1); // 4
+    const p2 = rest.slice(1, 4); // 577
+    const p3 = rest.slice(4);    // 6496
+    return `+971 ${p1} ${p2} ${p3}`;
+  }
+
+  // Fallback (unknown pattern)
+  return cleaned;
+};
+
+
+
+
   const onClick = (title: string, number?: string) => {
     if (title === "WhatsApp") {
       const msg = encodeURIComponent(
@@ -36,13 +73,32 @@ const ContactForm = () => {
 
       {/* Text block */}
       <div className="flex flex-col">
-       <span className="font-bold text-primary text-[16px] uppercase">
+       <span className="font-semibold text-primary text-[16px]">
   {item.title}
 </span>
 
-        <span className="text-sm sm:text-base md:text-lg font-medium  group-hover:text-[#9f8151] transition-colors duration-200 down_styling">
-          {item.desc}
-        </span>
+        <span className="text-sm sm:text-base md:text-lg font-medium group-hover:text-[#9f8151] text-[#0b4a35] transition-colors duration-200 down_styling">
+  {(() => {
+    const rawTitle = item.title || "";
+    const title = rawTitle.toLowerCase().trim();
+
+    const isPhone =
+      title === "phone" ||
+      title === "secondary phone" ||
+      title === "primary phone" ||
+      title.includes("phone") ||
+      title.includes("call");
+
+    const isWhatsapp =
+      title === "whatsapp" ||
+      title.includes("whatsapp");
+
+    return isPhone || isWhatsapp
+      ? formatUAEPhone(String(item.desc || ""))
+      : item.desc;
+  })()}
+</span>
+
       </div>
     </button>
   ));
@@ -53,10 +109,10 @@ const ContactForm = () => {
       id="ListYourProperty"
     >
       <div className="custom_container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start contact_us_wrapper">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
           {/* LEFT SIDE – Heading + contact details (Provident-style) */}
           <div className="space-y-8">
-            <div className="space-y-4">
+            <div className="space-y-4 contact_us_wrapper">
                <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
            {t("Speak with our Real Estate specialists today")}
           </h1>
@@ -86,7 +142,7 @@ const ContactForm = () => {
               {/* <h3 className="text-xl sm:text-2xl font-bold text-[#094834] mb-2">
                 {t("Get In Touch")}
               </h3> */}
-                <p className="down_styling para_styling">
+                <p className="down_styling para_styling !text-[#9f8151]">
                 {t("Fill out the form below and we'll get back to you shortly")}
 </p>
               {/* <p className="text-sm sm:text-base text-gray-600">

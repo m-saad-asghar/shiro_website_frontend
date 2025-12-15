@@ -42,6 +42,7 @@ const Hero = () => {
             muted
             width="100%"
             height="100%"
+            
             url={Video}
             config={{
               file: {
@@ -62,7 +63,7 @@ const Hero = () => {
       </div>
 
       {/* FOREGROUND CONTENT – CENTERED BOTH WAYS */}
-      <div className="relative z-20 h-full flex items-center justify-center">
+      <div className="relative z-20 h-full flex items-center justify-start custom_container">
         <MultiSearch />
       </div>
     </div>

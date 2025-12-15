@@ -80,6 +80,10 @@ h6 {
   letter-spacing: normal;
 }
 
+.right_details_info {
+  margin-bottom: 25px;
+}
+
 /* Additional Safari fixes for text rendering */
 .text-white {
   -webkit-font-feature-settings: "kern" 1;
@@ -88,12 +92,83 @@ h6 {
   font-variant-ligatures: common-ligatures;
 }
 
+.heading_space {
+  margin-bottom: 30px;
+}
+
+.hover_external_btn {
+    font-family: "Neue";
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 30px;
+    font-size: 14px;
+    min-width: 318px;
+    letter-spacing: 1px;
+    gap: 10px;
+    text-transform: uppercase;
+    background-color: #094834 ;
+    color: #fff;
+    transition: background-color 0.3s ease;
+    border: 1px solid #094834 ;
+}
+
+.hover_external_btn:hover {
+    background-color: #fff;
+    color: #094834 ;
+}
+
+.gallery_container_new {
+    margin-top: 30px;
+    margin-bottom: 60px;
+}
+
+.consultation_btn_style {
+    margin-top: 40px;
+}
+
+.mid_btn {
+    display: flex
+;
+    justify-content: center;
+}
+
 .down_styling {
-    /* color: #ffffff; */
+    color: #0b4a35;
      font-size: 1rem;
     font-family: "Neue";
     line-height: 25px;
     letter-spacing: 1px;
+}
+
+.text_stying {
+  font-family: "Segoe UI",
+    Roboto, Arial, sans-serif;
+}
+
+.text_roman {
+  font-family: "Times New Roman", Times, serif !important;
+}
+
+.selling_points_container {
+  padding-top: 100px;
+  padding-bottom: 100px;
+  margin-top: 30px;
+}
+
+.location_container {
+  padding-top: 80px;
+  padding-bottom: 100px;
+  margin-top: 30px;
+}
+
+.down_navbar {
+  min-height: 100px;
+}
+
+.navbar_styling_down {
+  border: 1px solid #f0f3f8;
 }
 
 .explore_properties_styling {
@@ -189,8 +264,9 @@ video {
 }
 
 .contact_us_wrapper {
+  margin-top: 40px;
   /* display: flex; */
-  align-items: center;
+  /* align-items: center; */
   /* justify-content: space-between; */
 }
 
@@ -448,6 +524,10 @@ video {
 }
 
 @media(max-width: 1199px) {
+
+  .hover_external_btn {
+    font-size: 12px;
+}
   .down_styling {
     max-width: 100%;
 }
@@ -455,7 +535,8 @@ video {
     font-size: 2rem;
 }
 .contact_us_wrapper {
-  display: block;
+  margin-top: 0px;
+  /* display: block; */
 }
 }
 
@@ -766,6 +847,42 @@ video {
 /* Responsive adjustments for team slider */
 @media (max-width: 767px) {
 
+  .selling_points_container {
+  padding-top: 50px;
+  padding-bottom: 0px;
+  margin-top: 30px;
+}
+
+  .sticky_inner_navbar {
+    /* Hide scrollbar but keep scroll functionality */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE & Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari, Opera */
+} 
+  }
+
+   .btn_cen {
+    display: flex;
+    justify-content: center;
+    }
+
+   .hover_external_btn {
+        min-width: 100% !important;
+    }
+
+    .consultation_btn_style {
+    margin-top: 10px;
+}
+
+
+  .mobie_version_icon {
+    display: none;
+  }
+
   .explore_properties_styling{
     margin-top: 0;
     margin-bottom: 0;
@@ -797,6 +914,14 @@ display: block !important;
     margin-top: 0.5rem;
   }
 }
+
+@media (max-width: 407px) {
+  .mobile_btns {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+  }
 
 /* Global cursor pointer for all interactive elements */
 button,

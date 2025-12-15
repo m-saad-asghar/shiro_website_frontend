@@ -32,7 +32,7 @@ const AllDeveloper: FC<AllDeveloperProps> = ({ data, status }) => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: index * 0.1 }}
-        whileHover={{ y: -5 }}
+        // whileHover={{ y: -5 }}
       >
         <DeveloperCard item={item} />
       </motion.div>
@@ -40,15 +40,15 @@ const AllDeveloper: FC<AllDeveloperProps> = ({ data, status }) => {
   }, [data]);
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="custom_container mx-auto px-4">
       {/* Section Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-12"
+        className="mb-12"
       >
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -58,16 +58,27 @@ const AllDeveloper: FC<AllDeveloperProps> = ({ data, status }) => {
           <span className="text-primary font-medium text-sm">
             {t("Developer Directory")}
           </span>
-        </motion.div>
+        </motion.div> */}
 
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+         <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+        {t("Our Trusted Developers")}
+      </h1>
+
+        {/* <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
           {t("Our Trusted Developers")}
-        </h2>
-        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+        </h2> */}
+
+          <p className="down_styling para_styling">
+                {t(
+            "Partner with Dubai's most reputable real estate developers who are committed to excellence and innovation"
+          )}
+</p>
+
+        {/* <p className="text-lg text-gray-600 max-w-3xl mx-auto">
           {t(
             "Partner with Dubai's most reputable real estate developers who are committed to excellence and innovation"
           )}
-        </p>
+        </p> */}
       </motion.div>
 
       {/* Developers Grid */}
@@ -83,7 +94,7 @@ const AllDeveloper: FC<AllDeveloperProps> = ({ data, status }) => {
       </motion.div>
 
       {/* Results Count */}
-      {data && data.length > 0 && (
+      {/* {data && data.length > 0 && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -96,7 +107,7 @@ const AllDeveloper: FC<AllDeveloperProps> = ({ data, status }) => {
             {t("developers")}
           </p>
         </motion.div>
-      )}
+      )} */}
 
       {/* Empty State */}
       {data && data.length === 0 && status !== "pending" && (

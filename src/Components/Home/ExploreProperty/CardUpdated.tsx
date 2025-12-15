@@ -90,7 +90,7 @@ const CardUpdated: FC<CardType> = ({ item, viewMode = "grid" }) => {
     <button
       key={item?.id || index}
       onClick={() => onClick(item?.type, item?.value)}
-      className={`flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-primary hover:bg-[#9f8151] text-white font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2`}
+      className={`flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:bg-[#9f8151] hover:text-white text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2`}
       style={{borderRadius: 8}}
       aria-label={`Contact via ${item?.type}`}
     >
@@ -109,7 +109,7 @@ const CardUpdated: FC<CardType> = ({ item, viewMode = "grid" }) => {
 const emailButton = item?.agent?.email ? (
   <button
     onClick={() => handleEmailClick(item.agent.email)}
-    className="flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-primary hover:bg-[#9f8151] text-white font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2"
+    className="flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:text-white hover:bg-[#9f8151] text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2"
      style={{borderRadius: 8}}
     aria-label="Send email to agent"
   >
@@ -126,7 +126,7 @@ const emailButton = item?.agent?.email ? (
 
   return (
    <div
-  className={`group bg-white rounded-2xl  border border-gray-100 transition-all duration-300 overflow-hidden relative ${
+  className={`group bg-white change_border border border-gray-100 transition-all duration-300 overflow-hidden relative ${
     viewMode === "grid"
       ? "flex flex-col h-auto"     // ✅ auto height
       : "h-[140px] flex flex-row"  // list view still fixed
@@ -212,11 +212,11 @@ const emailButton = item?.agent?.email ? (
   )}
 
   {/* Property Type Badge */}
-  {viewMode === "grid" && (
+  {/* {viewMode === "grid" && (
     <div className="absolute top-3 left-3 bg-primary text-white px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide shadow-lg z-10">
       {propertyTypeBadge}
     </div>
-  )}
+  )} */}
 </div>
 
 
@@ -251,7 +251,7 @@ const emailButton = item?.agent?.email ? (
         <div className={viewMode === "grid" ? "space-y-4" : "space-y-2"}>
           {/* Title */}
 
-           <h1  className={`font-bold text-primary ${
+           <h1  className={`font-semibold text-primary ${
                 viewMode === "grid" ? "text-xl" : "text-lg"
               }`} style={{marginBottom: 5}}>
              {item?.title}
@@ -268,7 +268,7 @@ const emailButton = item?.agent?.email ? (
           {/* Price */}
           <div className="flex items-center justify-between" style={{marginBottom: 30}}>
             <div
-              className={`font-bold text-primary ${
+              className={`text-primary text_stying ${
                 viewMode === "grid" ? "text-lg" : "text-lg"
               }`}
             >
@@ -281,13 +281,18 @@ const emailButton = item?.agent?.email ? (
             </div>
           </div>
 
+           {/* Selling Points */}
+          <div className="flex items-center gap-2 text-gray-600" style={{marginBottom: 0}}>
+            <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">{item?.selling_points}</span>
+          </div>
+
           {/* Location */}
           <div className="flex items-center gap-2 text-gray-600" style={{marginBottom: 0}}>
             <Icons.CiLocationOn
               size={viewMode === "grid" ? 18 : 16}
-              className="text-primary rounded-lg text-sm transition-all duration-200 mb-1 text-[#0b4a35]"
+              className="text-primary rounded-lg text-sm transition-all duration-200 mb-1 !text-[#9f8151]"
             />
-            <span className="rounded-lg text-sm transition-all duration-200 mb-1 text-[#0b4a35]">{item?.location}</span>
+            <span className="rounded-lg text-sm transition-all duration-200 mb-1 mt-1 text-[#9f8151] text_stying">{item?.location}</span>
           </div>
 
           {/* Property Features */}

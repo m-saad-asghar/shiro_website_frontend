@@ -227,7 +227,7 @@ const MultiSearch = () => {
             : "text-gray-700 border-gray-200 hover:bg-gray-50 hover:text-gray-900 backdrop-blur-sm bg-white/90"
         } font-semibold border min-w-[120px] ${
           item?.name === "Off-plan"
-            ? "w-[80px] sm:w-[90px] md:w-[110px]"
+            ? "pt-0.5 w-[80px] sm:w-[90px] md:w-[110px]"
             : "w-[60px] sm:w-[70px] md:w-[90px]"
         } h-[40px] sm:h-[40px] md:h-[40px] rounded-xl transition-all duration-300 text-xs sm:text-sm px-2 sm:px-0`}
       />
@@ -247,150 +247,97 @@ const MultiSearch = () => {
     ));
   }, []);
 
-  const onSubmit = () => {
-    if (values?.type_name && values?.type_id) {
-      const searchState = {
-        property_ids: searchId || values?.property_ids || [],
-        valueSearch: valueSearch || [],
-        search: values?.search,
-        property_name: values?.property_name,
-        property_type_id: values?.property_type_id,
-        price_min: values?.price_min,
-        price_max: values?.price_max,
-        bedroom_min: values?.bedroom_min,
-        bedroom_max: values?.bedroom_max,
-        bathroom_min: values?.bathroom_min,
-        bathroom_max: values?.bathroom_max,
-        area: values?.area,
-        developer_id: values?.developer_id,
-        developer_name: values?.developer_name,
-        sort: values?.sort,
-        sort_name: values?.sort_name,
-        type_id: values?.type_id,
-        type_name: values?.type_name,
-        is_sale: values?.type_name !== "new-projects" ? true : undefined,
-        region_name: values?.region_name,
-        region_names: values?.region_names,
-      };
+const onSubmit = () => {
+  if (values?.type_name && values?.type_id) {
+    const searchState = {
+      property_ids: searchId || values?.property_ids || [],
+      valueSearch: valueSearch || [],
+      search: values?.search,
+      property_name: values?.property_name,
+      property_type_id: values?.property_type_id,
+      price_min: values?.price_min,
+      price_max: values?.price_max,
+      bedroom_min: values?.bedroom_min,
+      bedroom_max: values?.bedroom_max,
+      bathroom_min: values?.bathroom_min,
+      bathroom_max: values?.bathroom_max,
+      area: values?.area,
+      developer_id: values?.developer_id,
+      developer_name: values?.developer_name,
+      sort: values?.sort,
+      sort_name: values?.sort_name,
+      type_id: values?.type_id,
+      type_name: values?.type_name,
+      is_sale: values?.type_name !== "new-projects" ? true : undefined,
+      region_name: values?.region_name,
+      region_names: values?.region_names,
+    };
 
-      if (values?.type_name == "buy/properties-for-sale") {
-        navigate(
-          `/buy/properties-for-sale${
-            values?.property_name
-              ? `/${getPropertyTypeSlug(values.property_name)}`
-              : ""
-          }${
-            values?.bedroom_min && values?.bedroom_max != undefined
-              ? `/with-${values?.bedroom_min}-to-${values?.bedroom_max}-bedrooms`
-              : values?.bedroom_min != undefined
-              ? `/more-than-${values?.bedroom_min}-bedrooms`
-              : values?.bedroom_max != undefined
-              ? `/under-${values?.bedroom_max}-bedrooms`
-              : ""
-          }${
-            values?.bathroom_min && values?.bathroom_max != undefined
-              ? `/with-${values?.bathroom_min}-to-${values?.bathroom_max}-bathrooms`
-              : values?.bathroom_min != undefined
-              ? `/more-than-${values?.bathroom_min}-bathrooms`
-              : values?.bathroom_max != undefined
-              ? `/under-${values?.bathroom_max}-bathrooms`
-              : ""
-          }${
-            values?.price_min && values?.price_max != undefined
-              ? `/between-${values?.price_min}-${values?.price_max}`
-              : values?.price_min != undefined
-              ? `/above-${values?.price_min}`
-              : values?.price_max != undefined
-              ? `/below-${values?.price_max}`
-              : ""
-          }`,
-          { state: searchState }
-        );
-      } else if (values?.type_name == "rent/properties-for-rent") {
-        navigate(
-          `/rent/properties-for-rent${
-            values?.property_name
-              ? `/${getPropertyTypeSlug(values.property_name)}`
-              : ""
-          }${
-            values?.bedroom_min && values?.bedroom_max != undefined
-              ? `/with-${values?.bedroom_min}-to-${values?.bedroom_max}-bedrooms`
-              : values?.bedroom_min != undefined
-              ? `/more-than-${values?.bedroom_min}-bedrooms`
-              : values?.bedroom_max != undefined
-              ? `/under-${values?.bedroom_max}-bedrooms`
-              : ""
-          }${
-            values?.bathroom_min && values?.bathroom_max != undefined
-              ? `/with-${values?.bathroom_min}-to-${values?.bathroom_max}-bathrooms`
-              : values?.bathroom_min != undefined
-              ? `/more-than-${values?.bathroom_min}-bathrooms`
-              : values?.bathroom_max != undefined
-              ? `/under-${values?.bathroom_max}-bathrooms`
-              : ""
-          }${
-            values?.price_min && values?.price_max != undefined
-              ? `/between-${values?.price_min}-${values?.price_max}`
-              : values?.price_min != undefined
-              ? `/above-${values?.price_min}`
-              : values?.price_max != undefined
-              ? `/below-${values?.price_max}`
-              : ""
-          }`,
-          { state: searchState }
-        );
-      } else {
-        navigate(
-          `/new-projects${
-            values?.property_name
-              ? `/${getPropertyTypeSlug(values.property_name)}`
-              : ""
-          }${
-            values?.bedroom_min && values?.bedroom_max != undefined
-              ? `/with-${values?.bedroom_min}-to-${values?.bedroom_max}-bedrooms`
-              : values?.bedroom_min != undefined
-              ? `/more-than-${values?.bedroom_min}-bedrooms`
-              : values?.bedroom_max != undefined
-              ? `/under-${values?.bedroom_max}-bedrooms`
-              : ""
-          }${
-            values?.bathroom_min && values?.bathroom_max != undefined
-              ? `/with-${values?.bathroom_min}-to-${values?.bathroom_max}-bathrooms`
-              : values?.bathroom_min != undefined
-              ? `/more-than-${values?.bathroom_min}-bathrooms`
-              : values?.bathroom_max != undefined
-              ? `/under-${values?.bathroom_max}-bathrooms`
-              : ""
-          }${
-            values?.price_min && values?.price_max != undefined
-              ? `/between-${values?.price_min}-${values?.price_max}`
-              : values?.price_min != undefined
-              ? `/above-${values?.price_min}`
-              : values?.price_max != undefined
-              ? `/below-${values?.price_max}`
-              : ""
-          }`,
-          { state: searchState }
-        );
-      }
+    const params = new URLSearchParams();
+
+    // -------- TYPE --------
+    if (values?.property_name) {
+      params.set("type", getPropertyTypeSlug(values.property_name));
     }
-  };
+
+    // -------- BEDROOMS (REPEATED PARAMS) --------
+    (values?.selected_bedrooms || []).forEach((bed: number | string) => {
+      const normalized = bed === "7+" ? "7plus" : String(bed);
+      params.append("bedrooms", normalized);
+    });
+
+    // -------- BATHROOMS (REPEATED PARAMS) --------
+    (values?.selected_bathrooms || []).forEach((bath: number | string) => {
+      const normalized = bath === "7+" ? "7plus" : String(bath);
+      params.append("bathrooms", normalized);
+    });
+
+    // -------- PRICE --------
+    if (values?.price_min !== undefined && values?.price_min !== null) {
+      params.set("min_price", String(values.price_min));
+    }
+
+    if (values?.price_max !== undefined && values?.price_max !== null) {
+      params.set("max_price", String(values.price_max));
+    }
+
+    const queryString = params.toString();
+
+    let basePath = "";
+    if (values?.type_name === "buy/properties-for-sale") {
+      basePath = "/buy/properties-for-sale";
+    } else if (values?.type_name === "rent/properties-for-rent") {
+      basePath = "/rent/properties-for-rent";
+    } else {
+      basePath = "/new-projects";
+    }
+
+    navigate(
+      `${basePath}${queryString ? `?${queryString}` : ""}`,
+      { state: searchState }
+    );
+  }
+};
+
+
 
   return (
-    <div className="flex items-center text-light flex-col gap-[20px] md:gap-[24px] lg:gap-[32px] absolute  left-4 right-4 md:left-auto md:right-auto">
-      <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content text-center">
+    <div className="text-light flex-col gap-[20px] md:gap-[24px] lg:gap-[32px] absolute left-4 right-4 md:left-auto md:right-auto">
+      <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content !mt-0">
         {t("Excellence beyond compare")}
       </h1>
-      <div className="border-radius flex gap-[8px] sm:gap-[12px] md:gap-[20px] flex-wrap justify-center md:justify-start mb-3">
-        {status == "pending" || status == "error" ? renderSkelton : renderTypes}
-      </div>
 
       {/* Google Flights Style Search Bar */}
       <div className="w-full">
+        <div className="border-radius flex gap-[8px] sm:gap-[12px] md:gap-[20px] flex-wrap md:justify-start mb-6 mobile_btns">
+          {status == "pending" || status == "error"
+            ? renderSkelton
+            : renderTypes}
+        </div>
         <div className="bg-white/95 backdrop-blur-md border-radius shadow-xl p-2 md:p-3 flex flex-col md:flex-row items-stretch md:items-center gap-2 search_bar_style">
           {/* Search Input with Selected Filters */}
           <div className="flex-1 relative">
-            <div className="flex items-center gap-2 flex-wrap min-h-[48px] px-4 py-2">
+            <div className="flex gap-2 flex-wrap min-h-[48px] px-4 py-2">
               {/* Selected Items Tags (inside input as before) */}
               {valueSearch && valueSearch.length > 0 && (
                 <span className="extra_margin">
@@ -494,7 +441,7 @@ const MultiSearch = () => {
                 value={values?.search || ""}
                 placeholder={
                   valueSearch && valueSearch.length > 0
-                    ? t("Add More...")
+                    ? ""
                     : t("Search By Properties...")
                 }
                 onChange={onSearch}
@@ -509,9 +456,183 @@ const MultiSearch = () => {
             </div>
 
             {/* Search icon */}
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none mobie_version_icon">
               <Icons.IoIosSearch color="#6b7280" size={16} />
             </div>
+
+            {/* 🔽 Combined Selected Items + Search Results Dropdown – now directly under search */}
+            {isSearchFocused && (
+              <div className="w-full max-w-md max-h-80 rounded-xl bg-white border border-gray-200 shadow-xl absolute left-0 right-0 top-full mt-2 z-[9999] overflow-y-auto">
+                {(() => {
+                  const selectedItemsIds = (valueSearch || []).map(
+                    (item: any) => item.uniqueId
+                  );
+
+                  const hasSelected = (valueSearch || []).length > 0;
+
+                  const availableRegions = filteredRegions.filter(
+                    (region: any) =>
+                      !selectedItemsIds.includes(`region_${region.id}`)
+                  );
+
+                  const filteredProperties = (
+                    options?.data?.data?.properties || []
+                  ).filter(
+                    (item: any) =>
+                      !selectedItemsIds.includes(`property_${item?.id}`)
+                  );
+
+                  const hasRegions = availableRegions.length > 0;
+                  const hasProperties = filteredProperties.length > 0;
+                  const hasResults = hasSelected || hasRegions || hasProperties;
+
+                  if (!hasResults) {
+                    return (
+                      <p className="text-sm font-medium text-gray-500 flex-center py-4">
+                        {t("no data found")}
+                      </p>
+                    );
+                  }
+
+                  return (
+                    <>
+                      {/* SELECTED ITEMS ON TOP (like "Selected locations") */}
+                      {hasSelected && (
+                        <div className="px-4 py-3 flex flex-wrap gap-2">
+                          {valueSearch.map((item: any, index: number) => (
+                            <div
+                              key={item.uniqueId || item.id || index}
+                              className={`selected_badge flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${
+                                item.type === "region"
+                                  ? "bg-blue-100 text-900"
+                                  : "bg-primary/10 text-primary"
+                              }`}
+                            >
+                              {item.type === "region" ? (
+                                <Icons.IoLocationOutline
+                                  size={12}
+                                  className="flex-shrink-0"
+                                />
+                              ) : (
+                                <Icons.IoBusiness
+                                  size={12}
+                                  className="flex-shrink-0"
+                                />
+                              )}
+
+                              <span className="truncate max-w-[160px]">
+                                {item.title || item.name}
+                              </span>
+
+                              <button
+                                onClick={() => {
+                                  setValueSearch((prev: any) =>
+                                    prev.filter(
+                                      (searchItem: any) =>
+                                        searchItem.uniqueId !== item.uniqueId
+                                    )
+                                  );
+
+                                  if (item.type === "property") {
+                                    setSearchId((prev: any) =>
+                                      prev.filter((id: any) => id !== item.id)
+                                    );
+                                  }
+                                }}
+                                className={`ml-1 rounded-full p-0.5 transition-colors duration-200 ${
+                                  item.type === "region"
+                                    ? "hover:bg-blue-200"
+                                    : "hover:bg-primary/20"
+                                }`}
+                                aria-label={`Remove ${
+                                  item.title || item.name
+                                }`}
+                              >
+                                <Icons.FaTimes size={14} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {(hasRegions || hasProperties) && hasSelected && (
+                        <div className="border-t border-gray-200" />
+                      )}
+
+                      {/* REGIONS */}
+                      {hasRegions && (
+                        <div className="region-results">
+                          <div className="px-4 py-2 bg-gray-50 border-b border-gray-200">
+                            <p className="text-xs font-semibold text-gray-600 uppercase">
+                              {t("Regions")}
+                            </p>
+                          </div>
+                          {availableRegions.map((region: any) => (
+                            <div
+                              key={`region_${region.id}`}
+                              className="w-full py-3 px-4 hover:bg-green-50 cursor-pointer border-b border-gray-100 transition-colors duration-200 flex items-center gap-3"
+                              onClick={() => handelAddValue(region, "region")}
+                            >
+                              <div className="flex-shrink-0">
+                                <Icons.IoLocationOutline
+                                  size={18}
+                                  className="text-[#9f8151]"
+                                />
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-sm font-medium text-[#094834]">
+                                  {region?.name}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {t("Search by region")}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* PROPERTIES */}
+                      {hasProperties && (
+                        <div className="property-results">
+                          {hasRegions && (
+                            <div className="px-4 py-2 bg-gray-50 border-b border-gray-200">
+                              <p className="text-xs font-semibold text-gray-600 uppercase">
+                                {t("Properties")}
+                              </p>
+                            </div>
+                          )}
+                          {filteredProperties.map((item: any) => (
+                            <div
+                              key={`property_${item.id}`}
+                              className="w-full py-3 px-4 hover:bg-green-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors duration-200 flex items-center gap-3"
+                              onClick={() =>
+                                handelAddValue(item, "property")
+                              }
+                            >
+                              <div className="flex-shrink-0">
+                                <Icons.IoBusiness
+                                  size={18}
+                                  className="text-green-600"
+                                />
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-sm font-medium text-gray-900 capitalize">
+                                  {item?.title}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {item?.region?.name}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
+              </div>
+            )}
           </div>
 
           {/* Divider - Hidden on mobile */}
@@ -521,17 +642,20 @@ const MultiSearch = () => {
           <div className="relative">
             <MainDropdown
               title={(() => {
-                // ====== BEDROOM TITLE (multi-select aware) ======
+                // ====== BEDROOM TITLE (multi-select aware, with "7+")
                 let bedTitle = "";
-                const selectedBeds: number[] = [
-                  ...(values?.selected_bedrooms ?? []),
-                ]
-                  .map((v: number) => Number(v))
-                  .sort((a, b) => a - b);
 
-                if (selectedBeds.length > 0) {
-                  const hasStudio = selectedBeds.includes(0);
-                  const numericBeds = selectedBeds.filter((n) => n !== 0);
+                const selectedBedsRaw = values?.selected_bedrooms ?? [];
+
+                if (selectedBedsRaw.length > 0) {
+                  const hasStudio = selectedBedsRaw.includes(0);
+                  const hasSevenPlus = selectedBedsRaw.includes("7+");
+
+                  const numericBeds = (selectedBedsRaw as any[])
+                    .filter(
+                      (n) => typeof n === "number" && n !== 0
+                    ) as number[];
+                  numericBeds.sort((a, b) => a - b);
 
                   const isContiguous =
                     numericBeds.length <= 1 ||
@@ -539,25 +663,40 @@ const MultiSearch = () => {
                       (v, i) => i === 0 || v === numericBeds[i - 1] + 1
                     );
 
-                  const parts: string[] = [];
+                  const labels: string[] = [];
 
                   if (hasStudio) {
-                    parts.push(t("Studio"));
+                    labels.push(t("Studio"));
                   }
 
-                  if (numericBeds.length === 1) {
-                    parts.push(`${numericBeds[0]} ${t("Beds")}`);
-                  } else if (numericBeds.length > 1 && isContiguous) {
-                    parts.push(
-                      `${numericBeds[0]}-${
+                  if (numericBeds.length > 0) {
+                    let numericLabel = "";
+                    if (numericBeds.length === 1) {
+                      numericLabel = `${numericBeds[0]}`;
+                    } else if (isContiguous) {
+                      numericLabel = `${numericBeds[0]}-${
                         numericBeds[numericBeds.length - 1]
-                      } ${t("Beds")}`
-                    );
-                  } else if (numericBeds.length > 1) {
-                    parts.push(`${numericBeds.join(", ")} ${t("Beds")}`);
+                      }`;
+                    } else {
+                      numericLabel = numericBeds.join(", ");
+                    }
+                    labels.push(numericLabel);
                   }
 
-                  bedTitle = parts.join(", ");
+                  if (hasSevenPlus) {
+                    labels.push("7+");
+                  }
+
+                  if (
+                    labels.length === 1 &&
+                    hasStudio &&
+                    !numericBeds.length &&
+                    !hasSevenPlus
+                  ) {
+                    bedTitle = t("Studio");
+                  } else if (labels.length > 0) {
+                    bedTitle = `${labels.join(", ")} ${t("Beds")}`;
+                  }
                 } else if (
                   values?.bedroom_min === 0 &&
                   values?.bedroom_max === 0
@@ -595,29 +734,46 @@ const MultiSearch = () => {
                   bedTitle = t("Beds");
                 }
 
-                // ====== BATHROOM TITLE (multi-select aware) ======
+                // ====== BATHROOM TITLE (multi-select aware, supports "7+") ======
                 let bathTitle = "";
-                const selectedBaths: number[] = [
-                  ...(values?.selected_bathrooms ?? []),
-                ]
-                  .map((v: number) => Number(v))
-                  .sort((a, b) => a - b);
 
-                if (selectedBaths.length > 0) {
+                const selectedBathsRaw = values?.selected_bathrooms ?? [];
+
+                if (selectedBathsRaw.length > 0) {
+                  const hasSevenPlus = selectedBathsRaw.includes("7+");
+
+                  const numericBaths = (selectedBathsRaw as any[])
+                    .filter((n) => typeof n === "number") as number[];
+                  numericBaths.sort((a, b) => a - b);
+
                   const isContiguous =
-                    selectedBaths.length <= 1 ||
-                    selectedBaths.every(
-                      (v, i) => i === 0 || v === selectedBaths[i - 1] + 1
+                    numericBaths.length <= 1 ||
+                    numericBaths.every(
+                      (v, i) => i === 0 || v === numericBaths[i - 1] + 1
                     );
 
-                  if (selectedBaths.length === 1) {
-                    bathTitle = `${selectedBaths[0]} ${t("Baths")}`;
-                  } else if (isContiguous) {
-                    bathTitle = `${selectedBaths[0]}-${
-                      selectedBaths[selectedBaths.length - 1]
-                    } ${t("Baths")}`;
-                  } else {
-                    bathTitle = `${selectedBaths.join(", ")} ${t("Baths")}`;
+                  const labels: string[] = [];
+
+                  if (numericBaths.length > 0) {
+                    let numericLabel = "";
+                    if (numericBaths.length === 1) {
+                      numericLabel = `${numericBaths[0]}`;
+                    } else if (isContiguous) {
+                      numericLabel = `${numericBaths[0]}-${
+                        numericBaths[numericBaths.length - 1]
+                      }`;
+                    } else {
+                      numericLabel = numericBaths.join(", ");
+                    }
+                    labels.push(numericLabel);
+                  }
+
+                  if (hasSevenPlus) {
+                    labels.push("7+");
+                  }
+
+                  if (labels.length > 0) {
+                    bathTitle = `${labels.join(", ")} ${t("Baths")}`;
                   }
                 } else if (
                   values?.bathroom_min !== undefined &&
@@ -665,14 +821,17 @@ const MultiSearch = () => {
                           const current = prev.selected_bedrooms || [];
                           const exists = current.includes(0);
                           const next = exists
-                            ? current.filter((v: number) => v !== 0)
+                            ? current.filter((v: any) => v !== 0)
                             : [...current, 0];
 
-                          const min = next.length
-                            ? Math.min(...next)
+                          const numeric = next.filter(
+                            (n: any) => typeof n === "number"
+                          ) as number[];
+                          const min = numeric.length
+                            ? Math.min(...numeric)
                             : undefined;
-                          const max = next.length
-                            ? Math.max(...next)
+                          const max = numeric.length
+                            ? Math.max(...numeric)
                             : undefined;
 
                           return {
@@ -692,7 +851,7 @@ const MultiSearch = () => {
                       {t("Studio")}
                     </button>
 
-                    {/* 1–6,7 */}
+                    {/* 1–7 */}
                     {[1, 2, 3, 4, 5, 6, 7].map((num) => (
                       <button
                         key={num}
@@ -701,14 +860,17 @@ const MultiSearch = () => {
                             const current = prev.selected_bedrooms || [];
                             const exists = current.includes(num);
                             const next = exists
-                              ? current.filter((v: number) => v !== num)
+                              ? current.filter((v: any) => v !== num)
                               : [...current, num];
 
-                            const min = next.length
-                              ? Math.min(...next)
+                            const numeric = next.filter(
+                              (n: any) => typeof n === "number"
+                            ) as number[];
+                            const min = numeric.length
+                              ? Math.min(...numeric)
                               : undefined;
-                            const max = next.length
-                              ? Math.max(...next)
+                            const max = numeric.length
+                              ? Math.max(...numeric)
                               : undefined;
 
                             return {
@@ -729,22 +891,28 @@ const MultiSearch = () => {
                       </button>
                     ))}
 
-                    {/* 7+ treated as 7 */}
+                    {/* 7+ stored as "7+" */}
                     <button
                       onClick={() =>
                         setValues((prev: any) => {
                           const current = prev.selected_bedrooms || [];
-                          const exists = current.includes(7);
+                          const exists = current.includes("7+");
                           const next = exists
-                            ? current.filter((v: number) => v !== 7)
-                            : [...current, 7];
+                            ? current.filter((v: any) => v !== "7+")
+                            : [...current, "7+"];
 
-                          const min = next.length
-                            ? Math.min(...next)
+                          const numeric = next.filter(
+                            (n: any) => typeof n === "number"
+                          ) as number[];
+                          const min = numeric.length
+                            ? Math.min(...numeric)
                             : undefined;
-                          const max = next.length
-                            ? Math.max(...next)
-                            : undefined;
+                          let max: number | string | undefined =
+                            numeric.length ? Math.max(...numeric) : undefined;
+
+                          if (next.includes("7+")) {
+                            max = "7+";
+                          }
 
                           return {
                             ...prev,
@@ -755,7 +923,7 @@ const MultiSearch = () => {
                         })
                       }
                       className={`px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
-                        (values?.selected_bedrooms || []).includes(7)
+                        (values?.selected_bedrooms || []).includes("7+")
                           ? "bg-primary text-white shadow-md"
                           : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                       }`}
@@ -809,22 +977,28 @@ const MultiSearch = () => {
                       </button>
                     ))}
 
-                    {/* 7+ */}
+                    {/* 7+ Bathrooms stored as "7+" */}
                     <button
                       onClick={() =>
                         setValues((prev: any) => {
                           const current = prev.selected_bathrooms || [];
-                          const exists = current.includes(7);
+                          const exists = current.includes("7+");
                           const next = exists
-                            ? current.filter((v: number) => v !== 7)
-                            : [...current, 7];
+                            ? current.filter((v: any) => v !== "7+")
+                            : [...current, "7+"];
 
-                          const min = next.length
-                            ? Math.min(...next)
+                          const numeric = next.filter(
+                            (n: any) => typeof n === "number"
+                          ) as number[];
+                          const min = numeric.length
+                            ? Math.min(...numeric)
                             : undefined;
-                          const max = next.length
-                            ? Math.max(...next)
-                            : undefined;
+                          let max: number | string | undefined =
+                            numeric.length ? Math.max(...numeric) : undefined;
+
+                          if (next.includes("7+")) {
+                            max = "7+"; // this will be sent to backend
+                          }
 
                           return {
                             ...prev,
@@ -835,7 +1009,7 @@ const MultiSearch = () => {
                         })
                       }
                       className={`px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
-                        (values?.selected_bathrooms || []).includes(7)
+                        (values?.selected_bathrooms || []).includes("7+")
                           ? "bg-primary text-white shadow-md"
                           : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                       }`}
@@ -918,15 +1092,7 @@ const MultiSearch = () => {
           {/* Price Range with Manual Input */}
           <div className="relative">
             <MainDropdown
-              title={
-                values?.price_min || values?.price_max
-                  ? values?.price_min && values?.price_max
-                    ? `${values.price_min}-${values.price_max}`
-                    : values?.price_min
-                    ? `${values.price_min}+`
-                    : `<${values.price_max}`
-                  : t("Price Range")
-              }
+              title={t("Price Range")}
               triggerClass="h-12 md:h-10 px-3 text-gray-700 text-sm  hover:bg-gray-100 rounded-xl transition-colors duration-200 flex items-center gap-1 bg-white/90 border border-gray-200 w-full md:w-auto justify-center md:justify-start"
             >
               <div className="w-full p-4 bg-white rounded-xl shadow-lg">
@@ -1018,175 +1184,6 @@ const MultiSearch = () => {
             <span className="hidden sm:inline">{t("Search")}</span>
           </button>
         </div>
-
-        {/* Combined Selected Items + Search Results Dropdown */}
-        {isSearchFocused && (
-          <div className="w-full max-w-md max-h-80 rounded-xl bg-white border border-gray-200 shadow-xl absolute top-full mt-2 z-[9999] overflow-y-auto">
-            {(() => {
-              const selectedItemsIds = (valueSearch || []).map(
-                (item: any) => item.uniqueId
-              );
-
-              const hasSelected = (valueSearch || []).length > 0;
-
-              const availableRegions = filteredRegions.filter(
-                (region: any) => !selectedItemsIds.includes(`region_${region.id}`)
-              );
-
-              const filteredProperties = (
-                options?.data?.data?.properties || []
-              ).filter(
-                (item: any) =>
-                  !selectedItemsIds.includes(`property_${item?.id}`)
-              );
-
-              const hasRegions = availableRegions.length > 0;
-              const hasProperties = filteredProperties.length > 0;
-              const hasResults = hasSelected || hasRegions || hasProperties;
-
-              if (!hasResults) {
-                return (
-                  <p className="text-sm font-medium text-gray-500 flex-center py-4">
-                    {t("no data found")}
-                  </p>
-                );
-              }
-
-              return (
-                <>
-                  {/* SELECTED ITEMS ON TOP (like "Selected locations") */}
-                  {hasSelected && (
-                    <div className="px-4 py-3 flex flex-wrap gap-2">
-                      {valueSearch.map((item: any, index: number) => (
-                        <div
-                          key={item.uniqueId || item.id || index}
-                          className={`selected_badge flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${
-                            item.type === "region"
-                              ? "bg-blue-100 text-900"
-                              : "bg-primary/10 text-primary"
-                          }`}
-                        >
-                          {item.type === "region" ? (
-                            <Icons.IoLocationOutline
-                              size={12}
-                              className="flex-shrink-0"
-                            />
-                          ) : (
-                            <Icons.IoBusiness
-                              size={12}
-                              className="flex-shrink-0"
-                            />
-                          )}
-
-                          <span className="truncate max-w-[160px]">
-                            {item.title || item.name}
-                          </span>
-
-                          <button
-                            onClick={() => {
-                              setValueSearch((prev: any) =>
-                                prev.filter(
-                                  (searchItem: any) =>
-                                    searchItem.uniqueId !== item.uniqueId
-                                )
-                              );
-
-                              if (item.type === "property") {
-                                setSearchId((prev: any) =>
-                                  prev.filter((id: any) => id !== item.id)
-                                );
-                              }
-                            }}
-                            className={`ml-1 rounded-full p-0.5 transition-colors duration-200 ${
-                              item.type === "region"
-                                ? "hover:bg-blue-200"
-                                : "hover:bg-primary/20"
-                            }`}
-                            aria-label={`Remove ${item.title || item.name}`}
-                          >
-                            <Icons.FaTimes size={14} />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {(hasRegions || hasProperties) && hasSelected && (
-                    <div className="border-t border-gray-200" />
-                  )}
-
-                  {/* REGIONS */}
-                  {hasRegions && (
-                    <div className="region-results">
-                      <div className="px-4 py-2 bg-gray-50 border-b border-gray-200">
-                        <p className="text-xs font-semibold text-gray-600 uppercase">
-                          {t("Regions")}
-                        </p>
-                      </div>
-                      {availableRegions.map((region: any) => (
-                        <div
-                          key={`region_${region.id}`}
-                          className="w-full py-3 px-4 hover:bg-green-50 cursor-pointer border-b border-gray-100 transition-colors duration-200 flex items-center gap-3"
-                          onClick={() => handelAddValue(region, "region")}
-                        >
-                          <div className="flex-shrink-0">
-                            <Icons.IoLocationOutline
-                              size={18}
-                              className="text-[#9f8151]"
-                            />
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-sm font-medium text-[#094834]">
-                              {region?.name}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {t("Search by region")}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* PROPERTIES */}
-                  {hasProperties && (
-                    <div className="property-results">
-                      {hasRegions && (
-                        <div className="px-4 py-2 bg-gray-50 border-b border-gray-200">
-                          <p className="text-xs font-semibold text-gray-600 uppercase">
-                            {t("Properties")}
-                          </p>
-                        </div>
-                      )}
-                      {filteredProperties.map((item: any) => (
-                        <div
-                          key={`property_${item.id}`}
-                          className="w-full py-3 px-4 hover:bg-green-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors duration-200 flex items-center gap-3"
-                          onClick={() => handelAddValue(item, "property")}
-                        >
-                          <div className="flex-shrink-0">
-                            <Icons.IoBusiness
-                              size={18}
-                              className="text-green-600"
-                            />
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-sm font-medium text-gray-900 capitalize">
-                              {item?.title}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {item?.region?.name}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </>
-              );
-            })()}
-          </div>
-        )}
       </div>
     </div>
   );
