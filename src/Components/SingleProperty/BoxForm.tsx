@@ -1,25 +1,28 @@
 import Icons from "@/Constants/Icons";
-// import Btn from "../Btn";
 import { useMemo, type FC } from "react";
 import FormikContainer from "../Forms/FormikContainer";
 import type { FormikValues } from "formik";
-import { ArrayInputBoxSingle } from "@/assets/Data/SingleProperty";
 import ContactAgent from "@/Services/ContactAgent";
 import UseQueryPost from "@/hooks/useQueryPost";
 import { useTranslation } from "react-i18next";
 import ImagesUrl from "@/helpers/ImagesURL";
 import { motion } from "framer-motion";
 import contactAgentValidationSchema from "@/Utils/Validations/contactAgentValidation";
+import ArrayInputsContact from "@/assets/Data/Home/ArrayInputsContact";
 
 type BoxFormProps = {
   item: any;
 };
 
+interface OnSubmitProps {
+  setSubmitting: (isSubmitting: boolean) => void;
+  resetForm: () => void;
+}
+
 const initialValues = {
-  first_name: "",
-  second_name: "",
-  phone_two: "",
-  prefix: "",
+  name: "",
+  email: "",
+  phone: "",
   message: "",
 };
 
@@ -27,10 +30,11 @@ const BoxForm: FC<BoxFormProps> = ({ item }) => {
   const { t } = useTranslation();
 
   const onClick = (name: string, number: string) => {
-    if (name == "whatsapp") {
-      window.open(`https://wa.me/${number}`);
+    if (!number) return;
+    if (name === "whatsapp") {
+      window.open(`https://wa.me/${number}`, "_blank", "noopener,noreferrer");
     } else {
-      window.open(`tel:${number}`);
+      window.open(`tel:${number}`, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -39,14 +43,15 @@ const BoxForm: FC<BoxFormProps> = ({ item }) => {
       <button
         key={contact?.type}
         onClick={() => onClick(contact?.type, contact?.value)}
-        className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-[.4s] ${
-          contact?.type == "phone"
-            ? "bg-primary text-white hover:bg-[#9f8151]"
-            : "bg-green-500 text-white hover:bg-[#9f8151]"
+        className={`flex items-center justify-center gap-2 px-6 py-3 change_border font-semibold transition-all duration-[.4s] ${
+          contact?.type === "phone"
+            ? "bg-[#9f8151] text-white hover:bg-[#094834]"
+            : "bg-[#094834] text-white hover:bg-[#9f8151]"
         }`}
+        type="button"
       >
         <span className="flex-shrink-0">
-          {contact?.type == "phone" ? (
+          {contact?.type === "phone" ? (
             <Icons.LuPhone size={20} />
           ) : (
             <Icons.FaWhatsapp size={20} />
@@ -65,18 +70,26 @@ const BoxForm: FC<BoxFormProps> = ({ item }) => {
     { success: t("Sent successfully") }
   );
 
-  const onSubmit = (values: FormikValues, onSubmitProps: any) => {
+  const onSubmit = (values: FormikValues, onSubmitProps: OnSubmitProps) => {
+    // Map new form fields to your existing API payload
     mutateAsync({
-      ...values,
+      // old API expects first_name / second_name
+      first_name: values?.name || "",
+      second_name: "",
+      // old API expects phone_two + prefix + phone_one mapping
+      phone_two: values?.phone || "",
+      prefix: values?.phone || "",
+      phone_one: values?.phone || "",
+      message: values?.message || "",
       agent_id: item?.agent?.id,
       property_id: item?.id,
-      phone_one: values["prefix"],
+      email: values?.email || "",
     })
-      .then((_) => {
+      .then(() => {
         onSubmitProps.setSubmitting(false);
         onSubmitProps.resetForm();
       })
-      .catch((_) => {
+      .catch(() => {
         onSubmitProps.setSubmitting(false);
       });
   };
@@ -86,12 +99,12 @@ const BoxForm: FC<BoxFormProps> = ({ item }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8 sticky top-6"
+      className="bg-white change_border shadow-lg border border-gray-100 p-6 md:p-8 sticky top-6"
     >
       {/* Agent Info */}
-      <div className="flex items-center gap-4 mb-6 p-4 bg-gray-50 rounded-xl">
+      <div className="flex items-center gap-4 mb-6 p-4 bg-gray-50 change_border">
         {item?.agent?.image && (
-          <div className="w-16 h-16 rounded-xl overflow-hidden">
+          <div className="w-28 h-28 change_border overflow-hidden">
             <img
               src={ImagesUrl(item.agent.image)}
               className="w-full h-full object-cover"
@@ -99,27 +112,37 @@ const BoxForm: FC<BoxFormProps> = ({ item }) => {
             />
           </div>
         )}
+
         <div className="flex-1">
-          <h3 className="text-lg font-bold text-gray-900">
+          <p className="text-primary text_stying text-sm">
+            <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
+              {t("Name")}:
+            </span>{" "}
             {item?.agent?.name}
-          </h3>
-          <p className="text-sm text-gray-600">
-            <span className="font-medium">{t("Email")}:</span>{" "}
+          </p>
+          <p className="text-primary text_stying text-sm">
+            <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
+              {t("Email")}:
+            </span>{" "}
             {item?.agent?.email}
           </p>
-          <p className="text-sm text-gray-600">
-            <span className="font-medium">{t("address")}:</span>{" "}
+          <p className="text-primary text_stying text-sm">
+            <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
+              {t("Address")}:
+            </span>{" "}
             {item?.agent?.address}
           </p>
         </div>
       </div>
 
       {/* Contact Buttons */}
-      <div className="grid grid-cols-2 gap-3 mb-6">{renderContact}</div>
+      {Array.isArray(item?.agent?.contact_inf) && item.agent.contact_inf.length > 0 && (
+        <div className="grid grid-cols-2 gap-3 mb-6">{renderContact}</div>
+      )}
 
       {/* Contact Form */}
       <div className="space-y-4">
-        <h4 className="text-lg font-bold text-gray-900">
+        <h4 className="font-semibold text-primary text-xl key_information_heading">
           {t("Request Information")}
         </h4>
 
@@ -127,17 +150,13 @@ const BoxForm: FC<BoxFormProps> = ({ item }) => {
           conClassName="space-y-4"
           onSubmit={onSubmit}
           initialValues={initialValues}
-          arrayOnInputs={ArrayInputBoxSingle}
+          // ✅ Use the same form input generator style as your other Form
+          arrayOnInputs={ArrayInputsContact()}
           schema={contactAgentValidationSchema}
-          btnClass="w-full bg-primary text-white py-3 px-6 rounded-xl font-semibold hover:bg-[#9f8151] transition-all duration-[.4s]"
+          // ✅ Keep BoxForm UI same as before (your existing button design)
+          btnClass="search_btn_styling change_border rounded-[4px] font-NeueHaasGrotesk !text-[16px] md:text-[14px] capitalize flex-center cursor-pointer search_btn_styling h-12 md:h-10 px-6 bg-primary hover:bg-[#9f8151] text-white font-semibold change_border transition-all duration-[.4s] flex items-center justify-center gap-2 flex-center w-fit min-h-[50px] min-w-[200px]"
           btnText={t("request information")}
-        >
-          <div className="text-xs text-gray-500 text-center">
-            {t(
-              "By clicking Submit, you agree to our Terms & Conditions and Privacy Policy."
-            )}
-          </div>
-        </FormikContainer>
+        />
       </div>
     </motion.div>
   );

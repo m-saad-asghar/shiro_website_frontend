@@ -166,7 +166,7 @@ const Buy = () => {
     return (
       <div className="w-full min-h-screen">
         <div className="pt-[120px] md:pt-[140px] lg:pt-[127.2px]" />
-        <div className="container mx-auto px-4 py-8">
+        <div className="custom_container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, index) => (
               <div
@@ -225,7 +225,7 @@ const Buy = () => {
 
             {/* Properties Section */}
             {data?.data?.data?.properties.length == 0 ? (
-              <div className="container mx-auto px-4 py-16">
+              <div className="custom_container mx-auto px-4 py-16">
                 <div className="text-center">
                   <div className="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
                     <Icons.IoIosSearch size={48} className="text-gray-400" />
@@ -273,23 +273,21 @@ const Buy = () => {
                 </div>
               </div>
             ) : (
-              <div className="container mx-auto px-4 py-8">
+              <div className="custom_container mx-auto px-4 py-8 property_container_styling">
                 {/* View Controls */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                   {/* Results Info */}
                   <div className="flex items-center gap-4">
-                    <h2 className="text-xl font-semibold text-gray-900">
-                      {t("Properties")}
+                    <h2 className="text-xl font-semibold text-[#9f8151]">
+                      {t("Properties For Sale")}
                     </h2>
                     <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full">
-                      {data?.data?.data?.properties?.length || 0} {t("results")}
+                      {data?.data?.data?.properties?.length || 0} {t("Listings")}
                     </span>
                   </div>
 
-                  {/* View Mode Toggle & Sort */}
                   <div className="flex items-center gap-4">
-                    {/* Sort Dropdown */}
-                    <div className="flex items-center gap-3">
+                    {/* <div className="flex items-center gap-3">
                       <span className="text-sm font-medium text-gray-700">
                         {t("Sort")}:
                       </span>
@@ -343,10 +341,9 @@ const Buy = () => {
                           </button>
                         </div>
                       </MainDropdown>
-                    </div>
+                    </div> */}
 
-                    {/* View Mode Toggle */}
-                    <div className="flex items-center gap-3">
+                    {/* <div className="flex items-center gap-3">
                       <span className="text-sm font-medium text-gray-700">
                         {t("View as")}:
                       </span>
@@ -379,11 +376,11 @@ const Buy = () => {
                           </button>
                         </div>
                       </MainDropdown>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
 
-                {/* Properties Grid/List */}
+               
                 <AllProperties
                   item={data?.data?.data}
                   status={status}
@@ -396,8 +393,8 @@ const Buy = () => {
             )}
 
             {/* Additional Sections */}
-            <OurTeam />
-            <AvailableOptions />
+            {/* <OurTeam />
+            <AvailableOptions /> */}
           </>
         )}
       </div>

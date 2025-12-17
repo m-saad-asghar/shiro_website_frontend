@@ -183,7 +183,7 @@ const Rent = () => {
     return (
       <div className="w-full min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
         <div className="pt-[120px] md:pt-[140px] lg:pt-[127.2px]" />
-        <div className="container mx-auto px-4 py-8">
+        <div className="custom_container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, index) => (
               <div
@@ -215,7 +215,7 @@ const Rent = () => {
           content="Discover rental properties in Dubai. Browse furnished and unfurnished apartments, villas, and townhouses for rent. Find your perfect home with Shiro Real Estate."
         />
       </Helmet>
-      <div className="w-full h-full  pt-[120px] md:pt-[140px] lg:pt-[127.2px]">
+      <div className="">
         {status == "error" ? (
           <LoaderPage message="Loading properties..." size="lg" />
         ) : (
@@ -235,7 +235,7 @@ const Rent = () => {
             />
             {/* Properties Section */}
             {data?.data?.data?.properties.length == 0 ? (
-              <div className="container mx-auto px-4 py-16">
+              <div className="custom_container mx-auto px-4 py-16">
                 <div className="text-center">
                   <div className="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
                     <Icons.IoIosSearch size={48} className="text-gray-400" />
@@ -281,16 +281,16 @@ const Rent = () => {
                 </div>
               </div>
             ) : (
-              <div className="container mx-auto px-4 py-8">
+              <div className="custom_container mx-auto px-4 py-8 property_container_styling">
                 {/* View Controls */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                   {/* Results Info */}
                   <div className="flex items-center gap-4">
-                    <h2 className="text-xl font-semibold text-gray-900">
-                      {t("Properties")}
+                    <h2 className="text-xl font-semibold text-[#9f8151]">
+                      {t("Properties For Rent")}
                     </h2>
                     <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full">
-                      {data?.data?.data?.properties?.length || 0} {t("results")}
+                      {data?.data?.data?.properties?.length || 0} {t("Listings")}
                     </span>
                   </div>
 
@@ -403,8 +403,8 @@ const Rent = () => {
               </div>
             )}
 
-            <OurTeam />
-            <AvailableOptions />
+            {/* <OurTeam />
+            <AvailableOptions /> */}
           </>
         )}
       </div>

@@ -63,65 +63,65 @@ const HeaderItem = () => {
       },
 
       // PROJECTS – keeps dropdown
-      {
-        id: 3,
-        li: t("Projects"),
-        link: "/new-projects",
-        content: {
-          option: [
-            {
-              id: 1,
-              item: t("New Projects"),
-              link: "/new-projects",
-            },
-            ...(propertyTypes?.map(
-              (propertyType: { id: number; name: string }, index: number) => ({
-                id: index + 2,
-                item: propertyType.name,
-                link: "/new-projects",
-                property_type_id: propertyType.id,
-              })
-            ) || []),
-          ],
-        },
-      },
+      // {
+      //   id: 3,
+      //   li: t("Projects"),
+      //   link: "/new-projects",
+      //   content: {
+      //     option: [
+      //       {
+      //         id: 1,
+      //         item: t("New Projects"),
+      //         link: "/new-projects",
+      //       },
+      //       ...(propertyTypes?.map(
+      //         (propertyType: { id: number; name: string }, index: number) => ({
+      //           id: index + 2,
+      //           item: propertyType.name,
+      //           link: "/new-projects",
+      //           property_type_id: propertyType.id,
+      //         })
+      //       ) || []),
+      //     ],
+      //   },
+      // },
 
       {
         id: 4,
         li: t("Developers"),
         link: "/developers",
-        content: {
-          option: renderDeveloper,
-        },
+        // content: {
+        //   option: renderDeveloper,
+        // },
       },
 
-      {
-        id: 5,
-        li: t("Areas"),
-        link: "/area-guides",
-        content: {
-          option: [
-            { id: 1, item: t("Dubai Creek Harbour") },
-            { id: 2, item: t("Business Bay") },
-            { id: 3, item: t("Dubai Marina") },
-            { id: 4, item: t("Palm Jumeirah") },
-            { id: 5, item: t("Downtown Dubai") },
-            { id: 6, item: t("Jumeirah Village Circle") },
-            { id: 7, item: t("EMAAR Beachfront") },
-            { id: 8, item: t("Sobha Hartland") },
-            { id: 9, item: t("Jumeirah") },
-            { id: 10, item: t("Meydan") },
-            { id: 11, item: t("Expo City") },
-            { id: 12, item: t("All Areas in Dubai") },
-          ],
-        },
-      },
+      // {
+      //   id: 5,
+      //   li: t("Areas"),
+      //   link: "/area-guides",
+      //   content: {
+      //     option: [
+      //       { id: 1, item: t("Dubai Creek Harbour") },
+      //       { id: 2, item: t("Business Bay") },
+      //       { id: 3, item: t("Dubai Marina") },
+      //       { id: 4, item: t("Palm Jumeirah") },
+      //       { id: 5, item: t("Downtown Dubai") },
+      //       { id: 6, item: t("Jumeirah Village Circle") },
+      //       { id: 7, item: t("EMAAR Beachfront") },
+      //       { id: 8, item: t("Sobha Hartland") },
+      //       { id: 9, item: t("Jumeirah") },
+      //       { id: 10, item: t("Meydan") },
+      //       { id: 11, item: t("Expo City") },
+      //       { id: 12, item: t("All Areas in Dubai") },
+      //     ],
+      //   },
+      // },
 
-      {
-        id: 6,
-        li: t("Blog"),
-        link: "/blog",
-      },
+      // {
+      //   id: 6,
+      //   li: t("Blog"),
+      //   link: "/blog",
+      // },
 
       {
         id: 7,

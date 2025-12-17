@@ -41,11 +41,11 @@ const FormBox = () => {
         <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
           <Icons.LuPhone size={28} className="text-primary" />
         </div>
-        <h4 className="text-xl font-bold text-gray-900 mb-2">
+        <h4 className="font-semibold text-primary text-xl">
           {t("Get a call within 55 seconds")}
         </h4>
-        <p className="text-gray-600 text-sm leading-relaxed">
-          <span className="font-semibold text-primary">
+        <p className="rounded-lg text-sm transition-all duration-200 mb-1 mt-1 text-[#9f8151] text_stying">
+          <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
             {t("Leave your number")}
           </span>{" "}
           {t("and we will call you right away!")}

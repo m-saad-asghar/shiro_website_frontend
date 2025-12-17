@@ -50,16 +50,16 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8 w-full">
+    <div className="bg-white change_border shadow-lg border border-gray-100 p-6 md:p-8 w-full">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+        {/* <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
           <Icons.IoIosInformationCircleOutline className="w-5 h-5 text-primary" />
-        </div>
+        </div> */}
         <div>
-          <h3 className="text-xl font-bold text-gray-900">
+          <h3 className="font-semibold text-primary text-xl">
             {t("Calculate Your Mortgage")}
           </h3>
-          <p className="text-sm text-gray-600">
+          <p className="text-primary text_stying text-sm">
             {t("Estimate your monthly payments")}
           </p>
         </div>
@@ -68,8 +68,8 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
       <div className="space-y-6">
         {/* Down Payment */}
         <div>
-          <div className="flex justify-between items-center mb-3">
-            <label className="text-sm font-medium text-gray-700">
+          <div className="flex justify-between items-center">
+            <label className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
               {t("Down Payment")}
             </label>
             <span className="text-sm font-semibold text-primary">
@@ -93,7 +93,7 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
                 }%, #e5e7eb 100%)`,
               }}
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-2">
+            <div className="flex justify-between font-semibold rounded-lg text-sm mt-1 transition-all duration-200 mb-1 text-[#9f8151]">
               <span>5%</span>
               <span>50%</span>
             </div>
@@ -102,12 +102,12 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
 
         {/* Loan Term */}
         <div>
-          <div className="flex justify-between items-center mb-3">
-            <label className="text-sm font-medium text-gray-700">
+          <div className="flex justify-between items-center">
+            <label className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
               {t("Loan Term")}
             </label>
             <span className="text-sm font-semibold text-primary">
-              {loanTerm} {t("years")}
+              {loanTerm} {t("Years")}
             </span>
           </div>
           <div className="relative">
@@ -126,17 +126,17 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
                 }%, #e5e7eb 100%)`,
               }}
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-2">
-              <span>5 {t("years")}</span>
-              <span>30 {t("years")}</span>
+            <div className="flex justify-between font-semibold rounded-lg text-sm mt-1 transition-all duration-200 mb-1 text-[#9f8151]">
+              <span>5 {t("Years")}</span>
+              <span>30 {t("Years")}</span>
             </div>
           </div>
         </div>
 
         {/* Interest Rate */}
         <div>
-          <div className="flex justify-between items-center mb-3">
-            <label className="text-sm font-medium text-gray-700">
+          <div className="flex justify-between items-center">
+            <label className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
               {t("Interest Rate")}
             </label>
             <span className="text-sm font-semibold text-primary">
@@ -160,7 +160,7 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
                 }%, #e5e7eb 100%)`,
               }}
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-2">
+            <div className="flex justify-between font-semibold rounded-lg text-sm mt-1 transition-all duration-200 mb-1 text-[#9f8151]">
               <span>2%</span>
               <span>8%</span>
             </div>
@@ -170,23 +170,31 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
         {/* Results */}
         <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-xl p-6 space-y-4">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600">{t("Loan Amount")}</span>
+            <span className="font-semibold rounded-lg text-sm transition-all duration-200 text-[#9f8151]">{t("Loan Amount")}</span>
             <span className="font-bold text-lg text-primary">
               {formatCurrency(loanAmount)}
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600">
+            <span className="font-semibold rounded-lg text-sm transition-all duration-200 text-[#9f8151]">
               {t("Monthly Payment")}
             </span>
-            <span className="font-bold text-xl text-primary">
+            <span className="font-bold text-lg text-primary">
               {formatCurrency(monthlyPayment)}
             </span>
           </div>
-          <div className="flex justify-between items-center text-xs text-gray-500">
+          <div className="flex justify-between items-center">
+            <span className="font-semibold rounded-lg text-sm transition-all duration-200 text-[#9f8151]">
+              {t("Total Interest")}
+            </span>
+            <span className="font-bold text-lg text-primary">
+              {formatCurrency(totalInterest)}
+            </span>
+          </div>
+          {/* <div className="flex justify-between items-center text-xs text-gray-500">
             <span>{t("Total Interest")}</span>
             <span>{formatCurrency(totalInterest)}</span>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

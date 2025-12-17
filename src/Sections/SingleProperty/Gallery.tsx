@@ -5,57 +5,51 @@ import { useTranslation } from "react-i18next";
 import Icons from "@/Constants/Icons";
 
 type GalleryProps = {
-  item: any;
+  item: any; // array of image urls
   status: "pending" | "error" | "success";
 };
 
 const Gallery: FC<GalleryProps> = ({ item, status }) => {
   const { t } = useTranslation();
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
 
-  const openLightbox = (index: number) => {
-    setSelectedImage(index);
-  };
-
-  const closeLightbox = useCallback(() => {
-    setSelectedImage(null);
-  }, []);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<number>(0);
 
   // Filter out empty images
   const validImages = useMemo(() => {
-    return item?.filter((img: string) => img && img.trim() !== "") || [];
+    return (item?.filter((img: string) => img && img.trim() !== "") || []) as string[];
   }, [item]);
 
+  const openGallery = (index: number) => {
+    setSelectedImage(index);
+    setIsOpen(true);
+  };
+
+  const closeGallery = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
   const nextImage = useCallback(() => {
-    if (selectedImage !== null && validImages.length > 0) {
-      setSelectedImage((selectedImage + 1) % validImages.length);
-    }
-  }, [selectedImage, validImages]);
+    if (!validImages.length) return;
+    setSelectedImage((p) => (p + 1) % validImages.length);
+  }, [validImages]);
 
   const prevImage = useCallback(() => {
-    if (selectedImage !== null && validImages.length > 0) {
-      setSelectedImage(
-        selectedImage === 0 ? validImages.length - 1 : selectedImage - 1
-      );
-    }
-  }, [selectedImage, validImages]);
+    if (!validImages.length) return;
+    setSelectedImage((p) => (p === 0 ? validImages.length - 1 : p - 1));
+  }, [validImages]);
 
-  // Handle keyboard navigation and prevent body scroll
+  // Keyboard + lock scroll when open
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (selectedImage !== null) {
-        if (e.key === "Escape") {
-          closeLightbox();
-        } else if (e.key === "ArrowRight") {
-          nextImage();
-        } else if (e.key === "ArrowLeft") {
-          prevImage();
-        }
-      }
+      if (!isOpen) return;
+
+      if (e.key === "Escape") closeGallery();
+      if (e.key === "ArrowRight") nextImage();
+      if (e.key === "ArrowLeft") prevImage();
     };
 
-    // Prevent body scroll when lightbox is open
-    if (selectedImage !== null) {
+    if (isOpen) {
       document.body.style.overflow = "hidden";
       window.addEventListener("keydown", handleKeyDown);
     } else {
@@ -66,183 +60,209 @@ const Gallery: FC<GalleryProps> = ({ item, status }) => {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selectedImage, closeLightbox, nextImage, prevImage]);
+  }, [isOpen, closeGallery, nextImage, prevImage]);
 
   if (status === "pending" || status === "error") {
     return (
       <div className="w-full space-y-4 md:space-y-6">
-        <Skeleton className="w-full h-[300px] md:h-[400px] lg:h-[600px] rounded-2xl bg-gray-200" />
+        <Skeleton className="w-full h-[300px] md:h-[420px] lg:h-[520px] bg-gray-200" />
         <div className="grid grid-cols-2 gap-4 md:gap-6">
-          <Skeleton className="w-full h-[200px] md:h-[250px] lg:h-[300px] rounded-2xl bg-gray-200" />
-          <Skeleton className="w-full h-[200px] md:h-[250px] lg:h-[300px] rounded-2xl bg-gray-200" />
+          <Skeleton className="w-full h-[180px] md:h-[220px] lg:h-[250px] bg-gray-200" />
+          <Skeleton className="w-full h-[180px] md:h-[220px] lg:h-[250px] bg-gray-200" />
         </div>
       </div>
     );
   }
 
-  if (validImages.length === 0) {
-    return null;
-  }
+  if (validImages.length === 0) return null;
+
+  const moreCount = Math.max(0, validImages.length - 3);
 
   return (
     <>
-      <div className="w-full space-y-4 md:space-y-6">
-        {/* Main Image - Full Width */}
+      {/* ===== MAIN LAYOUT ===== */}
+<div className="w-full">
+  <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 md:gap-6">
+
+    {/* LEFT BIG IMAGE */}
+    <motion.div
+      className="relative overflow-hidden change_border cursor-pointer group"
+      onClick={() => openGallery(0)}
+    >
+      <img
+        src={validImages[0]}
+        className="w-full 
+          h-[360px] 
+          sm:h-[420px] 
+          md:h-[480px] 
+          lg:h-[680px]   /* ⬅️ +30% height */
+          object-cover change_border"
+        alt="Main Property"
+      />
+
+      <div className="absolute bottom-4 left-4 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-xl flex items-center gap-2 text-primary shadow-lg">
+        <Icons.IoImageOutline className="w-5 h-5" />
+        <span className="text-sm font-semibold">
+          {validImages.length} {t("Photos")}
+        </span>
+      </div>
+    </motion.div>
+
+    {/* RIGHT COLUMN */}
+    <div className="
+      grid 
+      grid-cols-1          /* 📱 mobile: stacked */
+      sm:grid-cols-1 
+      lg:grid-cols-1       /* 🖥 desktop: stacked */
+      gap-4 md:gap-6
+    ">
+
+      {/* IMAGE 2 */}
+      {validImages[1] && (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-full rounded-2xl relative overflow-hidden group cursor-pointer"
-          onClick={() => openLightbox(0)}
+          className="relative overflow-hidden change_border cursor-pointer group"
+          onClick={() => openGallery(1)}
         >
           <img
-            src={validImages[0]}
-            className="w-full h-[300px] md:h-[400px] lg:h-[600px] object-cover rounded-2xl"
-            alt="Main Property Image"
+            src={validImages[1]}
+            className="w-full 
+              h-[240px] 
+              sm:h-[280px] 
+              md:h-[320px] 
+              lg:h-[330px]   /* ⬅️ half of left */
+              object-cover change_border"
+            alt="Property 2"
+          />
+        </motion.div>
+      )}
+
+      {/* IMAGE 3 */}
+      {validImages[2] && (
+        <motion.div
+          className="relative overflow-hidden change_border cursor-pointer group"
+          onClick={() => openGallery(2)}
+        >
+          <img
+            src={validImages[2]}
+            className="w-full 
+              h-[240px] 
+              sm:h-[280px] 
+              md:h-[320px] 
+              lg:h-[330px]   /* ⬅️ half of left */
+              object-cover change_border"
+            alt="Property 3"
           />
 
-          {/* Badge with photo count */}
-          <div className="absolute bottom-4 left-4 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-xl flex items-center gap-2 text-primary shadow-lg">
-            <Icons.IoImageOutline className="w-5 h-5" />
-            <span className="text-sm font-semibold">
-              {validImages.length} {t("photo")}
-            </span>
-          </div>
-
-          {/* Hover overlay */}
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
+          {validImages.length > 3 && (
+            <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+              <div className="text-white text-3xl font-bold">
+                +{validImages.length - 3}
+              </div>
+            </div>
+          )}
         </motion.div>
+      )}
+    </div>
+  </div>
+</div>
 
-        {/* Side Images - Grid Layout */}
-        {validImages.length > 1 && (
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-            {/* Second Image */}
-            {validImages[1] && (
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="w-full h-[200px] md:h-[250px] lg:h-[300px] rounded-2xl overflow-hidden group cursor-pointer relative"
-                onClick={() => openLightbox(1)}
-              >
-                <img
-                  src={validImages[1]}
-                  className="w-full h-full object-cover rounded-2xl"
-                  alt="Property Image 2"
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
-              </motion.div>
-            )}
 
-            {/* Third Image */}
-            {validImages[2] && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                className="w-full h-[200px] md:h-[250px] lg:h-[300px] rounded-2xl overflow-hidden group cursor-pointer relative"
-                onClick={() => openLightbox(2)}
-              >
-                <img
-                  src={validImages[2]}
-                  className="w-full h-full object-cover rounded-2xl"
-                  alt="Property Image 3"
-                />
-
-                {/* Show "+X more" overlay if there are more than 3 images */}
-                {validImages.length > 3 && (
-                  <div className="absolute inset-0 bg-black/60 group-hover:bg-black/70 transition-all duration-300 flex flex-col items-center justify-center">
-                    <Icons.IoImageOutline className="w-12 h-12 text-white mb-2" />
-                    <span className="text-white text-2xl font-bold">
-                      +{validImages.length - 3}
-                    </span>
-                    <span className="text-white text-sm mt-1">More Photos</span>
-                  </div>
-                )}
-
-                {/* Regular hover overlay for 3rd image if no more images */}
-                {validImages.length <= 3 && (
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
-                )}
-              </motion.div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Lightbox */}
+      {/* ======= OVERLAY GALLERY (main preview + thumbnails below) ======= */}
       <AnimatePresence>
-        {selectedImage !== null && (
+        {isOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 z-[9999] flex items-center justify-center p-4"
-            onClick={closeLightbox}
+            className="fixed inset-0 bg-black/90 z-[9999] p-4 md:p-8"
+            onClick={closeGallery}
           >
-            {/* Close Button */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                closeLightbox();
-              }}
-              className="absolute top-4 right-4 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:text-white transition-all duration-[.4s] z-[10000]"
-              aria-label="Close gallery"
+            <div
+              className="w-full h-full max-w-6xl mx-auto flex flex-col"
+              onClick={(e) => e.stopPropagation()}
             >
-              <Icons.LiaTimesSolid className="w-6 h-6" />
-            </button>
+              {/* Top bar */}
+              <div className="flex items-center justify-between text-white mb-4">
+                <div className="text-sm font-semibold">
+                  {selectedImage + 1} / {validImages.length}
+                </div>
 
-            {/* Navigation Buttons */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                prevImage();
-              }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-[.4s] z-[10000]"
-              aria-label="Previous image"
-            >
-              <Icons.IoChevronBack className="w-6 h-6" />
-            </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={prevImage}
+                    className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all"
+                    aria-label="Previous image"
+                  >
+                    <Icons.IoChevronBack className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={nextImage}
+                    className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all"
+                    aria-label="Next image"
+                  >
+                    <Icons.IoChevronForward className="w-5 h-5" />
+                  </button>
 
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                nextImage();
-              }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all duration-[.4s] z-[10000]"
-              aria-label="Next image"
-            >
-              <Icons.IoChevronForward className="w-6 h-6" />
-            </button>
+                  <button
+                    onClick={closeGallery}
+                    className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center transition-all"
+                    aria-label="Close gallery"
+                  >
+                    <Icons.LiaTimesSolid className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
 
-            {/* Image */}
-            {validImages[selectedImage] && (
+              {/* Main preview */}
               <motion.div
                 key={selectedImage}
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-                className="relative max-w-5xl max-h-full"
-                onClick={(e) => e.stopPropagation()}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.2 }}
+                className="flex-1 flex items-center justify-center"
               >
                 <img
                   src={validImages[selectedImage]}
-                  alt={`Property Image ${selectedImage + 1}`}
-                  className="max-w-full max-h-[85vh] object-contain rounded-lg"
+                  alt={`Property ${selectedImage + 1}`}
+                  className="max-w-full max-h-[62vh] md:max-h-[70vh] object-contain rounded-xl"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src =
                       "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f3f4f6'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='16' fill='%239ca3af'%3ENo Image Available%3C/text%3E%3C/svg%3E";
                   }}
                 />
-
-                {/* Image Counter */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm text-white px-6 py-2 rounded-full text-sm font-semibold border border-white/20">
-                  {selectedImage + 1} / {validImages.length}
-                </div>
               </motion.div>
-            )}
+
+              {/* Thumbnails (all images down) */}
+              <div className="mt-4">
+                <div className="flex gap-3 overflow-x-auto pb-2">
+                  {validImages.map((src, idx) => (
+                    <button
+                      key={`${src}-${idx}`}
+                      onClick={() => setSelectedImage(idx)}
+                      className={`relative flex-shrink-0 rounded-lg overflow-hidden border transition-all ${
+                        idx === selectedImage ? "border-white" : "border-white/20 hover:border-white/60"
+                      }`}
+                      aria-label={`Open image ${idx + 1}`}
+                    >
+                      <img
+                        src={src}
+                        alt={`Thumb ${idx + 1}`}
+                        className="w-[90px] h-[64px] md:w-[110px] md:h-[78px] object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = "/src/assets/Images/Property/placeholder-property.jpg";
+                        }}
+                      />
+                      {idx === selectedImage && (
+                        <div className="absolute inset-0 ring-2 ring-white/80" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

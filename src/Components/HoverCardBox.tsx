@@ -22,18 +22,38 @@ const HoverCardBox: FC<HoverCardBoxProps> = ({
   onClick,
   href,
   ariaLabel,
-  // content,
+  content,
 }) => {
   const { t } = useTranslation();
+
+  // ✅ show dropdown ONLY when content has options
+  const hasDropdown =
+    !!content &&
+    Array.isArray(content?.option) &&
+    content.option.length > 0;
+
+  // helper for trigger class (unchanged)
+  const triggerClass = twMerge(
+    `${
+      onScroll == true ? "text-dark" : "text-light"
+    } text-[16px] px-4 py-2 font-[500] cursor-pointer rounded-lg transition-all duration-200 hover:bg-primary/10 relative group`,
+    className
+  );
+
+  // ✅ If no dropdown, don’t mount HoverCardContent at all (prevents empty box)
+  if (!hasDropdown) {
+    return (
+      <div className={triggerClass} onClick={onClick} aria-label={ariaLabel || title}>
+        <span className="relative z-10">{title}</span>
+        <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+      </div>
+    );
+  }
+
   return (
     <HoverCard openDelay={0} closeDelay={0}>
       <HoverCardTrigger
-        className={twMerge(
-          `${
-            onScroll == true ? "text-dark" : "text-light"
-          } text-[16px] px-4 py-2 font-[500] cursor-pointer rounded-lg transition-all duration-200 hover:bg-primary/10 relative group`,
-          className
-        )}
+        className={triggerClass}
         onClick={onClick}
         asChild={!!href}
       >
@@ -51,21 +71,18 @@ const HoverCardBox: FC<HoverCardBoxProps> = ({
           </>
         )}
       </HoverCardTrigger>
-      {(title == t("More Options") ||
-        title == t("Buy") ||
-        title == t("Rent") ||
-        title == t("Projects")) && (
-        <HoverCardContent
-          className={
-            title == t("More Options")
-              ? "w-[440px] bg-white/95 backdrop-blur-md rounded-xl border border-gray-200/50 shadow-xl p-6"
-              : "bg-white/95 backdrop-blur-md rounded-xl border border-gray-200/50 shadow-xl p-6"
-          }
-          sideOffset={8}
-        >
-          {children}
-        </HoverCardContent>
-      )}
+
+      {/* ✅ Dropdown only when hasDropdown === true */}
+      <HoverCardContent
+        className={
+          title == t("More Options")
+            ? "w-[440px] bg-white/95 backdrop-blur-md rounded-xl border border-gray-200/50 shadow-xl p-6"
+            : "bg-white/95 backdrop-blur-md rounded-xl border border-gray-200/50 shadow-xl p-6"
+        }
+        sideOffset={8}
+      >
+        {children}
+      </HoverCardContent>
     </HoverCard>
   );
 };

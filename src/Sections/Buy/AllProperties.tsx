@@ -17,7 +17,7 @@ const AllProperties: FC<AllPropertiesProps> = ({
   item,
   status,
   pagination,
-  viewMode = "grid",
+  viewMode = "list",
   page = 1,
   setPage,
 }) => {
@@ -46,7 +46,9 @@ const AllProperties: FC<AllPropertiesProps> = ({
   }, [viewMode]);
 
   return (
-    <div className="container pb-[44px] md:pb-6 lg:pb-6 pt-[20px]">
+    <div 
+    // className="container pb-[44px] md:pb-6 lg:pb-6 pt-[20px]"
+    >
       <div className="w-full grid grid-cols-1 lg:grid-cols-[1fr_.4fr] gap-[32px]">
         <div
           className={`w-full h-full ${

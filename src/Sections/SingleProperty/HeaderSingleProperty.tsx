@@ -38,7 +38,7 @@ const HeaderSingleProperty: FC<HeaderSinglePropertyProps> = ({
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full py-6 flex items-center justify-between pt-24"
+      className="w-full py-0 flex items-center justify-between pt-5"
     >
       {/* Back Button */}
       <motion.button
@@ -50,13 +50,13 @@ const HeaderSingleProperty: FC<HeaderSinglePropertyProps> = ({
         <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-colors duration-200">
           <Icons.FaLongArrowAltLeft className="w-5 h-5" />
         </div>
-        <span className="text-base font-semibold underline capitalize">
+        <span className="text-base  capitalize">
           {t("Back to Listings")}
         </span>
       </motion.button>
 
       {/* Save Button */}
-      <motion.button
+      {/* <motion.button
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={handleFavoite}
@@ -68,7 +68,7 @@ const HeaderSingleProperty: FC<HeaderSinglePropertyProps> = ({
       >
         <Icons.IoMdHeart className="w-5 h-5" />
         <span className="text-base font-semibold capitalize">{t("save")}</span>
-      </motion.button>
+      </motion.button> */}
     </motion.div>
   );
 };

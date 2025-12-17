@@ -66,12 +66,12 @@ const RecommendedProperties: FC<RecommendedPropertiesProps> = ({
   }, []);
 
   return (
-    <div className="container py-4 md:py-6 lg:py-6">
-      <div className="mb-[32px] md:mb-[40px] lg:mb-[48px]">
-        <h2 className="text-[24px] md:text-[28px] lg:text-[32px] font-[700] text-primary mb-[8px]">
+    <div className="">
+      <div className="mb-6">
+        <h2 className="font-semibold text-primary text-xl">
           {t("Recommended Properties")}
         </h2>
-        <p className="text-[14px] md:text-[16px] text-dark font-[400]">
+        <p className="text-primary text_stying text-sm">
           {t("Discover more properties you might like")}
         </p>
       </div>

@@ -1,5 +1,5 @@
 import Icons from "../../../Constants/Icons";
-import { useContext, useEffect, type FC } from "react";
+import { useContext, useEffect, type FC, useMemo } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -25,7 +25,8 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
   const { formatArea } = useAreaUnit();
 
   const onClick = (name: string, number: string) => {
-    if (name == "whatsapp") {
+    if (!number) return;
+    if (name === "whatsapp") {
       window.open(`https://wa.me/${number}`);
     } else {
       window.open(`tel:${number}`);
@@ -33,6 +34,7 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
   };
 
   const handleEmailClick = (email: string) => {
+    if (!email) return;
     window.open(`mailto:${email}`);
   };
 
@@ -46,12 +48,27 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
     );
   };
 
+  const goToDetails = () => {
+    if (isProject(item)) {
+      navigate(`/project/${item?.slug || item?.id}`);
+    } else {
+      const propertySlug =
+        item?.slug ||
+        `${item?.num_bedroom}-bedroom-${
+          item?.property_type?.name || "property"
+        }-for-${location?.pathname.split("/")[1] || "buy"}-in-${
+          item?.location?.replace(/\s+/g, "-") || "dubai"
+        }`.toLowerCase();
+      navigate(`/single-property/${propertySlug}`);
+    }
+  };
+
   // toggle isFavorite
   const { isFavorite, toggleFavoriteOptimistic, token } =
     useContext(FavoiteContext);
 
   useEffect(() => {
-    // This effect is used to track favorite state changes
+    // track favorite state changes
   }, [isFavorite]);
 
   const handleFavoite = async () => {
@@ -65,6 +82,14 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
       navigate("/login");
     }
   };
+
+  // pick first phone + whatsapp from agent.contact_inf
+  const contacts = useMemo(() => {
+    const inf = item?.agent?.contact_inf || [];
+    const phone = inf.find((x: any) => x?.type === "phone")?.value;
+    const whatsapp = inf.find((x: any) => x?.type === "whatsapp")?.value;
+    return { phone, whatsapp };
+  }, [item]);
 
   const renderImagesCard = item?.images?.map((imageUrl: any, index: number) => {
     return (
@@ -82,16 +107,14 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
     );
   });
 
+  // GRID contact buttons (unchanged)
   const renderContact = item?.agent?.contact_inf?.map(
     (item: any, index: number) => (
       <button
         key={item?.id || index}
         onClick={() => onClick(item?.type, item?.value)}
-        className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
-          item?.type === "phone"
-            ? "bg-primary text-white hover:bg-primary/90"
-            : "bg-green-500 text-white hover:bg-green-600"
-        }`}
+        className={`flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:bg-[#9f8151] hover:text-white text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2`}
+      style={{borderRadius: 8}}
         aria-label={`Contact via ${item?.type}`}
       >
         {item?.type === "phone" ? (
@@ -104,11 +127,11 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
     )
   );
 
-  // Add email button if agent has email
   const emailButton = item?.agent?.email ? (
     <button
       onClick={() => handleEmailClick(item.agent.email)}
-      className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium bg-[#9f8151] text-white hover:bg-[#8a6f45] transition-all duration-300"
+       className="flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:text-white hover:bg-[#9f8151] text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2"
+     style={{borderRadius: 8}}
       aria-label="Send email to agent"
     >
       <Icons.MdOutlineEmail size={16} />
@@ -116,18 +139,38 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
     </button>
   ) : null;
 
+  // List-mode extra description (safe fallback)
+  const descriptionText =
+    item?.description ||
+    item?.short_description ||
+    item?.excerpt ||
+    item?.summary ||
+    "";
+
+  const shortDesc =
+    typeof descriptionText === "string"
+      ? descriptionText.replace(/<\/?[^>]+(>|$)/g, "").trim()
+      : "";
+
+  const trimmedDesc =
+    shortDesc.length > 120 ? `${shortDesc.slice(0, 120)}...` : shortDesc;
+
   return (
     <div
-      className={`group bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 overflow-hidden relative ${
+      className={`group bg-white change_border  border border-gray-100 overflow-hidden relative ${
         viewMode === "grid"
-          ? "h-[500px] flex flex-col"
-          : "h-[140px] flex flex-row"
+          ? "h-auto flex flex-col"
+          : // ✅ LIST MODE RESPONSIVE (mobile stacked, desktop row)
+            "flex flex-col md:flex-row w-full"
       }`}
     >
       {/* Favorite Button - Only show if user is logged in */}
       {token && (
         <button
-          onClick={handleFavoite}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleFavoite();
+          }}
           className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm p-2 rounded-full shadow-lg hover:bg-white transition-all duration-300 group-hover:scale-110 z-20"
           aria-label={
             isFavorite?.includes(item?.id)
@@ -145,50 +188,56 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
           />
         </button>
       )}
-      {/* Image Section */}
+
+      {/* ✅ Image Section (ONLY UPDATED PART) */}
       <div
-        className={`relative overflow-hidden ${
-          viewMode === "grid" ? "h-[280px]" : "h-full w-[200px]"
+        className={`relative overflow-hidden flex-shrink-0 ${
+          viewMode === "grid"
+            ? "h-[280px]"
+            : // LIST MODE: fixed height so ALL images are consistent + fill the left area
+              "h-[280px] sm:h-[340px] md:h-[280px] lg:h-[320px] w-full md:w-[360px] lg:w-[420px]"
         }`}
       >
         {item?.images && item.images.length > 0 ? (
-          <Carousel className="w-full h-full">
-            <CarouselContent className="relative m-0 p-0 h-full">
-              {renderImagesCard}
+          <Carousel className="w-full h-full relative">
+            <CarouselContent className="m-0 p-0 h-full">
+              {(item?.images || []).map((imageUrl: any, index: number) => (
+                <CarouselItem key={index} className="p-0 m-0 h-full">
+                  <img
+                    src={imageUrl}
+                    className="w-full h-[400px] object-cover"
+                    alt={item?.title || "Property image"}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src =
+                        "/src/assets/Images/Property/placeholder-property.jpg";
+                    }}
+                  />
+                </CarouselItem>
+              ))}
             </CarouselContent>
+
             {item.images.length > 1 && (
               <>
-                <CarouselPrevious className="absolute top-1/2 left-3 transform -translate-y-1/2 bg-white/90 hover:bg-white text-primary border-0 shadow-lg z-10" />
-                <CarouselNext className="absolute top-1/2 right-3 transform -translate-y-1/2 bg-white/90 hover:bg-white text-primary border-0 shadow-lg z-10" />
+                <CarouselPrevious className="absolute top-1/2 left-3 -translate-y-1/2 bg-white/90 hover:bg-white text-primary border-0 shadow-lg z-10" />
+                <CarouselNext className="absolute top-1/2 right-3 -translate-y-1/2 bg-white/90 hover:bg-white text-primary border-0 shadow-lg z-10" />
               </>
             )}
           </Carousel>
         ) : (
           <div className="w-full h-full bg-gray-200 flex items-center justify-center">
             <div className="text-center">
-              <Icons.IoImageOutline
-                size={48}
-                className="text-gray-400 mx-auto mb-2"
-              />
-              <p className="text-gray-500 text-sm">
-                {t("No images available")}
-              </p>
+              <Icons.IoImageOutline size={48} className="text-gray-400 mx-auto mb-2" />
+              <p className="text-gray-500 text-sm">{t("No images available")}</p>
             </div>
           </div>
         )}
 
-        {/* Image Counter */}
-        {viewMode === "grid" && item?.images && item.images.length > 0 && (
-          <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-2 text-sm font-medium text-primary shadow-lg">
+        {/* ✅ Always INSIDE image (grid + list) */}
+        {item?.images && item.images.length > 0 && (
+          <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-2 text-sm font-medium text-primary shadow-lg z-20">
             <Icons.IoImageOutline size={16} />
             <span>{item?.images?.length}</span>
-          </div>
-        )}
-
-        {/* Property Type Badge */}
-        {viewMode === "grid" && (
-          <div className="absolute top-3 left-3 bg-primary text-white px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide shadow-lg z-10">
-            {item?.property_type?.name}
           </div>
         )}
       </div>
@@ -198,160 +247,237 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
         className={`flex-1 cursor-pointer ${
           viewMode === "grid"
             ? "p-6 flex flex-col justify-between"
-            : "p-4 flex flex-col justify-center"
+            : "p-4 sm:p-5 md:p-6 flex flex-col justify-between"
         }`}
-        onClick={() => {
-          if (isProject(item)) {
-            // Navigate to project page
-            navigate(`/project/${item?.slug || item?.id}`);
-          } else {
-            // Navigate to regular property page
-            // Use slug if available, otherwise create descriptive slug
-            const propertySlug =
-              item.slug ||
-              `${item?.num_bedroom}-bedroom-${
-                item?.property_type?.name || "property"
-              }-for-${location?.pathname.split("/")[1] || "buy"}-in-${
-                item?.location?.replace(/\s+/g, "-") || "dubai"
-              }`.toLowerCase();
-            navigate(`/single-property/${propertySlug}`);
-          }
-        }}
+        onClick={goToDetails}
       >
-        {/* Property Info */}
-        <div className={viewMode === "grid" ? "space-y-4" : "space-y-2"}>
-          {/* Title */}
-          <h3
-            className={`font-semibold text-gray-900 line-clamp-2 leading-tight group-hover:text-primary transition-colors duration-300 ${
-              viewMode === "grid" ? "text-lg" : "text-base"
-            }`}
-          >
-            {item?.title}
-          </h3>
+        {/* ===== GRID stays same (your existing blocks) ===== */}
+        {viewMode === "grid" ? (
+          <>
+            <div className="space-y-4">
+              <h3 className="font-semibold text-primary text-xl" style={{marginBottom: '5px'}}>
+                {item?.title}
+              </h3>
 
-          {/* Price */}
-          <div className="flex items-center justify-between">
-            <div
-              className={`font-bold text-primary ${
-                viewMode === "grid" ? "text-2xl" : "text-lg"
-              }`}
-            >
-              {item?.currency_symbol} {item?.converted_price}
-            </div>
-            <div className="text-sm text-gray-500">
-              {location?.pathname.split("/")[1] === "rent"
-                ? item.rental_period
-                : " "}
-            </div>
+              <div className="flex items-center justify-between" style={{marginBottom: '30px'}}>
+                <div className="text-primary text_stying text-lg">
+                  {item?.currency_symbol} {item?.converted_price}
+                </div>
+                <div className="text-sm text-gray-500">
+                  {location?.pathname.split("/")[1] === "rent"
+                    ? item.rental_period
+                    : " "}
+                </div>
+              </div>
+
+              {/* Selling Points */}
+          <div className="flex items-center gap-2 text-gray-600" style={{marginBottom: 0}}>
+            <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-2 text-[#9f8151]">{item?.selling_points}</span>
           </div>
 
-          {/* Location */}
-          <div className="flex items-center gap-2 text-gray-600">
-            <Icons.CiLocationOn
-              size={viewMode === "grid" ? 18 : 16}
-              className="text-primary"
-            />
-            <span className="text-sm font-medium">{item?.location}</span>
-          </div>
+              <div className="flex items-center gap-2 text-gray-600" style={{marginBottom: '0px'}}>
+                <Icons.CiLocationOn
+                  size={18}
+                  className="text-primary rounded-lg text-sm transition-all duration-200 mb-1 !text-[#9f8151]"
+                />
+                <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
+                  {item?.location}
+                </span>
+              </div>
 
-          {/* Property Features */}
-          <div
-            className={`grid gap-4 py-3 border-t border-gray-100 ${
-              viewMode === "grid" ? "grid-cols-3" : "grid-cols-3"
-            }`}
-          >
-            {viewMode === "grid" ? (
-              <>
+              <div className="grid gap-4 grid-cols-3">
                 <div className="flex items-center gap-2">
-                  <img
-                    src={Images.BedsIcons}
-                    className="w-5 h-5"
-                    alt="Bedrooms icon"
-                  />
+                  <img src={Images.BedsIcons} className="w-5 h-5" alt="Beds" />
                   <div className="text-center">
-                    <div className="text-sm font-semibold text-primary">
-                      {item?.num_bedroom === 0
-                        ? t("Studio")
-                        : item?.num_bedroom}
+                    <div className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
+                      {item?.num_bedroom === 0 ? t("Studio") : item?.num_bedroom} {t("Bedrooms")}
                     </div>
-                    <div className="text-xs text-gray-500">{t("Bedrooms")}</div>
+                    {/* <div className="text-xs text-gray-500">{t("Bedrooms")}</div> */}
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <img
-                    src={Images.BathIcons}
-                    className="w-5 h-5"
-                    alt="Bathrooms icon"
-                  />
+                  <img src={Images.BathIcons} className="w-5 h-5" alt="Bath" />
                   <div className="text-center">
-                    <div className="text-sm font-semibold text-primary">
-                      {item?.num_bathroom}
+                    <div className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
+                      {item?.num_bathroom}  {t("Bathrooms")}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    {/* <div className="text-xs text-gray-500">
                       {t("Bathrooms")}
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <img
                     src={Images.ArrowIcons}
                     className="w-5 h-5"
-                    alt="Area icon"
+                    alt="Area"
                   />
                   <div className="text-center">
-                    <div className="text-sm font-semibold text-primary">
-                      {formatArea(item?.area)}
+                    <div className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
+                      {formatArea(item?.area)} {t("Area")}
                     </div>
-                    <div className="text-xs text-gray-500">{t("Area")}</div>
+                    {/* <div className="text-xs text-gray-500">{t("Area")}</div> */}
                   </div>
                 </div>
-              </>
-            ) : (
-              <>
-                <div className="flex items-center gap-1">
-                  <img
-                    src={Images.BedsIcons}
-                    className="w-4 h-4"
-                    alt="Bedrooms icon"
-                  />
-                  <span className="text-xs text-gray-600">
+              </div>
+            </div>
+
+            {item?.agent && (
+              <div
+                className="grid gap-4 pt-2 grid-cols-3"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {renderContact}
+                {emailButton}
+              </div>
+            )}
+          </>
+        ) : (
+          // ===== LIST MODE: add content like reference image =====
+          <>
+            <div className="space-y-2">
+
+               {/* Title / subtitle */}
+              <div className="font-semibold text-primary text-xl" style={{marginBottom: '5px'}}>
+                {item?.title}
+              </div>
+
+              {/* Price */}
+              <div className="text-primary text_stying text-lg" style={{marginBottom: '10px'}}>
+                {item?.currency_symbol} {item?.converted_price}
+              </div>
+
+              {/* Location line */}
+              <div className="flex items-center gap-2 text-sm text-gray-500" style={{marginBottom: '5px'}}>
+                <Icons.CiLocationOn size={16} className="!text-[#9f8151]" />
+                <span className="rounded-lg text-sm transition-all duration-200 mb-1 mt-1 text-[#9f8151] text_stying">{item?.location}</span>
+              </div>
+
+              {/* Location line */}
+              <div className="flex items-center gap-2 text-sm text-gray-500" style={{marginBottom: '0px'}}>
+                <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]" style={{marginBottom: '0px'}}>{item?.selling_points}</span>
+              </div>
+
+              {/* Apartment | bed | bath | area row */}
+              <div className="flex items-center flex-wrap gap-6" style={{marginBottom: '0px'}}>
+                <div className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
+                  {item?.property_type?.name || t("Apartment")}
+                </div>
+
+                <div className="flex items-center gap-2 text-sm text-gray-700">
+                  <img src={Images.BedsIcons} className="w-4 h-4" alt="Beds" />
+                  <span className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
                     {item?.num_bedroom === 0 ? t("Studio") : item?.num_bedroom}
                   </span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <img
-                    src={Images.BathIcons}
-                    className="w-4 h-4"
-                    alt="Bathrooms icon"
-                  />
-                  <span className="text-xs text-gray-600">
+
+                <div className="flex items-center gap-2 text-sm text-gray-700">
+                  <img src={Images.BathIcons} className="w-4 h-4" alt="Bath" />
+                  <span className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
                     {item?.num_bathroom}
                   </span>
                 </div>
-                <div className="flex items-center gap-1">
+
+                <div className="flex items-center gap-2 text-sm text-gray-700">
                   <img
                     src={Images.ArrowIcons}
                     className="w-4 h-4"
-                    alt="Area icon"
+                    alt="Area"
                   />
-                  <span className="text-xs text-gray-600">
+                  <span className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
                     {formatArea(item?.area)}
                   </span>
                 </div>
-              </>
-            )}
-          </div>
-        </div>
+              </div>
 
-        {/* Contact Buttons */}
-        {viewMode === "grid" && item?.agent && (
-          <div
-            className="flex justify-center gap-3 pt-4 border-t border-gray-100"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {renderContact}
-            {emailButton}
-          </div>
+              {/* Description + more */}
+              {trimmedDesc ? (
+                <div className="text-sm text-gray-600">
+                  <span className="!text-[14px] text-dark leading-relaxed !text-[#0b4a35] down_styling !leading-normal">{trimmedDesc}</span>{" "}
+                  <button
+                    className="text-primary underline font-medium"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      goToDetails();
+                    }}
+                  >
+                    {t("Read More")}
+                  </button>
+                </div>
+              ) : null}
+
+               <div
+              className="pt-4 mt-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="grid grid-cols-3 gap-3">
+                {/* Book a Viewing */}
+                <button
+  onClick={() => {
+    goToDetails();
+  }}
+  className="
+    flex items-center justify-center gap-2
+    search_btn_styling
+    h-12 md:h-10
+    px-6
+    bg-[#f1ece0]
+    hover:bg-[#9f8151]
+    hover:text-white
+    text-[#0b4a35]
+    font-semibold
+    transition-all duration-[.4s]
+    change_border
+    whitespace-nowrap
+  "
+>
+  <Icons.MdOutlineEmail size={18} className="opacity-80 shrink-0" />
+
+  <span className="hidden sm:inline whitespace-nowrap">
+    {t("Book a Viewing")}
+  </span>
+
+  <span className="sm:hidden whitespace-nowrap">
+    {t("Book")}
+  </span>
+</button>
+
+
+                {/* Call */}
+                <button
+  onClick={() => onClick("phone", contacts.phone)}
+  className="
+    flex items-center justify-center gap-2
+    search_btn_styling
+    h-12 md:h-10
+    px-6
+    bg-[#f1ece0]
+    hover:bg-[#9f8151]
+    hover:text-white
+    text-[#0b4a35]
+    font-semibold
+    transition-all duration-[.4s]
+    change_border
+    whitespace-nowrap
+  "
+>
+  <Icons.LuPhone size={18} className="opacity-80 shrink-0" />
+  <span className="whitespace-nowrap">{t("Call")}</span>
+</button>
+
+
+                {/* WhatsApp */}
+                <button
+                  onClick={() => onClick("whatsapp", contacts.whatsapp)}
+                  className="flex items-center justify-center gap-2 search_btn_styling w-fit h-12 md:h-10 px-6 bg-[#f1ece0] hover:bg-[#9f8151] hover:text-white text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2 change_border"
+                  aria-label="WhatsApp"
+                >
+                  <Icons.FaWhatsapp size={18} className="text-green-600" />
+                </button>
+              </div>
+            </div>
+            </div>
+          </>
         )}
       </div>
     </div>

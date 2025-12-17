@@ -15,6 +15,7 @@ import {
 import PropertiesServices from "@/Services/PropertiesServices";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
+import ExploreProperty from "@/Sections/Home/ExploreProperty";
 
 const SingleProperty = () => {
   const { slug } = useParams();
@@ -50,7 +51,7 @@ const SingleProperty = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="container mx-auto px-4 py-8"
+          className="custom_container"
         >
           {/* Header */}
           <motion.div
@@ -66,7 +67,7 @@ const SingleProperty = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-8"
+            className="mt-5"
           >
             <Gallery item={show?.property?.images} status={status} />
           </motion.div>
@@ -80,7 +81,7 @@ const SingleProperty = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="bg-white rounded-2xl shadow-lg p-6 md:p-8"
+                className="bg-white  shadow-lg p-6 md:p-8 change_border"
               >
                 <InfoProperty item={show?.property} />
               </motion.div>
@@ -107,7 +108,7 @@ const SingleProperty = () => {
               </motion.div>
 
               {/* Currency Converter */}
-              <motion.div
+              {/* <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
@@ -119,7 +120,7 @@ const SingleProperty = () => {
                     0
                   }
                 />
-              </motion.div>
+              </motion.div> */}
             </div>
           </div>
 
@@ -128,7 +129,7 @@ const SingleProperty = () => {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="mt-16"
+            className=""
           >
             <MortgageCalculator
               propertyPrice={show?.property?.converted_price || 0}
@@ -140,7 +141,7 @@ const SingleProperty = () => {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
-            className="mt-16"
+            className="mt-16 mb-20"
           >
             <RecommendedProperties
               currentPropertyId={id || ""}

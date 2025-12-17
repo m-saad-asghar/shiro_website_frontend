@@ -2,20 +2,20 @@ const ArrayInputBoxSingle = [
   {
     id: 1,
     name: "first_name",
-    placeholder: "first name",
+    placeholder: "First name",
     control: "input",
     type: "text",
     required: true,
-    inptClass: "w-full h-[48px] border border-gray rounded-[2px] mt-[8px]",
+    inptClass: "w-full h-[48px] border border-gray rounded-[2px] mt-[8px] pl-[14px]",
   },
   {
     id: 2,
     name: "second_name",
-    placeholder: "second name",
+    placeholder: "Last Name",
     control: "input",
     type: "text",
     required: true,
-    inptClass: "w-full h-[48px] border border-gray rounded-[2px] mt-[8px]",
+    inptClass: "w-full h-[48px] border border-gray rounded-[2px] mt-[8px] pl-[14px]",
   },
   {
     id: 3,
@@ -31,7 +31,7 @@ const ArrayInputBoxSingle = [
     as: "textarea",
     control: "input",
     name: "message",
-    placeholder: "مرحبا! أريد الاستفسار عن خدمة ...",
+    placeholder: "Message",
     required: true,
     inptClass:
       "w-full h-[100px] border border-gray rounded-[2px]  mt-[8px] p-[16px] capitalize text-[14px] outline-none text-dark",
