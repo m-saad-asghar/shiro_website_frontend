@@ -56,10 +56,10 @@ const ContactForm: React.FC<ContactFormProps> = ({
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       viewport={{ once: true }}
-      className="w-full bg-white rounded-2xl shadow-xl border border-gray-100 p-8"
+      className="w-full bg-white change_border shadow-xl border border-gray-100 p-8"
     >
       {/* Header */}
-      <div className="text-center mb-8">
+      {/* <div className="text-center mb-8">
         <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
           <Icons.IoMailOutline size={24} className="text-primary" />
         </div>
@@ -67,7 +67,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
         <p className="text-gray-600">
           {t("Get in touch with our team for professional assistance")}
         </p>
-      </div>
+      </div> */}
 
       {/* Form */}
       <div className="space-y-6">
@@ -84,7 +84,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
       {/* Additional Info */}
       <div className="mt-8 pt-6 border-t border-gray-100">
-        <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+        <div className="flex items-center justify-center gap-2 text-sm text-[#9f8151]">
           <Icons.IoShieldCheckmarkOutline size={16} />
           <span>{t("Your information is secure and confidential")}</span>
         </div>

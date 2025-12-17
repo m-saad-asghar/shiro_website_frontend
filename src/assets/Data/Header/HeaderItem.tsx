@@ -87,9 +87,17 @@ const HeaderItem = () => {
       // },
 
       {
-        id: 4,
+        id: 3,
         li: t("Developers"),
         link: "/developers",
+        // content: {
+        //   option: renderDeveloper,
+        // },
+      },
+       {
+        id: 4,
+        li: t("List With Us"),
+        link: "/list-your-property",
         // content: {
         //   option: renderDeveloper,
         // },
@@ -142,12 +150,12 @@ const HeaderItem = () => {
               item: t("Services"),
               link: "/property-services",
             },
-            {
-              id: 3,
-              icon: listPropertyIcon,
-              item: t("List Your Property"),
-              link: "/list-your-property",
-            },
+            // {
+            //   id: 3,
+            //   icon: listPropertyIcon,
+            //   item: t("List Your Property"),
+            //   link: "/list-your-property",
+            // },
             {
               id: 4,
               icon: faqsIcon,

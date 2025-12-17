@@ -4,6 +4,7 @@ import { ContactForm } from "@/Components";
 import Icons from "@/Constants/Icons";
 import { Helmet } from "react-helmet";
 import { OurClients } from "@/Sections/Home";
+import ImagesUrl from "@/helpers/ImagesURL";
 
 const ListYourProperty = () => {
   const { t } = useTranslation();
@@ -19,16 +20,64 @@ const ListYourProperty = () => {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen bg-gradient-to-br from-primary/10 via-white to-primary/5 overflow-hidden pt-20">
-        {/* Background Pattern */}
+
+     <section className="relative w-full h-[72vh]">
+            <img
+              src={ImagesUrl("creek_bay_main_image.jpg")}
+              alt="List Your Property Main Banner"
+              className="w-full h-full object-cover"
+            />
+
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-transparent" />
+
+            <div
+              className="
+                custom_container
+                absolute bottom-14 left-1/2 -translate-x-1/2 
+                flex flex-col items-center text-center gap-5 text-white
+                sm:bottom-18
+                md:bottom-28 md:left-0 md:translate-x-0 md:items-start md:text-left
+              "
+            >
+              <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold !text-white drop-shadow-lg tracking-wide leading-tight content_general">
+                {t("Sell or Rent Out Your Property in Dubai")}
+              </h1>
+
+              <p className="text-sm sm:text-base">
+                <span className="text-white text-xl">by</span>{" "}
+                <span className="font-semibold text-white text-xl">
+                  {t("One of the Top Real Estate Agencies in Dubai")}
+                </span>
+              </p>
+
+              <button
+        onClick={() => {
+  const section = document.getElementById("list_with_us");
+  if (section) {
+    section.scrollIntoView({ behavior: "smooth" });
+  }
+}}
+
+
+                className="
+                  w-fit bg-[#094834] hover:bg-[#9f8151] text-white font-semibold py-4 px-6 border-radius shadow-lg hover:shadow-xl cursor-pointer transition
+                "
+              >
+                {t("List Your Property")}
+              </button>
+            </div>
+          </section>
+
+      {/* <section className="relative min-h-screen bg-gradient-to-br from-primary/10 via-white to-primary/5 overflow-hidden pt-20">
+       
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-20 left-10 w-72 h-72 bg-primary rounded-full blur-3xl"></div>
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary/30 rounded-full blur-3xl"></div>
         </div>
 
-        <div className="container mx-auto px-4 py-20 lg:py-32">
+        <div className="custom_container mx-auto px-4 py-20 lg:py-32">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            {/* Content */}
+            
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -60,7 +109,7 @@ const ListYourProperty = () => {
                 </p>
               </div>
 
-              {/* Features */}
+             
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -153,7 +202,7 @@ const ListYourProperty = () => {
               </div>
             </motion.div>
 
-            {/* Image */}
+           
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -169,7 +218,7 @@ const ListYourProperty = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent rounded-2xl"></div>
               </div>
 
-              {/* Floating Stats Card */}
+              
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -191,19 +240,19 @@ const ListYourProperty = () => {
       </section>
 
       {/* Why Choose Us Section */}
-      <section className="py-20 lg:py-32 bg-white">
-        <div className="container mx-auto px-4">
+      <section className="mt-18 mb-20">
+        <div className="custom_container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="mb-12"
           >
-            <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
               {t("Why Choose Shiro Estate?")}
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="down_styling para_styling">
               {t(
                 "We provide comprehensive real estate services that ensure your property gets the attention it deserves"
               )}
@@ -249,15 +298,15 @@ const ListYourProperty = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
+                className="group bg-white change_border p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
               >
-                <div className="w-16 h-16 bg-[#094834] rounded-2xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300">
+                <div style={{borderRadius: "50%"}} className="w-16 h-16 bg-[#9f8151] flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                <h3 className="font-semibold text-primary text-xl">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="down_styling para_styling">
                   {feature.description}
                 </p>
               </motion.div>
@@ -267,9 +316,9 @@ const ListYourProperty = () => {
       </section>
 
       {/* Contact Form Section */}
-      <section className="py-20 lg:py-32 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <section className="">
+        <div className="custom_container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
             {/* Content */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -279,10 +328,10 @@ const ListYourProperty = () => {
               className="space-y-8"
             >
               <div className="space-y-4">
-                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">
+                <h2 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
                   {t("Ready to List Your Property?")}
                 </h2>
-                <p className="text-xl text-gray-600 leading-relaxed">
+                <p className="down_styling para_styling">
                   {t(
                     "Fill out the form below and our team will contact you within 24 hours to discuss your property listing."
                   )}
@@ -295,32 +344,32 @@ const ListYourProperty = () => {
                   <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
                     <Icons.IoCheckmark size={16} className="text-white" />
                   </div>
-                  <span className="text-gray-700">
-                    {t("Free property valuation")}
+                  <span className="tfont-semibold text-primary text-xl">
+                    {t("Free Property Valuation")}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
                     <Icons.IoCheckmark size={16} className="text-white" />
                   </div>
-                  <span className="text-gray-700">
-                    {t("Professional marketing materials")}
+                  <span className="tfont-semibold text-primary text-xl">
+                    {t("Professional Marketing Materials")}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
                     <Icons.IoCheckmark size={16} className="text-white" />
                   </div>
-                  <span className="text-gray-700">
-                    {t("Dedicated property manager")}
+                  <span className="tfont-semibold text-primary text-xl">
+                    {t("Dedicated Property Manager")}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
                     <Icons.IoCheckmark size={16} className="text-white" />
                   </div>
-                  <span className="text-gray-700">
-                    {t("Regular market updates")}
+                  <span className="tfont-semibold text-primary text-xl">
+                    {t("Regular Market Updates")}
                   </span>
                 </div>
               </div>
@@ -332,6 +381,7 @@ const ListYourProperty = () => {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
+               id="list_with_us"
             >
               <ContactForm
                 title={t("List Your Property")}
@@ -345,7 +395,7 @@ const ListYourProperty = () => {
       </section>
 
       {/* Testimonials Section */}
-      <OurClients />
+      {/* <OurClients /> */}
     </>
   );
 };
