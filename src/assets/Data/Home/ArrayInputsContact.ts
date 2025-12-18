@@ -13,7 +13,7 @@ const ArrayInputsContact = () => {
       type: "text",
       required: true,
       inptClass:
-        "w-full h-14 px-4 border border-gray-300 change_border focus:border-[#094834] focus:ring-2 placeholder-16: focus:ring-[#094834]/20 transition-all duration-200 bg-white text-gray-900 placeholder-gray-500",
+        "w-full h-14 px-4 border border-gray-300 change_border focus:border-[#094834] focus:ring-2  focus:ring-[#094834]/20 transition-all duration-200 bg-white text-gray-900 placeholder-gray-500",
       labelClass: "text-sm font-semibold text-[#094834] mb-2 block",
     },
     {
@@ -25,7 +25,7 @@ const ArrayInputsContact = () => {
       type: "email",
       required: true,
       inptClass:
-        "w-full h-14 px-4 border border-gray-300 change_border focus:border-[#094834] focus:ring-2 placeholder-16: focus:ring-[#094834]/20 transition-all duration-200 bg-white text-gray-900 placeholder-gray-500",
+        "w-full h-14 px-4 border border-gray-300 change_border focus:border-[#094834] focus:ring-2  focus:ring-[#094834]/20 transition-all duration-200 bg-white text-gray-900 placeholder-gray-500",
       labelClass: "text-sm font-semibold text-[#094834] mb-2 block",
     },
     {
@@ -37,7 +37,7 @@ const ArrayInputsContact = () => {
       type: "",
       required: true,
       inptClass:
-        "w-full h-14 px-4 border border-gray-300 change_border focus:border-[#094834] focus:ring-2 placeholder-16: focus:ring-[#094834]/20 transition-all duration-200 bg-white text-gray-900 placeholder-gray-500",
+        "w-full h-14 px-4 border border-gray-300 change_border focus:border-[#094834] focus:ring-2  focus:ring-[#094834]/20 transition-all duration-200 bg-white text-gray-900 placeholder-gray-500",
       labelClass: "text-sm font-semibold text-[#094834] mb-2 block",
     },
     {
@@ -49,7 +49,7 @@ const ArrayInputsContact = () => {
       type: "",
       required: true,
       inptClass:
-        "w-full h-14 px-4 border border-gray-300 rounded-xl focus:border-[#094834] focus:ring-2 placeholder-16: focus:ring-[#094834]/20 transition-all duration-200 bg-white text-gray-900",
+        "w-full h-14 px-4 border border-gray-300 rounded-xl focus:border-[#094834] focus:ring-2 focus:ring-[#094834]/20 transition-all duration-200 bg-white text-gray-900",
       labelClass: "text-sm font-semibold text-[#094834] mb-2 block",
       arrayOfOptions: [
         {
@@ -75,8 +75,8 @@ const ArrayInputsContact = () => {
       ),
       required: true,
       inptClass:
-        "w-full h-32 px-4 py-4 border border-gray-300 change_border focus:border-[#094834] placeholder-16: focus:ring-2 focus:ring-[#094834]/20 transition-all duration-200 bg-white text-gray-900 placeholder-gray-500 resize-none",
-      labelClass: "text-sm font-semibold text-[#094834] mb-2 block",
+        "w-full h-32 px-4 py-4 input_styling border border-gray-300 change_border focus:border-[#094834] focus:ring-2 focus:ring-[#094834]/20 transition-all duration-200 bg-white text-gray-900 placeholder-gray-500 resize-none",
+      labelClass: "text-sm font-semibold text-[#094834] mb-2 block input_styling",
     },
   ];
 };

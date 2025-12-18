@@ -75,7 +75,7 @@ const PhoneNumber: FC<PhoneNumberProps> = ({ input }) => {
   dropdownStyle={{ maxHeight: "300px", overflowY: "auto" }}
   placeholder="50 123 4567"
   value={fullValue}
-  inputStyle={{ minHeight: 56, fontSize: 16 }}
+  inputStyle={{ minHeight: 56}}
   countryCodeEditable={false}   // 🔥 <— ADD THIS LINE
   // main wrapper
   containerClass={`w-full flex-1 ${
@@ -84,7 +84,7 @@ const PhoneNumber: FC<PhoneNumberProps> = ({ input }) => {
       : "direction-ltr"
   }`}
   // input field (force Tailwind over library defaults)
-  inputClass="!w-full !h-11 !border !border-gray-300 change_border !pl-12 !pr-3 !bg-white text-[#5E5C59] placeholder-gray-500 text-base"
+  inputClass="!w-full !h-11 !border input_styling !border-gray-300 change_border !pl-12 !pr-3 !bg-white text-[#5E5C59] placeholder-gray-500 text-base"
   // country button next to input
   buttonClass="!border !border-gray-300 !rounded-l-md !bg-white"
   // dropdown list

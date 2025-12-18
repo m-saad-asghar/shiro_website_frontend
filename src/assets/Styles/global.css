@@ -100,8 +100,22 @@ h6 {
   margin-bottom: 30px !important;
 }
 
+input::placeholder,
+textarea::placeholder {
+  font-size: 16px !important;
+}
+
+.input_styling {
+  font-size: 16px !important;
+}
+
+
 .key_information_heading {
   margin-bottom: 15px;
+}
+
+.premiere_marketplace_styling {
+  margin-bottom: 45px;
 }
 
 .property_container_styling {
@@ -889,6 +903,23 @@ video {
 /* Responsive adjustments for team slider */
 @media (max-width: 767px) {
 
+  input::placeholder,
+textarea::placeholder {
+  font-size: 14px !important;
+}
+
+.input_styling {
+  font-size: 14px !important;
+}
+
+  .premiere_marketplace_styling {
+  margin-bottom: 25px;
+}
+
+  .down_styling {
+     font-size: 0.8rem;
+}
+
   .selling_points_container {
   padding-top: 50px;
   padding-bottom: 0px;
@@ -943,8 +974,8 @@ display: block !important;
 }
 
   .custom_container {
-  padding-left: 30px;
-  padding-right: 30px;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
   .team-slider-nav {

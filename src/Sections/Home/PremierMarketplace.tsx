@@ -61,8 +61,7 @@ const PremierMarketplace = () => {
 
   return (
     <section
-      className="w-full py-12 md:py-10 lg:py-12 bg-gradient-to-br from-white via-gray-50/30 to-white"
-      style={{ marginBottom: 45 }}
+      className="w-full py-8 md:py-10 lg:py-12 bg-gradient-to-br from-white via-gray-50/30 to-white premiere_marketplace_styling"
     >
       <div className="custom_container mx-auto px-4">
         {/* Header Section */}

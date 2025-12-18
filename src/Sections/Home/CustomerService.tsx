@@ -12,7 +12,7 @@ const CustomerService = () => {
   ));
 
   return (
-    <section className="w-full py-12 md:py-2 lg:py-4">
+    <section className="w-full py-8 md:py-2 lg:py-4">
       <div className="custom_container mx-auto px-4">
          <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
              {t("Dubai real estate solutions focused around excellent")}

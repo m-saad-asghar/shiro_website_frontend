@@ -25,7 +25,7 @@ const Select: FC<SelectProps> = ({ input }) => {
         as="select"
         name={input?.name}
         required={input.required}
-        className="w-full h-[48px] border border-gray-300 change_border  outline-none px-[12px] text-[16px] cursor-pointer min-h-[56px] text-[#5E5C59]"
+        className="w-full h-[48px] border border-gray-300 change_border  outline-none px-[12px] input_styling cursor-pointer min-h-[56px] text-[#5E5C59]"
       >
         <option disabled value="" hidden>
           {t("Select Preferred Language")}

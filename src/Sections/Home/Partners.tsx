@@ -91,7 +91,7 @@ const Partners: React.FC<PartnersProps> = ({ conClass }) => {
   return (
     <section
       className={twMerge(
-        "w-full py-12 md:py-16 lg:py-20 bg-light overflow-hidden partner_padding",
+        "w-full py-8 md:py-16 lg:py-20 bg-light overflow-hidden partner_padding",
         conClass
       )}
     >

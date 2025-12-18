@@ -316,7 +316,7 @@ const ListYourProperty = () => {
       </section>
 
       {/* Contact Form Section */}
-      <section className="">
+      <section className="mb-22">
         <div className="custom_container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
             {/* Content */}

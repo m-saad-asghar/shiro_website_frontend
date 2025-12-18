@@ -172,7 +172,7 @@ const ExploreProperty = () => {
   }, [AllProperties, t]);
 
   return (
-    <section className="w-full py-12 md:py-4 lg:py-6 explore_properties_styling">
+    <section className="w-full py-2 md:py-4 lg:py-6 explore_properties_styling">
       <div className="custom_container mx-auto px-4">
         <div className="mx-auto">
           {/* Header Section */}
