@@ -37,9 +37,9 @@ const Rent = () => {
   const [page, setPage] = useState<number>(1);
 
   const handleViewModeChange = (mode: "grid" | "list") => {
-    setViewMode(mode);
+    setViewMode("list");
     // Save to localStorage
-    localStorage.setItem("rentViewMode", mode);
+    localStorage.setItem("rentViewMode", "list");
     // Close dropdown after selection
     setTimeout(() => {
       const closeEvent = new KeyboardEvent("keydown", {
@@ -396,7 +396,7 @@ const Rent = () => {
                   item={data?.data?.data}
                   status={status}
                   pagination={data?.data?.data?.pagination}
-                  viewMode={viewMode}
+                  viewMode={"list"}
                   page={page}
                   setPage={setPage}
                 />

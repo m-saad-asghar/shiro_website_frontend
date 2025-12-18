@@ -30,7 +30,7 @@ const Buy = () => {
   const navigate = useNavigate();
 
   // Use custom hook for view mode management
-  const { viewMode, handleViewModeChange } = useViewMode("buyViewMode");
+  // const { viewMode, handleViewModeChange } = useViewMode("buyViewMode");
   const [page, setPage] = useState<number>(1);
 
   const location = useLocation();
@@ -385,7 +385,7 @@ const Buy = () => {
                   item={data?.data?.data}
                   status={status}
                   pagination={data?.data?.data?.pagination}
-                  viewMode="list"
+                  viewMode={"list"}
                   page={page}
                   setPage={setPage}
                 />
