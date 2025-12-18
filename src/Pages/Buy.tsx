@@ -385,7 +385,7 @@ const Buy = () => {
                   item={data?.data?.data}
                   status={status}
                   pagination={data?.data?.data?.pagination}
-                  viewMode={viewMode}
+                  viewMode="list"
                   page={page}
                   setPage={setPage}
                 />
