@@ -1,51 +1,146 @@
-import {
-  MortgageCalculator,
-  BoxForm,
-  CurrencyConverter,
-} from "@/Components/SingleProperty";
+import { MortgageCalculator, BoxForm } from "@/Components/SingleProperty";
 import { PropertyMap } from "@/Components";
 import { Helmet } from "react-helmet";
-import useQueryGet from "@/hooks/useQueryGet";
+import ExploreProperty from "@/Sections/Home/ExploreProperty";
 import {
   Gallery,
   HeaderSingleProperty,
   InfoProperty,
   RecommendedProperties,
 } from "@/Sections/SingleProperty";
-import PropertiesServices from "@/Services/PropertiesServices";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import ExploreProperty from "@/Sections/Home/ExploreProperty";
+import { useEffect, useMemo, useState } from "react";
+
+type ApiResponse = {
+  status: boolean;
+  data: {
+    listing: any;
+    employee: {
+      name: string;
+      slug: string;
+      position: string;
+      profile_picture: string | null;
+      email: string;
+      phone: string;
+      whatsapp: string | null;
+    } | null;
+    images: string[];
+    amenities: string[];
+  };
+};
 
 const SingleProperty = () => {
+  // Your route param is `slug` in this file.
+  // You said URL contains `reference`, so we treat slug as reference.
   const { slug } = useParams();
+  const reference = slug || "";
 
-  // Use slug directly with API - no need for ID extraction
-  // The API supports /property/slug/{slug} endpoint
-  const { data: show, status } = useQueryGet(["showProperty", slug || ""], () =>
-    PropertiesServices.showBySlug(slug)
-  );
+  const [show, setShow] = useState<ApiResponse | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [listings, setListings] = useState<Record<string, any> | null>(null);
+const [amenities, setAmenities] = useState<string[]>([]);
+const [images, setImages] = useState<string[]>([]);
+ const [employees, setEmployees] = useState<Record<string, any>[]>([]);
+  const [error, setError] = useState<string>("");
 
-  // Get ID from property data for recommended properties
-  const id = show?.property?.id?.toString();
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchListingDetails = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        if (!reference) {
+          setShow(null);
+          setLoading(false);
+          return;
+        }
+
+        // ✅ IMPORTANT:
+        // Use your actual API base if needed, e.g.
+        const url = `${import.meta.env.VITE_API_URL}/listing_details/${encodeURIComponent(reference)}`
+        // For same-domain backend, this relative path is fine:
+        // const url = `/listing_details/${encodeURIComponent(reference)}`;
+
+        const res = await fetch(url, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
+        });
+
+        const json = (await res.json()) as ApiResponse;
+
+        if (!res.ok || !json?.status) {
+          throw new Error((json as any)?.message || "Failed to fetch listing details");
+        }
+        setListings(json.data.listing || []);
+        setAmenities(json.data.amenities || []);
+        setEmployees(json.data.employee ? [json.data.employee] : []);
+        setImages(json.data.images || []);
+
+        if (isMounted) setShow(json);
+      } catch (e: any) {
+        if (isMounted) {
+          setError(e?.message || "Something went wrong");
+          setShow(null);
+        }
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    fetchListingDetails();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [reference]);
+
+  const property = useMemo(() => {
+    const listing = show?.data?.listing;
+    if (!listing) return null;
+
+    const images = show?.data?.images || [];
+    const amenities = show?.data?.amenities || [];
+    const employee = show?.data?.employee || null;
+
+    // Shape data to match existing UI components WITHOUT changing UI/CSS
+    return {
+      ...listing,
+      images, // Gallery uses this
+      amenities,
+      employee,
+      is_favorite: listing?.is_favorite ?? 0,
+
+      // Used by RecommendedProperties
+      property_type: { name: listing?.property_type || "" },
+      location: listing?.sub_community || listing?.community || "",
+
+      // MortgageCalculator
+      converted_price: Number(listing?.price || 0),
+    };
+  }, [show]);
+
+  const id = property?.id?.toString();
 
   return (
     <>
       <Helmet>
-        <title>
-          {show?.property?.meta_title ||
-            show?.property?.title ||
-            "Property Details"}
-        </title>
+        <title>{property?.title || "Property Details"}</title>
         <meta
           name="description"
           content={
-            show?.property?.meta_description ||
-            show?.property?.description ||
+            (property?.description &&
+              typeof property.description === "string" &&
+              property.description.replace(/<[^>]*>/g, "").slice(0, 160)) ||
             "Discover this exceptional property in Dubai. Explore detailed information, photos, amenities, and contact Shiro Real Estate for viewing."
           }
         />
       </Helmet>
+
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -53,13 +148,21 @@ const SingleProperty = () => {
           transition={{ duration: 0.6 }}
           className="custom_container"
         >
+          {/* OPTIONAL: keep UI same, but prevent crashes if data missing */}
+          {/* If you already have loaders inside components, you can remove this */}
+          {error ? (
+            <div className="py-10">
+              <p className="text-center text-red-600">{error}</p>
+            </div>
+          ) : null}
+
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <HeaderSingleProperty is_favorite={show?.property?.is_favorite} />
+            <HeaderSingleProperty is_favorite={property?.is_favorite} />
           </motion.div>
 
           {/* Gallery - Full Width */}
@@ -69,7 +172,9 @@ const SingleProperty = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mt-5"
           >
-            <Gallery item={show?.property?.images} status={status} />
+            {/* Pass loading as "status" if your Gallery expects react-query status.
+                Many implementations just check truthy/falsy; this keeps UI intact. */}
+            <Gallery item={images} status={loading ? "pending" : "success"} />
           </motion.div>
 
           {/* Main Content Grid */}
@@ -83,17 +188,17 @@ const SingleProperty = () => {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="bg-white  shadow-lg p-6 md:p-8 change_border"
               >
-                <InfoProperty item={show?.property} />
+                <InfoProperty item={listings} employee={employees[0]} />
               </motion.div>
 
               {/* Property Map */}
-              <motion.div
+              {/* <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
-                <PropertyMap property={show?.property} />
-              </motion.div>
+                <PropertyMap property={property} />
+              </motion.div> */}
             </div>
 
             {/* Sidebar - 1/3 width */}
@@ -104,23 +209,8 @@ const SingleProperty = () => {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
               >
-                <BoxForm item={show?.property} />
+                <BoxForm item={property} employee={employees[0]} />
               </motion.div>
-
-              {/* Currency Converter */}
-              {/* <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.6 }}
-              >
-                <CurrencyConverter
-                  propertyPrice={
-                    show?.property?.converted_price ||
-                    show?.property?.price ||
-                    0
-                  }
-                />
-              </motion.div> */}
             </div>
           </div>
 
@@ -131,25 +221,25 @@ const SingleProperty = () => {
             transition={{ duration: 0.6, delay: 0.7 }}
             className=""
           >
-            <MortgageCalculator
-              propertyPrice={show?.property?.converted_price || 0}
-            />
+            <MortgageCalculator propertyPrice={listings?.price || 0} />
           </motion.div>
 
           {/* Recommended Properties */}
-          <motion.div
+        </motion.div>
+
+        <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
             className="mt-16 mb-20"
           >
-            <RecommendedProperties
+            <ExploreProperty />
+            {/* <RecommendedProperties
               currentPropertyId={id || ""}
-              propertyType={show?.property?.property_type?.name}
-              location={show?.property?.location}
-            />
+              propertyType={property?.property_type?.name}
+              location={property?.location}
+            /> */}
           </motion.div>
-        </motion.div>
       </div>
     </>
   );

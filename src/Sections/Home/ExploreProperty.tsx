@@ -21,8 +21,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/Components/ui/carousel";
-import UseQueryPost from "@/hooks/useQueryPost";
-import PropertiesServices from "@/Services/PropertiesServices";
 import { useContext, useMemo, useState, useEffect } from "react";
 import { TypesContext } from "@/Context/TypesContext";
 import { Skeleton } from "@/Components/ui/skeleton";
@@ -100,36 +98,66 @@ const ExploreProperty = () => {
     ));
   }, []);
 
-  // Optimize data fetching - fetch properties for main display
-  const {
-    mutateAsync,
-    data: AllProperties,
-    status: propertiesStatus,
-  } = UseQueryPost(["HomeProperties", id || "all"], PropertiesServices.Search);
+  // Local state to hold fetched properties and status
+  const [AllProperties, setAllProperties] = useState<any>(null);
+  const [propertiesStatus, setPropertiesStatus] = useState<string>("idle");
 
-  // Fetch properties when component loads or category changes
+  // Fetch properties when component loads or category changes using fetch
   useEffect(() => {
-    const searchParams = {
-      is_home: 1,
-      is_sale: true,
-      per_page: 6,
-      ...(id && { type_id: id }),
+    const fetchFeatured = async () => {
+      // const searchParams = {
+      //   is_home: 1,
+      //   is_sale: true,
+      //   per_page: 6,
+      //   ...(id && { type_id: id }),
+      // };
+
+      try {
+        console.log("[ExploreProperty] About to send request to show_featured_properties");
+        setPropertiesStatus("pending");
+
+        // Build URL from environment base or relative path
+        const base = (import.meta as any).env?.VITE_API_URL || "";
+        const url = `${base.replace(/\/$/, "")}/show_featured_properties`;
+
+        const res = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // body: JSON.stringify(searchParams),
+        });
+
+        const data = await res.json();
+        console.log("[ExploreProperty] Received response from show_featured_properties", data.data.featured_listings);
+        // Keep the original variable shape so render logic remains unchanged
+        setAllProperties(data);
+        setPropertiesStatus("success");
+      } catch (error) {
+        console.log("[ExploreProperty] Request to show_featured_properties failed", error);
+        setPropertiesStatus("error");
+      }
     };
-    mutateAsync(searchParams);
-  }, [id, mutateAsync]);
+
+    fetchFeatured();
+  }, [id]);
 
   const renderCard = useMemo(() => {
     // Check if properties exist and have data
     const allProperties =
-      AllProperties?.data?.data?.properties ||
-      AllProperties?.data?.properties ||
+      AllProperties?.data?.data?.featured_listings ||
+      AllProperties?.data?.featured_listings ||
       [];
+
+      console.log("allProperties", allProperties);
 
     // Filter properties: only show if is_home = true AND is_sale = true
     const properties = allProperties.filter(
-      (property: { is_home?: boolean; is_sale?: boolean }) =>
-        property.is_home === true && property.is_sale === true
+      (property: { active?: number; is_featured?: number }) =>
+        property.active == 1 && property.is_featured == 1
     );
+
+      console.log("properties", properties);
 
     if (properties.length === 0) {
       return (
@@ -160,11 +188,12 @@ const ExploreProperty = () => {
             className="md:basis-1/2 lg:basis-1/3"
             key={item?.id || index}
           >
-            {isOffPlan ? (
+            <CardUpdated item={item} />
+            {/* {isOffPlan ? (
               <ProjectCard item={item} viewMode="grid" />
             ) : (
               <CardUpdated item={item} />
-            )}
+            )} */}
           </CarouselItem>
         );
       }

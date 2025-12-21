@@ -11,9 +11,9 @@ const Card: FC<CardProps> = ({ item }) => {
   const [isFlipped, setIsFlipped] = useState(true);
 
   const handleClick = () => {
-    // if (item?.onClick) {
-    //   item.onClick();
-    // }
+    if (item?.onClick) {
+      item.onClick();
+    }
   };
 
   return (

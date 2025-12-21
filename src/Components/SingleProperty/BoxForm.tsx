@@ -7,11 +7,13 @@ import UseQueryPost from "@/hooks/useQueryPost";
 import { useTranslation } from "react-i18next";
 import ImagesUrl from "@/helpers/ImagesURL";
 import { motion } from "framer-motion";
+import employeeImagesUrl from "@/helpers/employeeImagesURL";
 import contactAgentValidationSchema from "@/Utils/Validations/contactAgentValidation";
 import ArrayInputsContact from "@/assets/Data/Home/ArrayInputsContact";
 
 type BoxFormProps = {
   item: any;
+  employee?: any;
 };
 
 interface OnSubmitProps {
@@ -26,7 +28,7 @@ const initialValues = {
   message: "",
 };
 
-const BoxForm: FC<BoxFormProps> = ({ item }) => {
+const BoxForm: FC<BoxFormProps> = ({ item , employee}) => {
   const { t } = useTranslation();
 
   const onClick = (name: string, number: string) => {
@@ -103,34 +105,37 @@ const BoxForm: FC<BoxFormProps> = ({ item }) => {
     >
       {/* Agent Info */}
       <div className="flex items-center gap-4 mb-6 p-4 bg-gray-50 change_border">
-        {item?.agent?.image && (
-          <div className="w-28 h-28 change_border overflow-hidden">
-            <img
-              src={ImagesUrl(item.agent.image)}
-              className="w-full h-full object-cover"
-              alt={item?.agent?.name || "Agent"}
-            />
-          </div>
-        )}
+       <div className="w-28 h-28 change_border overflow-hidden">
+  <img
+    src={employeeImagesUrl(
+      employee?.profile_picture?.trim()
+        ? employee.profile_picture
+        : "default_employee.png"
+    )}
+    className="w-full h-full object-cover"
+    alt={employee?.name || "Agent"}
+  />
+</div>
+
 
         <div className="flex-1">
           <p className="text-primary text_stying text-sm">
             <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
               {t("Name")}:
             </span>{" "}
-            {item?.agent?.name}
+            {employee?.name}
           </p>
           <p className="text-primary text_stying text-sm">
             <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
               {t("Email")}:
             </span>{" "}
-            {item?.agent?.email}
+            {employee?.email}
           </p>
           <p className="text-primary text_stying text-sm">
             <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
-              {t("Address")}:
+              {t("Position")}:
             </span>{" "}
-            {item?.agent?.address}
+            {employee?.position}
           </p>
         </div>
       </div>

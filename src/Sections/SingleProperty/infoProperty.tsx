@@ -9,9 +9,11 @@ import SocialShare from "@/Components/SingleProperty/SocialShare";
 
 type InfoPropertyProps = {
   item: any;
+  employee: any;
 };
 
-const InfoProperty: FC<InfoPropertyProps> = ({ item }) => {
+const InfoProperty: FC<InfoPropertyProps> = ({ item, employee }) => {
+  console.log("InfoProperty item prop debugging:", employee);
   const { t } = useTranslation();
   const location = useLocation();
   const [expanded, setExpanded] = useState(false);
@@ -19,12 +21,12 @@ const InfoProperty: FC<InfoPropertyProps> = ({ item }) => {
   const segment = location.pathname.split("/")[2];
   const match = segment.match(/for-(.*?)-in/);
   const result = match ? match[1].replace(/-/g, " ") : null;
-
+console.log("InfoProperty item:", item);
   return (
     <div className="space-y-8 relative change_border">
       {/* Share button in top right corner */}
       <div className="absolute top-0 right-0 z-10">
-        <SocialShare property={item} />
+        {/* <SocialShare property={item} /> */}
       </div>
 
       {/* Property Header */}
@@ -36,20 +38,33 @@ const InfoProperty: FC<InfoPropertyProps> = ({ item }) => {
       >
         <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-6 properties_details_heading">
           <h1 className="font-semibold text-primary text-3xl">
-            {item?.currency_symbol}
-            {item?.converted_price?.toLocaleString()}
+           {"Đ "} {item?.price?.toLocaleString()}
           </h1>
-          {/* <h2 className="text-xl md:text-2xl font-semibold text-gray-700">
-            {item?.title}
-          </h2> */}
         </div>
+
+         <h3 className="font-semibold text-primary text-xl mb-0 !text-[#9f8151]">
+         {item?.title}
+        </h3>
+
+         <h3 className="rounded-lg text-md transition-all duration-200 mb-1 text-[#9f8151]">
+        {[
+  item?.property_type && `${item.property_type}`,
+  item?.property_category && `${t("for")} ${item.property_category}`,
+  item?.community && `${t("in")} ${item.community}`,
+  item?.sub_community && `, ${item.sub_community}`,
+]
+  .filter(Boolean)
+  .join(" ")}
+
+
+        </h3>
 
         <div className="space-y-2">
           <p className="font-semibold rounded-lg text-lg transition-all duration-200 mb-1 text-[#9f8151]">
             {item?.selling_points}
           </p>
           <p className="text-primary text_stying text-lg">
-             {item?.title} {t("By")}{" "}  {item?.developer.name}
+             {/* {item?.title} {t("By")}{" "}  {item?.developer.name} */}
             {/* {item?.property_type?.name} {t("for")}{" "}
             {result == "rent"
               ? t("rent")
@@ -77,11 +92,13 @@ const InfoProperty: FC<InfoPropertyProps> = ({ item }) => {
                           />
                           <div className="text-center">
                             <div className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
-                             {item?.num_bedroom === 0
-          ? t("Studio")
-          : item?.num_bedroom === 1
-          ? `${item?.num_bedroom} ${t("Bedroom")}`
-          : `${item?.num_bedroom} ${t("Bedrooms")}`}
+                             {item?.bedrooms == "Studio"
+                      ? t("Studio")
+                      : `${item?.bedrooms} ${
+                          Number(item?.bedrooms) == 1
+                            ? t("Bedroom")
+                            : t("Bedrooms")
+                        }`}
         
                             </div>
                             {/* <div className="text-xs text-gray-500">{t("Bedrooms")}</div> */}
@@ -95,9 +112,9 @@ const InfoProperty: FC<InfoPropertyProps> = ({ item }) => {
                           />
                           <div className="text-center">
                             <div className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
-                             {item?.num_bathroom === 1
-          ? `${item?.num_bathroom} ${t("Bathroom")}`
-          : `${item?.num_bathroom} ${t("Bathrooms")}`}
+                            {Number(item?.bathrooms) === 1
+                      ? `1 ${t("Bathroom")}`
+                      : `${item?.bathrooms} ${t("Bathrooms")}`}
         
                             </div>
                             {/* <div className="text-xs text-gray-500">
@@ -173,19 +190,19 @@ const InfoProperty: FC<InfoPropertyProps> = ({ item }) => {
               {t("Property Type")}
             </p>
             <p className="text-primary text_stying text-sm">
-              {item?.property_type?.name}
+              {item?.property_type}
             </p>
           </div>
 
           <div className="bg-gray-50 rounded-xl p-4">
             <p className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
-              {t("Developer")}
+             {t("Property Category")}
             </p>
             {/* <p className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
               {t("Purpose")}
             </p> */}
             <p className="text-primary text_stying text-sm">
-              {item?.developer?.name}
+              {item?.property_category}
             </p>
           </div>
 
@@ -214,119 +231,147 @@ const InfoProperty: FC<InfoPropertyProps> = ({ item }) => {
           {t("Regulatory Information")}
         </h3>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 info_property_header">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-gray-50 rounded-xl p-4">
+            <p className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
+              {t("Broker License")}
+            </p>
+            <p className="text-primary text_stying text-sm">
+               {employee?.orn ? employee.orn : "-"}
+            </p>
+          </div>
+
+          <div className="bg-gray-50 rounded-xl p-4">
+            <p className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
+             {t("DLD Permit Number")}
+            </p>
+            {/* <p className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
+              {t("Purpose")}
+            </p> */}
+            <p className="text-primary text_stying text-sm">
+              {item?.rera ? item.rera : "-"}
+            </p>
+          </div>
+
+          {/* Rental Period - Only show for rent properties */}
+          {/* {result === "rent" && item?.rental_period && (
+            <div className="bg-green-50 rounded-xl p-4 border border-green-200">
+              <p className="text-sm font-medium text-green-700 mb-1">
+                {t("Rental Period")}
+              </p>
+              <p className="text-lg font-semibold text-green-800">
+                {item.rental_period}
+              </p>
+            </div>
+          )} */}
+        </div>
+
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-gray-50 rounded-xl p-4">
+            <p className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
+              {t("Reference ID")}
+            </p>
+            <p className="text-primary text_stying text-sm">
+               {item?.reference}
+            </p>
+          </div>
+
+          <div className="bg-gray-50 rounded-xl p-4">
+            <p className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
+              {t("Furnishing Type")}
+            </p>
+            {/* <p className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
+              {t("Purpose")}
+            </p> */}
+            <p className="text-primary text_stying text-sm">
+               {item?.furnishing == "furnished"
+  ? t("Furnished")
+  : item?.furnishing == "unfurnished"
+  ? t("Not Furnished")
+  : item?.furnishing == "semifurnished"
+  ? t("Semi Furnished")
+  : "-"}
+            </p>
+          </div>
+
+          {/* Rental Period - Only show for rent properties */}
+          {/* {result === "rent" && item?.rental_period && (
+            <div className="bg-green-50 rounded-xl p-4 border border-green-200">
+              <p className="text-sm font-medium text-green-700 mb-1">
+                {t("Rental Period")}
+              </p>
+              <p className="text-lg font-semibold text-green-800">
+                {item.rental_period}
+              </p>
+            </div>
+          )} */}
+        </div>
+
+        {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 info_property_header">
           <div className="lg:col-span-2 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* <div className="bg-gray-50 rounded-xl p-4">
-                <p className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
-                  {t("Date of Sale")}
-                </p>
-                <p className="text-base font-semibold text-primary">
-                  {item?.date_sale?.split("T")[0]}
-                </p>
-              </div> */}
-
-              <div className="bg-gray-50 rounded-xl p-4">
-                <p className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
-                  {t("Broker License")}
-                </p>
-                <p className="text-base text-primary">
-                  {item?.broker_license}
-                </p>
-              </div>
-
-              <div className="bg-gray-50 rounded-xl p-4">
-                <p className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
-                  {t("DLD Permit Number")}
-                </p>
-                <p className="text-base text-primary">
-                  {item?.dld_permit_number}
-                </p>
-              </div>
-
-              {/* <div className="bg-gray-50 rounded-xl p-4">
-                <p className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
-                  {t("agent license")}
-                </p>
-                <p className="text-base font-semibold text-primary">
-                  {item?.agent_license}
-                </p>
-              </div> */}
 
               <div className="bg-gray-50 rounded-xl p-4">
                 <p className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
                   {t("Reference ID")}
                 </p>
                 <p className="text-base text-primary">
-                  {item?.reference_id}
+                  {item?.reference}
                 </p>
               </div>
 
-              <div className="bg-gray-50 rounded-xl p-4">
+              <div className="bg-gray-50 rounded-xl p-">
                 <p className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
-                  {t("Location")}
+                  {t("Furnishing Type")}
                 </p>
                 <p className="text-base text-primary capitalize">
-                  {item?.location}
+                 {item?.furnishing == "furnished"
+  ? t("Furnished")
+  : item?.furnishing == "unfurnished"
+  ? t("Not Furnished")
+  : item?.furnishing == "semifurnished"
+  ? t("Semi Furnished")
+  : "-"}
+
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="flex justify-center lg:justify-end">
-            <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200 flex flex-col items-center justify-center min-h-[200px]">
-              <img
-                src={item?.qr_code}
-                className="w-32 h-32 rounded-lg"
-                alt="QR Code"
-              />
-              <div className="mt-3 text-center">
-                <a
-                  href="https://dubailand.gov.ae/en/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-primary hover:text-primary/80 transition-colors duration-200 font-medium"
-                >
-                  {t("Dubai Land Department")}
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+
+        </div> */}
       </motion.div>
 
       {/* Description */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-        className="space-y-4"
-      >
-        <h3 className="font-semibold text-primary text-xl key_information_heading">{t("Description")}</h3>
-        <div className="bg-gray-50 rounded-xl p-6">
-      <p
-        className={`down_styling para_styling ${
-          expanded ? "" : "line-clamp-4"
-        }`}
-      >
-        {item?.description}
-      </p>
+    <motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5, delay: 0.4 }}
+  style={{ marginTop: 15 }}
+  className="space-y-4"
+>
+  <h3 className="font-semibold text-primary text-xl key_information_heading">
+    {t("Description")}
+  </h3>
 
-      {item?.description?.length > 200 && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="mt-2 text-base font-semibold text-primary underline !text-[#9f8151]"
-        >
-          {expanded ? "Read Less" : "Read More"}
-        </button>
-      )}
-    </div>
-        {/* <div className="bg-gray-50 rounded-xl p-6">
-          <p className="text-base leading-relaxed text-gray-700">
-            {item?.description}
-          </p>
-        </div> */}
-      </motion.div>
+  <div className="bg-gray-50 rounded-xl p-6">
+    <div
+      className={`down_styling para_styling ${expanded ? "" : "line-clamp-4"}`}
+      // render HTML from backend
+      dangerouslySetInnerHTML={{ __html: item?.description || "" }}
+    />
+
+    {(item?.description?.length || 0) > 200 && (
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="mt-2 text-base font-semibold text-primary underline !text-[#9f8151]"
+      >
+        {expanded ? "Read Less" : "Read More"}
+      </button>
+    )}
+  </div>
+</motion.div>
+
     </div>
   );
 };

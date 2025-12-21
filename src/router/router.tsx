@@ -84,7 +84,7 @@ const router = createBrowserRouter([
         element: <ForgotPassword />,
       },
       {
-        path: "/single-property/:slug",
+        path: "/listing/:slug",
         element: <SingleProperty />,
       },
       {

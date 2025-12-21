@@ -2,45 +2,36 @@ import { LoaderPage } from "@/Components";
 import { Helmet } from "react-helmet";
 import { ValueContext } from "@/Context/ValueContext";
 import useQueryGet from "@/hooks/useQueryGet";
-import UseQueryPost from "@/hooks/useQueryPost";
-import {
-  AllProperties,
-  AvailableOptions,
-  OurTeam,
-  Search,
-} from "@/Sections/Buy";
+import { AllProperties, Search } from "@/Sections/Buy";
 import DevelopersServices from "@/Services/DevelopersServices";
 import PropertiesServices from "@/Services/PropertiesServices";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import Icons from "@/Constants/Icons";
-import { MainDropdown } from "@/Components";
 import { parsePropertyTypeFromUrl } from "@/helpers/propertyTypeHelper";
 import { parseUrlParams } from "@/helpers/urlParser";
-import { useViewMode } from "@/hooks/useViewMode";
-import {
-  createMostRecentHandler,
-  createHighestPriceHandler,
-  createLowestPriceHandler,
-} from "@/helpers/sortHelpers";
+
+type ApiStatus = "idle" | "pending" | "success" | "error";
 
 const Buy = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-
-  // Use custom hook for view mode management
-  // const { viewMode, handleViewModeChange } = useViewMode("buyViewMode");
-  const [page, setPage] = useState<number>(1);
-
   const location = useLocation();
+
+  // ✅ pagination
+  const [page, setPage] = useState<number>(1);
+  const PER_PAGE = 6;
+
   // Type ID is fixed for Buy page
   const id = "1";
+
   const { data: filter } = useQueryGet(["filter"], PropertiesServices.filters);
   const { data: filterDeveloper } = useQueryGet(
     ["filterDeveloper"],
     DevelopersServices.developer
   );
+
   const {
     values,
     setValues,
@@ -50,11 +41,15 @@ const Buy = () => {
     setSearchId,
   } = useContext(ValueContext);
 
-  // Get search state from navigation
+  // ✅ local state for new endpoint response
+  const [apiStatus, setApiStatus] = useState<ApiStatus>("idle");
+  const [apiResponse, setApiResponse] = useState<any>(null);
+
+  // Navigation search state (kept as-is)
   const searchState = location.state as {
     property_ids?: number[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    valueSearch?: any[]; // Array of selected search items with full object data
+    valueSearch?: any[];
     search?: string;
     property_name?: string;
     property_type_id?: number;
@@ -73,49 +68,66 @@ const Buy = () => {
     region_name?: string;
     region_names?: string[];
   } | null;
-  const { mutateAsync, data, status } = UseQueryPost(
-    ["search", "buy", id || ""],
-    PropertiesServices.Search
-  );
 
-  // Remove auto-search - only search when user clicks search button or applies filters
-  // This useEffect is commented out to prevent automatic search on typing
-
-  // Call API when page changes
-  useEffect(() => {
-    if (values && values.type_id === id) {
-      mutateAsync({
-        ...values,
-        is_sale: true,
-        page: page,
+  // ✅ ONE function: POST -> show_sale_properties
+  const fetchSaleProperties = async (pageToLoad: number) => {
+    try {
+      console.log("[Buy] About to send POST request to show_sale_properties", {
+        page: pageToLoad,
+        per_page: PER_PAGE,
       });
+
+      setApiStatus("pending");
+
+      const base = (import.meta as any).env?.VITE_API_URL || "";
+      // IMPORTANT: if your backend is underscore, change to /show_sale_properties
+      const url = `${base.replace(/\/$/, "")}/show_sale_properties`;
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          page: pageToLoad,
+          per_page: PER_PAGE,
+        }),
+      });
+
+      const json = await res.json();
+
+      console.log("[Buy] Received response from show_sale_properties", json);
+
+      setApiResponse(json);
+      setApiStatus("success");
+    } catch (error) {
+      console.log("[Buy] Request to show_sale_properties failed", error);
+      setApiStatus("error");
     }
+  };
+
+  // ✅ Call API when page changes
+  useEffect(() => {
+    fetchSaleProperties(page);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
-  // Clean up values when page changes
+  // ✅ URL parsing effect (now ensures values is ALWAYS an object)
   useEffect(() => {
     if (id && filter) {
-      // Use helper to parse URL parameters (eliminates code duplication)
-      const urlParams = parseUrlParams(
-        location.pathname,
-        searchState,
-        filter,
-        filterDeveloper,
-        id
-      );
+      const urlParams =
+        parseUrlParams(location.pathname, searchState, filter, filterDeveloper, id) ||
+        {};
 
-      // Parse property type from URL segments - using English slug helper
       const segments = location.pathname.split("/");
       if (segments.length >= 4) {
-        const propertyTypeSegment = segments[3]; // After /buy/properties-for-sale/
-
+        const propertyTypeSegment = segments[3];
         if (propertyTypeSegment && filter?.property_types) {
           const propertyType = parsePropertyTypeFromUrl(
             propertyTypeSegment,
             filter.property_types
           );
-
           if (propertyType) {
             urlParams.property_type_id = propertyType.id;
             urlParams.property_name = propertyType.name;
@@ -123,46 +135,34 @@ const Buy = () => {
         }
       }
 
-      // Add Buy-specific flag
-      setValues({ ...urlParams, is_sale: true });
+      // ✅ IMPORTANT: values must never be undefined
+      setValues({ ...(urlParams || {}), is_sale: true });
 
       // Restore valueSearch and searchId from searchState if coming from MultiSearch
       if (searchState?.valueSearch && searchState?.valueSearch.length > 0) {
         setValueSearch(searchState.valueSearch);
         setSearchId(searchState.property_ids || []);
-      } else if (
-        searchState?.property_ids &&
-        searchState.property_ids.length > 0
-      ) {
-        // If we only have property_ids, keep existing valueSearch if it matches
+      } else if (searchState?.property_ids && searchState.property_ids.length > 0) {
         setSearchId(searchState.property_ids);
       } else {
-        // Clear only if not coming from search navigation
         setValueSearch([]);
         setSearchId([]);
       }
 
-      setPage(1); // Reset page to 1 when filters change
-
-      // Call API with parsed values
-      mutateAsync({ ...urlParams, is_sale: true, page: 1 });
+      // Reset to page 1 when URL filters change
+      setPage(1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, location.pathname, filter]);
 
-  // Remove this useEffect to prevent double API calls
-  // useEffect(() => {
-  //   // Only call API if values exist and we're not in the cleanup phase
-  //   if (values && Object.keys(values).length > 1 && values.type_id === id) {
-  //     mutateAsync({
-  //       type_id: id,
-  //       ...values,
-  //     });
-  //   }
-  // }, [values?.sort, id]);
+  // ✅ Adapt API response to what <AllProperties /> expects
+  const adaptedData = {
+    properties: apiResponse?.data?.sale_listings || [],
+    pagination: apiResponse?.pagination || null,
+  };
 
-  // Show skeleton loading state
-  if (status === "pending" || !data) {
+  // ✅ Skeleton state
+  if (apiStatus === "pending" && !apiResponse) {
     return (
       <div className="w-full min-h-screen">
         <div className="pt-[120px] md:pt-[140px] lg:pt-[127.2px]" />
@@ -192,55 +192,56 @@ const Buy = () => {
   return (
     <>
       <Helmet>
-        <title>
-          Buy Properties in Dubai | Luxury Apartments & Villas for Sale
-        </title>
+        <title>Buy Properties in Dubai | Luxury Apartments & Villas for Sale</title>
         <meta
           name="description"
           content="Find your dream property in Dubai. Browse luxury apartments, villas, and townhouses for sale. Exclusive listings from Shiro Real Estate with expert guidance."
         />
       </Helmet>
-      <div className="w-full ">
-        {/* Header Spacing */}
-        {/* <div className="pt-[120px] md:pt-[140px] lg:pt-[127.2px]" /> */}
 
-        {status == "error" ? (
+      <div className="w-full">
+        {apiStatus === "error" ? (
           <LoaderPage message="Loading properties..." size="lg" />
         ) : (
           <>
-            {/* Search Section */}
+            {/* ✅ Search Section */}
             <Search
               from="buy"
-              options={data}
+              options={apiResponse}
               item={filter}
               filterDeveloper={filterDeveloper}
-              values={values}
-              valueSearch={valueSearch}
+              values={values ?? {}} // ✅ prevents Search.tsx crash
+              valueSearch={valueSearch ?? []}
               setValueSearch={setValueSearch}
               setSearchId={setSearchId}
-              searchId={searchId}
+              searchId={searchId ?? []}
               setValues={setValues}
-              onClick={mutateAsync}
+              onClick={() => {
+                // Reload page 1
+                setPage(1);
+                fetchSaleProperties(1);
+              }}
             />
 
-            {/* Properties Section */}
-            {data?.data?.data?.properties.length == 0 ? (
+            {/* No properties */}
+            {adaptedData?.properties?.length === 0 ? (
               <div className="custom_container mx-auto px-4 py-16">
                 <div className="text-center">
                   <div className="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
                     <Icons.IoIosSearch size={48} className="text-gray-400" />
                   </div>
+
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">
                     {t("No properties found")}
                   </h3>
+
                   <p className="text-gray-600 mb-8">
-                    {t(
-                      "Try adjusting your search criteria or browse all properties"
-                    )}
+                    {t("Try adjusting your search criteria or browse all properties")}
                   </p>
+
                   <button
                     onClick={() => {
-                      const cleanValues = {
+                      const cleanValues: any = {
                         type_id: id,
                         is_sale: true,
                         search: "",
@@ -258,11 +259,13 @@ const Buy = () => {
                         sort_name: undefined,
                         page: 1,
                       };
+
                       setValues(cleanValues);
                       setValueSearch([]);
                       setSearchId([]);
                       setPage(1);
-                      mutateAsync(cleanValues);
+
+                      fetchSaleProperties(1);
                       navigate(`/buy/properties-for-sale`);
                     }}
                     className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary/90 transition-all duration-300"
@@ -274,127 +277,27 @@ const Buy = () => {
               </div>
             ) : (
               <div className="custom_container mx-auto px-4 py-8 property_container_styling">
-                {/* View Controls */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-                  {/* Results Info */}
                   <div className="flex items-center gap-4">
                     <h2 className="text-xl font-semibold text-[#9f8151]">
                       {t("Properties For Sale")}
                     </h2>
                     <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full">
-                      {data?.data?.data?.properties?.length || 0} {t("Listings")}
+                      {adaptedData?.pagination?.total || 0} {t("Listings")}
                     </span>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    {/* <div className="flex items-center gap-3">
-                      <span className="text-sm font-medium text-gray-700">
-                        {t("Sort")}:
-                      </span>
-                      <MainDropdown
-                        title={
-                          values?.sort_name
-                            ? values?.sort_name
-                            : t("Most Recent")
-                        }
-                        triggerClass="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-900 hover:bg-gray-50 transition-all duration-300"
-                      >
-                        <div className="p-2 w-40">
-                          <button
-                            className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-primary hover:text-white rounded-lg transition-colors duration-200"
-                            onClick={createMostRecentHandler(
-                              values,
-                              id,
-                              { is_sale: true },
-                              setValues,
-                              setPage,
-                              mutateAsync
-                            )}
-                          >
-                            {t("Most Recent")}
-                          </button>
-                          <button
-                            className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-primary hover:text-white rounded-lg transition-colors duration-200"
-                            onClick={createHighestPriceHandler(
-                              values,
-                              id,
-                              { is_sale: true },
-                              setValues,
-                              setPage,
-                              mutateAsync
-                            )}
-                          >
-                            {t("Highest price")}
-                          </button>
-                          <button
-                            className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-primary hover:text-white rounded-lg transition-colors duration-200"
-                            onClick={createLowestPriceHandler(
-                              values,
-                              id,
-                              { is_sale: true },
-                              setValues,
-                              setPage,
-                              mutateAsync
-                            )}
-                          >
-                            {t("Lowest price")}
-                          </button>
-                        </div>
-                      </MainDropdown>
-                    </div> */}
-
-                    {/* <div className="flex items-center gap-3">
-                      <span className="text-sm font-medium text-gray-700">
-                        {t("View as")}:
-                      </span>
-                      <MainDropdown
-                        title={viewMode === "grid" ? t("Grid") : t("List")}
-                        triggerClass="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-900 hover:bg-gray-50 transition-all duration-300"
-                      >
-                        <div className="p-2 w-32">
-                          <button
-                            className={`w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors duration-200 ${
-                              viewMode === "grid"
-                                ? "bg-primary text-white"
-                                : "text-gray-700 hover:bg-primary hover:text-white"
-                            }`}
-                            onClick={() => handleViewModeChange("grid")}
-                          >
-                            <Icons.IoHomeOutline size={16} />
-                            {t("Grid")}
-                          </button>
-                          <button
-                            className={`w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors duration-200 ${
-                              viewMode === "list"
-                                ? "bg-primary text-white"
-                                : "text-gray-700 hover:bg-primary hover:text-white"
-                            }`}
-                            onClick={() => handleViewModeChange("list")}
-                          >
-                            <Icons.IoPerson size={16} />
-                            {t("List")}
-                          </button>
-                        </div>
-                      </MainDropdown>
-                    </div> */}
                   </div>
                 </div>
 
-               
                 <AllProperties
-                  item={data?.data?.data}
-                  status={status}
-                  pagination={data?.data?.data?.pagination}
+                  item={adaptedData}
+                  status={apiStatus}
+                  pagination={adaptedData?.pagination}
                   viewMode={"list"}
                   page={page}
                   setPage={setPage}
                 />
               </div>
             )}
-
-            {/* Additional Sections */}
-            {/* <OurTeam />
-            <AvailableOptions /> */}
           </>
         )}
       </div>

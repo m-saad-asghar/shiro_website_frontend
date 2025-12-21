@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo, type FC } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Skeleton } from "@/Components/ui/skeleton";
 import { useTranslation } from "react-i18next";
+import ListingImagesUrl from "@/helpers/listingImagesURL";
 import Icons from "@/Constants/Icons";
 
 type GalleryProps = {
@@ -90,7 +91,7 @@ const Gallery: FC<GalleryProps> = ({ item, status }) => {
       onClick={() => openGallery(0)}
     >
       <img
-        src={validImages[0]}
+        src={ListingImagesUrl(validImages[0])}
         className="w-full 
           h-[360px] 
           sm:h-[420px] 
@@ -124,7 +125,7 @@ const Gallery: FC<GalleryProps> = ({ item, status }) => {
           onClick={() => openGallery(1)}
         >
           <img
-            src={validImages[1]}
+            src={ListingImagesUrl(validImages[1])}
             className="w-full 
               h-[240px] 
               sm:h-[280px] 
@@ -143,7 +144,7 @@ const Gallery: FC<GalleryProps> = ({ item, status }) => {
           onClick={() => openGallery(2)}
         >
           <img
-            src={validImages[2]}
+            src={ListingImagesUrl(validImages[2])}
             className="w-full 
               h-[240px] 
               sm:h-[280px] 
@@ -223,7 +224,7 @@ const Gallery: FC<GalleryProps> = ({ item, status }) => {
                 className="flex-1 flex items-center justify-center"
               >
                 <img
-                  src={validImages[selectedImage]}
+                  src={ListingImagesUrl(validImages[selectedImage])}
                   alt={`Property ${selectedImage + 1}`}
                   className="max-w-full max-h-[62vh] md:max-h-[70vh] object-contain rounded-xl"
                   onError={(e) => {
@@ -247,7 +248,7 @@ const Gallery: FC<GalleryProps> = ({ item, status }) => {
                       aria-label={`Open image ${idx + 1}`}
                     >
                       <img
-                        src={src}
+                        src={ListingImagesUrl(src)}
                         alt={`Thumb ${idx + 1}`}
                         className="w-[90px] h-[64px] md:w-[110px] md:h-[78px] object-cover"
                         onError={(e) => {

@@ -12,6 +12,7 @@ import Images from "@/Constants/Images";
 import { FavoiteContext } from "@/Context/FavoiteContext";
 import { useAreaUnit } from "@/Context/AreaUnitContext";
 import { useTranslation } from "react-i18next";
+import ListingImagesUrl from "@/helpers/listingImagesURL";
 
 type CardType = {
   item: any;
@@ -26,16 +27,28 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
 
   const onClick = (name: string, number: string) => {
     if (!number) return;
-    if (name === "whatsapp") {
-      window.open(`https://wa.me/${number}`);
+
+    const cleanNumber = String(number).replace(/\D/g, "");
+
+    if (name == "whatsapp") {
+      const ref = item?.reference || item?.reference || "";
+      const title = item?.title || item?.title || "";
+      const msg = encodeURIComponent(
+        `Hello, I am interested in Property Reference Number ${ref}, with Title ${title}`
+      );
+      window.open(`https://wa.me/${number}?text=${msg}`, "_blank");
     } else {
-      window.open(`tel:${number}`);
+      window.open(`tel:${cleanNumber}`);
     }
   };
 
-  const handleEmailClick = (email: string) => {
+  const handleEmailClick = (email: string, body?: string) => {
     if (!email) return;
-    window.open(`mailto:${email}`);
+
+    const subject = encodeURIComponent("Property Inquiry");
+    const mailBody = encodeURIComponent(body || "");
+
+    window.open(`mailto:${email}?subject=${subject}&body=${mailBody}`);
   };
 
   // Helper function to check if item is a project
@@ -49,18 +62,19 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
   };
 
   const goToDetails = () => {
-    if (isProject(item)) {
-      navigate(`/project/${item?.slug || item?.id}`);
-    } else {
-      const propertySlug =
-        item?.slug ||
-        `${item?.num_bedroom}-bedroom-${
-          item?.property_type?.name || "property"
-        }-for-${location?.pathname.split("/")[1] || "buy"}-in-${
-          item?.location?.replace(/\s+/g, "-") || "dubai"
-        }`.toLowerCase();
-      navigate(`/single-property/${propertySlug}`);
-    }
+    navigate(`/listing/${item?.reference}`);
+    // if (isProject(item)) {
+    //   navigate(`/project/${item?.slug || item?.id}`);
+    // } else {
+    //   const propertySlug =
+    //     item?.slug ||
+    //     `${item?.num_bedroom}-bedroom-${
+    //       item?.property_type?.name || "property"
+    //     }-for-${location?.pathname.split("/")[1] || "buy"}-in-${
+    //       item?.location?.replace(/\s+/g, "-") || "dubai"
+    //     }`.toLowerCase();
+    //   navigate(`/single-property/${propertySlug}`);
+    // }
   };
 
   // toggle isFavorite
@@ -83,56 +97,53 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
     }
   };
 
-  // pick first phone + whatsapp from agent.contact_inf
+  // ✅ NEW BACKEND: company_contact (phone/whatsapp/email)
   const contacts = useMemo(() => {
-    const inf = item?.agent?.contact_inf || [];
-    const phone = inf.find((x: any) => x?.type === "phone")?.value;
-    const whatsapp = inf.find((x: any) => x?.type === "whatsapp")?.value;
-    return { phone, whatsapp };
+    const phone = item?.company_contact?.phone || "";
+    const whatsapp = item?.company_contact?.whatsapp || "";
+    const email = item?.company_contact?.email || "";
+    return { phone, whatsapp, email };
   }, [item]);
 
-  const renderImagesCard = item?.images?.map((imageUrl: any, index: number) => {
-    return (
-      <CarouselItem className="p-0 m-0" key={index}>
-        <img
-          src={imageUrl}
-          className="w-full h-full object-cover"
-          alt={item?.title || "Property image"}
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = "/src/assets/Images/Property/placeholder-property.jpg";
-          }}
-        />
-      </CarouselItem>
-    );
-  });
-
-  // GRID contact buttons (unchanged)
-  const renderContact = item?.agent?.contact_inf?.map(
-    (item: any, index: number) => (
-      <button
-        key={item?.id || index}
-        onClick={() => onClick(item?.type, item?.value)}
-        className={`flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:bg-[#9f8151] hover:text-white text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2`}
-      style={{borderRadius: 8}}
-        aria-label={`Contact via ${item?.type}`}
-      >
-        {item?.type === "phone" ? (
-          <Icons.LuPhone size={16} />
-        ) : (
-          <Icons.FaWhatsapp size={16} />
-        )}
-        {item?.type === "phone" ? t("Call") : t("WhatsApp")}
-      </button>
-    )
-  );
-
-  const emailButton = item?.agent?.email ? (
+  // GRID contact buttons (unchanged styles, updated data source)
+  const renderContact = [
+    {
+      type: "phone",
+      value: contacts.phone,
+      label: t("Call"),
+      Icon: <Icons.LuPhone size={16} />,
+    },
+    {
+      type: "whatsapp",
+      value: contacts.whatsapp,
+      label: t("WhatsApp"),
+      Icon: <Icons.FaWhatsapp size={16} />,
+    },
+  ].map((btn, index) => (
     <button
-      onClick={() => handleEmailClick(item.agent.email)}
-       className="flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:text-white hover:bg-[#9f8151] text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2"
-     style={{borderRadius: 8}}
-      aria-label="Send email to agent"
+      key={index}
+      onClick={() => onClick(btn.type, btn.value)}
+      className={`flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:bg-[#9f8151] hover:text-white text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2`}
+      style={{ borderRadius: 8 }}
+      aria-label={`Contact via ${btn.type}`}
+      disabled={!btn.value}
+    >
+      {btn.Icon}
+      {btn.label}
+    </button>
+  ));
+
+  const emailButton = contacts.email ? (
+    <button
+      onClick={() =>
+        handleEmailClick(
+          contacts.email,
+          `Hello,\n\nI am interested in Property Reference Number ${item?.reference}.\nTitle: ${item?.title}\nPrice: AED ${item?.price}\n\nPlease share more details.\n\nThanks`
+        )
+      }
+      className="flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:text-white hover:bg-[#9f8151] text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2"
+      style={{ borderRadius: 8 }}
+      aria-label="Send email to company"
     >
       <Icons.MdOutlineEmail size={16} />
       {t("Email")}
@@ -204,7 +215,7 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
               {(item?.images || []).map((imageUrl: any, index: number) => (
                 <CarouselItem key={index} className="p-0 m-0 h-full">
                   <img
-                    src={imageUrl}
+                    src={ListingImagesUrl(imageUrl)}
                     className="w-full h-[400px] object-cover"
                     alt={item?.title || "Property image"}
                     onError={(e) => {
@@ -227,7 +238,10 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
         ) : (
           <div className="w-full h-full bg-gray-200 flex items-center justify-center">
             <div className="text-center">
-              <Icons.IoImageOutline size={48} className="text-gray-400 mx-auto mb-2" />
+              <Icons.IoImageOutline
+                size={48}
+                className="text-gray-400 mx-auto mb-2"
+              />
               <p className="text-gray-500 text-sm">{t("No images available")}</p>
             </div>
           </div>
@@ -255,13 +269,19 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
         {viewMode === "grid" ? (
           <>
             <div className="space-y-4">
-              <h3 className="font-semibold text-primary text-xl" style={{marginBottom: '5px'}}>
+              <h3
+                className="font-semibold text-primary text-xl"
+                style={{ marginBottom: "5px" }}
+              >
                 {item?.title}
               </h3>
 
-              <div className="flex items-center justify-between" style={{marginBottom: '30px'}}>
+              <div
+                className="flex items-center justify-between"
+                style={{ marginBottom: "30px" }}
+              >
                 <div className="text-primary text_stying text-lg">
-                  {item?.currency_symbol} {item?.converted_price}
+                  {item?.currency_symbol} {item?.price}
                 </div>
                 <div className="text-sm text-gray-500">
                   {location?.pathname.split("/")[1] === "rent"
@@ -271,11 +291,19 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
               </div>
 
               {/* Selling Points */}
-          <div className="flex items-center gap-2 text-gray-600" style={{marginBottom: 0}}>
-            <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-2 text-[#9f8151]">{item?.selling_points}</span>
-          </div>
+              <div
+                className="flex items-center gap-2 text-gray-600"
+                style={{ marginBottom: 0 }}
+              >
+                <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-2 text-[#9f8151]">
+                  {item?.selling_points}
+                </span>
+              </div>
 
-              <div className="flex items-center gap-2 text-gray-600" style={{marginBottom: '0px'}}>
+              <div
+                className="flex items-center gap-2 text-gray-600"
+                style={{ marginBottom: "0px" }}
+              >
                 <Icons.CiLocationOn
                   size={18}
                   className="text-primary rounded-lg text-sm transition-all duration-200 mb-1 !text-[#9f8151]"
@@ -290,39 +318,32 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
                   <img src={Images.BedsIcons} className="w-5 h-5" alt="Beds" />
                   <div className="text-center">
                     <div className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
-                      {item?.num_bedroom === 0 ? t("Studio") : item?.num_bedroom} {t("Bedrooms")}
+                      {item?.num_bedroom === 0 ? t("Studio") : item?.num_bedroom}{" "}
+                      {t("Bedrooms")}
                     </div>
-                    {/* <div className="text-xs text-gray-500">{t("Bedrooms")}</div> */}
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <img src={Images.BathIcons} className="w-5 h-5" alt="Bath" />
                   <div className="text-center">
                     <div className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
-                      {item?.num_bathroom}  {t("Bathrooms")}
+                      {item?.num_bathroom} {t("Bathrooms")}
                     </div>
-                    {/* <div className="text-xs text-gray-500">
-                      {t("Bathrooms")}
-                    </div> */}
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <img
-                    src={Images.ArrowIcons}
-                    className="w-5 h-5"
-                    alt="Area"
-                  />
+                  <img src={Images.ArrowIcons} className="w-5 h-5" alt="Area" />
                   <div className="text-center">
                     <div className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
                       {formatArea(item?.area)} {t("Area")}
                     </div>
-                    {/* <div className="text-xs text-gray-500">{t("Area")}</div> */}
                   </div>
                 </div>
               </div>
             </div>
 
-            {item?.agent && (
+            {/* ✅ company_contact buttons */}
+            {(contacts.phone || contacts.whatsapp || contacts.email) && (
               <div
                 className="grid gap-4 pt-2 grid-cols-3"
                 onClick={(e) => e.stopPropagation()}
@@ -336,45 +357,84 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
           // ===== LIST MODE: add content like reference image =====
           <>
             <div className="space-y-2">
-
-               {/* Title / subtitle */}
-              <div className="font-semibold text-primary text-xl" style={{marginBottom: '5px'}}>
+              {/* Title / subtitle */}
+              <div
+                className="font-semibold text-primary text-xl"
+                style={{ marginBottom: "5px" }}
+              >
                 {item?.title}
               </div>
 
               {/* Price */}
-              <div className="text-primary text_stying text-lg" style={{marginBottom: '10px'}}>
-                {item?.currency_symbol} {item?.converted_price}
+              <div
+                className="text-primary text_stying text-lg"
+                style={{ marginBottom: "10px" }}
+              >
+                {"Đ"} {item?.price ? Number(item.price).toLocaleString() : "0"}
               </div>
 
               {/* Location line */}
-              <div className="flex items-center gap-2 text-sm text-gray-500" style={{marginBottom: '5px'}}>
+              <div
+                className="flex items-center gap-2 text-sm text-gray-500"
+                style={{ marginBottom: "5px" }}
+              >
                 <Icons.CiLocationOn size={16} className="!text-[#9f8151]" />
-                <span className="rounded-lg text-sm transition-all duration-200 mb-1 mt-1 text-[#9f8151] text_stying">{item?.location}</span>
+                <span className="rounded-lg text-sm transition-all duration-200 mb-1 mt-1 text-[#9f8151] text_stying">
+                  {[item?.community, item?.sub_community, item?.property]
+                    .filter(Boolean)
+                    .join(", ")}
+                </span>
               </div>
 
-              {/* Location line */}
-              <div className="flex items-center gap-2 text-sm text-gray-500" style={{marginBottom: '0px'}}>
-                <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]" style={{marginBottom: '0px'}}>{item?.selling_points}</span>
+              {/* Selling points */}
+              <div
+                className="flex items-center gap-2 text-sm text-gray-500"
+                style={{ marginBottom: "0px" }}
+              >
+                <span
+                  className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]"
+                  style={{ marginBottom: "0px" }}
+                >
+                  {item?.selling_points}
+                </span>
               </div>
 
               {/* Apartment | bed | bath | area row */}
-              <div className="flex items-center flex-wrap gap-6" style={{marginBottom: '0px'}}>
+              <div
+                className="flex items-center flex-wrap gap-6"
+                style={{ marginBottom: "0px" }}
+              >
                 <div className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
                   {item?.property_type?.name || t("Apartment")}
                 </div>
 
                 <div className="flex items-center gap-2 text-sm text-gray-700">
-                  <img src={Images.BedsIcons} className="w-4 h-4" alt="Beds" />
+                  <img
+                    src={Images.BedsIcons}
+                    className="w-4 h-4"
+                    alt="Beds"
+                  />
                   <span className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
-                    {item?.num_bedroom === 0 ? t("Studio") : item?.num_bedroom}
+                    {item?.bedrooms == "Studio"
+                      ? t("Studio")
+                      : `${item?.bedrooms} ${
+                          Number(item?.bedrooms) == 1
+                            ? t("Bedroom")
+                            : t("Bedrooms")
+                        }`}
                   </span>
                 </div>
 
                 <div className="flex items-center gap-2 text-sm text-gray-700">
-                  <img src={Images.BathIcons} className="w-4 h-4" alt="Bath" />
+                  <img
+                    src={Images.BathIcons}
+                    className="w-4 h-4"
+                    alt="Bath"
+                  />
                   <span className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
-                    {item?.num_bathroom}
+                    {Number(item?.bathrooms) === 1
+                      ? `1 ${t("Bathroom")}`
+                      : `${item?.bathrooms} ${t("Bathrooms")}`}
                   </span>
                 </div>
 
@@ -393,7 +453,9 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
               {/* Description + more */}
               {trimmedDesc ? (
                 <div className="text-sm text-gray-600">
-                  <span className="!text-[14px] text-dark leading-relaxed !text-[#0b4a35] down_styling !leading-normal">{trimmedDesc}</span>{" "}
+                  <span className="!text-[14px] text-dark leading-relaxed !text-[#0b4a35] down_styling !leading-normal">
+                    {trimmedDesc}
+                  </span>{" "}
                   <button
                     className="text-primary underline font-medium"
                     onClick={(e) => {
@@ -406,76 +468,70 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
                 </div>
               ) : null}
 
-               <div
-              className="pt-4 mt-2"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="grid grid-cols-3 gap-3">
-                {/* Book a Viewing */}
-                <button
-  onClick={() => {
-    goToDetails();
-  }}
-  className="
-    flex items-center justify-center gap-2
-    search_btn_styling
-    h-12 md:h-10
-    px-6
-    bg-[#f1ece0]
-    hover:bg-[#9f8151]
-    hover:text-white
-    text-[#0b4a35]
-    font-semibold
-    transition-all duration-[.4s]
-    change_border
-    whitespace-nowrap
-  "
->
-  <Icons.MdOutlineEmail size={18} className="opacity-80 shrink-0" />
+              <div className="pt-4 mt-2" onClick={(e) => e.stopPropagation()}>
+                <div className="grid grid-cols-3 gap-3">
+                  {/* Email */}
+                  <button
+                    onClick={() =>
+                      handleEmailClick(
+                        contacts.email,
+                        `Hello,\n\nI am interested in Property Reference Number ${item?.reference}, with Title ${item?.title}.\n\nThanks`
+                      )
+                    }
+                    className="
+                      flex items-center justify-center gap-2
+                      search_btn_styling
+                      h-12 md:h-10
+                      px-6
+                      bg-[#f1ece0]
+                      hover:bg-[#9f8151]
+                      hover:text-white
+                      text-[#0b4a35]
+                      font-semibold
+                      transition-all duration-[.4s]
+                      change_border
+                      whitespace-nowrap
+                    "
+                    disabled={!contacts.email}
+                  >
+                    <Icons.MdOutlineEmail size={18} className="opacity-80 shrink-0" />
+                    <span className="whitespace-nowrap">{t("Email")}</span>
+                  </button>
 
-  <span className="hidden sm:inline whitespace-nowrap">
-    {t("Book a Viewing")}
-  </span>
+                  {/* Call */}
+                  <button
+                    onClick={() => onClick("phone", contacts.phone)}
+                    className="
+                      flex items-center justify-center gap-2
+                      search_btn_styling
+                      h-12 md:h-10
+                      px-6
+                      bg-[#f1ece0]
+                      hover:bg-[#9f8151]
+                      hover:text-white
+                      text-[#0b4a35]
+                      font-semibold
+                      transition-all duration-[.4s]
+                      change_border
+                      whitespace-nowrap
+                    "
+                    disabled={!contacts.phone}
+                  >
+                    <Icons.LuPhone size={18} className="opacity-80 shrink-0" />
+                    <span className="whitespace-nowrap">{t("Call")}</span>
+                  </button>
 
-  <span className="sm:hidden whitespace-nowrap">
-    {t("Book")}
-  </span>
-</button>
-
-
-                {/* Call */}
-                <button
-  onClick={() => onClick("phone", contacts.phone)}
-  className="
-    flex items-center justify-center gap-2
-    search_btn_styling
-    h-12 md:h-10
-    px-6
-    bg-[#f1ece0]
-    hover:bg-[#9f8151]
-    hover:text-white
-    text-[#0b4a35]
-    font-semibold
-    transition-all duration-[.4s]
-    change_border
-    whitespace-nowrap
-  "
->
-  <Icons.LuPhone size={18} className="opacity-80 shrink-0" />
-  <span className="whitespace-nowrap">{t("Call")}</span>
-</button>
-
-
-                {/* WhatsApp */}
-                <button
-                  onClick={() => onClick("whatsapp", contacts.whatsapp)}
-                  className="flex items-center justify-center gap-2 search_btn_styling w-fit h-12 md:h-10 px-6 bg-[#f1ece0] hover:bg-[#9f8151] hover:text-white text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2 change_border"
-                  aria-label="WhatsApp"
-                >
-                  <Icons.FaWhatsapp size={18} className="text-green-600" />
-                </button>
+                  {/* WhatsApp */}
+                  <button
+                    onClick={() => onClick("whatsapp", contacts.whatsapp)}
+                    className="flex items-center justify-center gap-2 search_btn_styling w-fit h-12 md:h-10 px-6 bg-[#f1ece0] hover:bg-[#9f8151] hover:text-white text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2 change_border"
+                    aria-label="WhatsApp"
+                    disabled={!contacts.whatsapp}
+                  >
+                    <Icons.FaWhatsapp size={18} className="text-green-600" />
+                  </button>
+                </div>
               </div>
-            </div>
             </div>
           </>
         )}

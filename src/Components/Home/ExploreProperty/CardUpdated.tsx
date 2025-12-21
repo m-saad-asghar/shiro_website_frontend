@@ -12,6 +12,7 @@ import Images from "@/Constants/Images";
 import { FavoiteContext } from "@/Context/FavoiteContext";
 import { useAreaUnit } from "@/Context/AreaUnitContext";
 import { useTranslation } from "react-i18next";
+import ListingImagesUrl from "@/helpers/listingImagesURL";
 
 type CardType = {
   item: any;
@@ -24,10 +25,17 @@ const CardUpdated: FC<CardType> = ({ item, viewMode = "grid" }) => {
   const navigate = useNavigate();
   const { formatArea } = useAreaUnit();
 
-  const onClick = (name: string, number: string) => {
+  const onClick = (
+    name: string,
+    number: string,
+    payload?: { reference?: string; title?: string }
+  ) => {
+    if (!number) return;
     if (name == "whatsapp") {
-       const msg = encodeURIComponent(
-        "Hello, I’m interested in your Real Estate Expertise. How can Shiro Estate assist me with my Next Purchase?"
+      const ref = payload?.reference || item?.reference || "";
+      const title = payload?.title || item?.title || "";
+      const msg = encodeURIComponent(
+        `Hello, I am interested in Property Reference Number ${ref}, with Title ${title}`
       );
       window.open(`https://wa.me/${number}?text=${msg}`, "_blank");
     } else {
@@ -35,8 +43,11 @@ const CardUpdated: FC<CardType> = ({ item, viewMode = "grid" }) => {
     }
   };
 
-  const handleEmailClick = (email: string) => {
-    window.open(`mailto:${email}`);
+  const handleEmailClick = (email: string, body?: string) => {
+    if (!email) return;
+    const mailto = `mailto:${email}${body ? `?body=${encodeURIComponent(body)}` : ""}`;
+    // open default mail client in a new tab/window
+    window.open(mailto, "_blank");
   };
 
   // Helper function to check if item is a project
@@ -73,7 +84,7 @@ const CardUpdated: FC<CardType> = ({ item, viewMode = "grid" }) => {
     return (
       <CarouselItem className="p-0 m-0" key={index}>
         <img
-          src={imageUrl}
+          src={ListingImagesUrl(imageUrl)}
           className="w-full h-full object-cover"
           alt={item?.title || "Property image"}
           onError={(e) => {
@@ -86,29 +97,39 @@ const CardUpdated: FC<CardType> = ({ item, viewMode = "grid" }) => {
   });
 
  const renderContact = item?.agent?.contact_inf?.map(
-  (item: any, index: number) => (
+  (contact: any, index: number) => (
     <button
-      key={item?.id || index}
-      onClick={() => onClick(item?.type, item?.value)}
+      key={contact?.id || index}
+      onClick={() =>
+        onClick(contact?.type, contact?.value, {
+          reference: item?.reference,
+          title: item?.title,
+        })
+      }
       className={`flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:bg-[#9f8151] hover:text-white text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2`}
       style={{borderRadius: 8}}
-      aria-label={`Contact via ${item?.type}`}
+      aria-label={`Contact via ${contact?.type}`}
     >
-      {item?.type === "phone" ? (
+      {contact?.type === "phone" ? (
         <Icons.LuPhone size={18} />
       ) : (
         <Icons.FaWhatsapp size={18} />
       )}
-      {item?.type === "phone" ? t("Call") : t("WhatsApp")}
+      {contact?.type === "phone" ? t("Call") : t("WhatsApp")}
     </button>
   )
-);
+ );
 
 
   // Add email button if agent has email
-const emailButton = item?.agent?.email ? (
+  const emailButton = item?.agent?.email ? (
   <button
-    onClick={() => handleEmailClick(item.agent.email)}
+    onClick={() =>
+      handleEmailClick(
+        item.agent.email,
+        `Hello, I am interested in Property Reference Number ${item?.reference}, with Title ${item?.title}`
+      )
+    }
     className="flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:text-white hover:bg-[#9f8151] text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2"
      style={{borderRadius: 8}}
     aria-label="Send email to agent"
@@ -126,6 +147,7 @@ const emailButton = item?.agent?.email ? (
 
   return (
    <div
+   style={{minHeight: 600}}
   className={`group bg-white change_border border border-gray-100 transition-all duration-300 overflow-hidden relative ${
     viewMode === "grid"
       ? "flex flex-col h-auto"     // ✅ auto height
@@ -159,7 +181,7 @@ const emailButton = item?.agent?.email ? (
 <div
   className={`relative overflow-hidden ${
     viewMode === "grid"
-      ? "w-full h-[260px] sm:h-[320px] md:h-[380px] lg:h-[420px]" 
+      ? "w-full h-[200px] sm:h-[280px] md:h-[310px] lg:h-[350px]" 
       : "h-full w-[200px]"
   }`}
 >
@@ -173,7 +195,7 @@ const emailButton = item?.agent?.email ? (
             key={index}
           >
             <img
-              src={imageUrl}
+              src={ListingImagesUrl(imageUrl)}
               className="w-full h-[260px] sm:h-[320px] md:h-[380px] lg:h-[420px] object-cover"
               alt={item?.title || "Property image"}
               onError={(e) => {
@@ -230,21 +252,19 @@ const emailButton = item?.agent?.email ? (
             : "p-4 flex flex-col justify-center"
         }`}
         onClick={() => {
-          if (isProject(item)) {
-            // Navigate to project page
-            navigate(`/project/${item?.slug || item?.id}`);
-          } else {
-            // Navigate to regular property page
-            // Use slug if available, otherwise create descriptive slug
-            const propertySlug =
-              item.slug ||
-              `${item?.num_bedroom}-bedroom-${
-                item?.property_type?.name || "property"
-              }-for-${location?.pathname.split("/")[1] || "buy"}-in-${
-                item?.location?.replace(/\s+/g, "-") || "dubai"
-              }`.toLowerCase();
-            navigate(`/single-property/${propertySlug}`);
-          }
+          navigate(`/listing/${item?.reference}`);
+          // if (isProject(item)) {
+          //   navigate(`/project/${item?.slug || item?.id}`);
+          // } else {
+          //   const propertySlug =
+          //     item.slug ||
+          //     `${item?.num_bedroom}-bedroom-${
+          //       item?.property_type?.name || "property"
+          //     }-for-${location?.pathname.split("/")[1] || "buy"}-in-${
+          //       item?.location?.replace(/\s+/g, "-") || "dubai"
+          //     }`.toLowerCase();
+          //   navigate(`/single-property/${propertySlug}`);
+          // }
         }}
       >
         {/* Property Info */}
@@ -252,9 +272,9 @@ const emailButton = item?.agent?.email ? (
           {/* Title */}
 
            <h1  className={`font-semibold text-primary ${
-                viewMode === "grid" ? "text-xl" : "text-lg"
+                viewMode === "grid" ? "text-2xl" : "text-lg"
               }`} style={{marginBottom: 5}}>
-             {item?.title}
+             {"Đ"} {item?.price ? Number(item.price).toLocaleString() : "0"}
           </h1>
 
           {/* <h3
@@ -266,12 +286,13 @@ const emailButton = item?.agent?.email ? (
           </h3> */}
 
           {/* Price */}
-          <div className="flex items-center justify-between" style={{marginBottom: 30}}>
+          {/* <div className="flex items-center justify-between" style={{marginBottom: 30}}>
             <div
               className={`text-primary text_stying ${
                 viewMode === "grid" ? "text-lg" : "text-lg"
               }`}
             >
+              {"Đ"} {item?.price}
               {item?.currency_symbol} {item?.converted_price}
             </div>
             <div className="text-sm text-gray-500">
@@ -279,11 +300,11 @@ const emailButton = item?.agent?.email ? (
                 ? item.rental_period
                 : " "}
             </div>
-          </div>
+          </div> */}
 
            {/* Selling Points */}
           <div className="flex items-center gap-2 text-gray-600" style={{marginBottom: 0}}>
-            <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">{item?.selling_points}</span>
+            <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">{item?.title}</span>
           </div>
 
           {/* Location */}
@@ -292,7 +313,16 @@ const emailButton = item?.agent?.email ? (
               size={viewMode === "grid" ? 18 : 16}
               className="text-primary rounded-lg text-sm transition-all duration-200 mb-1 !text-[#9f8151]"
             />
-            <span className="rounded-lg text-sm transition-all duration-200 mb-1 mt-1 text-[#9f8151] text_stying">{item?.location}</span>
+            <span className="rounded-lg text-sm transition-all duration-200 mb-1 mt-1 text-[#9f8151] text_stying">
+              {[
+  item?.community,
+  item?.sub_community,
+  item?.property,
+]
+  .filter(Boolean)
+  .join(", ")}
+              {/* {item?.location} */}
+              </span>
           </div>
 
           {/* Property Features */}
@@ -311,11 +341,21 @@ const emailButton = item?.agent?.email ? (
                   />
                   <div className="text-center">
                     <div className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
-                     {item?.num_bedroom === 0
+
+<span>
+  {item?.bedrooms == "Studio"
+    ? t("Studio")
+    : `${item?.bedrooms} ${
+        Number(item?.bedrooms) == 1
+          ? t("Bedroom")
+          : t("Bedrooms")
+      }`}
+</span>
+                     {/* {item?.num_bedroom === 0
   ? t("Studio")
   : item?.num_bedroom === 1
   ? `${item?.num_bedroom} ${t("Bedroom")}`
-  : `${item?.num_bedroom} ${t("Bedrooms")}`}
+  : `${item?.num_bedroom} ${t("Bedrooms")}`} */}
 
                     </div>
                     {/* <div className="text-xs text-gray-500">{t("Bedrooms")}</div> */}
@@ -329,9 +369,10 @@ const emailButton = item?.agent?.email ? (
                   />
                   <div className="text-center">
                     <div className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
-                     {item?.num_bathroom === 1
+                      {Number(item?.bathrooms) === 1 ? `1 ${t("Bathroom")}` : `${item?.bathrooms} ${t("Bathrooms")}`}
+                     {/* {item?.num_bathroom === 1
   ? `${item?.num_bathroom} ${t("Bathroom")}`
-  : `${item?.num_bathroom} ${t("Bathrooms")}`}
+  : `${item?.num_bathroom} ${t("Bathrooms")}`} */}
 
                     </div>
                     {/* <div className="text-xs text-gray-500">
@@ -390,21 +431,62 @@ const emailButton = item?.agent?.email ? (
           </div>
         </div>
 
-        {/* Contact Buttons */}
-        {viewMode === "grid" && item?.agent && (
+        {/* Contact Buttons: prefer agent contacts (renderContact + emailButton), fallback to company_contact */}
+        {viewMode === "grid" && (
           <div
             className={`grid gap-4 pt-2 ${
               viewMode === "grid" ? "grid-cols-3" : "grid-cols-3"
             }`}
             onClick={(e) => e.stopPropagation()}
           >
-            {renderContact}
-            {emailButton}
+            {item?.agent ? (
+              <>
+                {renderContact}
+                {emailButton}
+              </>
+            ) : item?.company_contact ? (
+              <>
+                <button
+                  onClick={() => onClick("phone", item?.company_contact.phone)}
+                  className={`flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:bg-[#9f8151] hover:text-white text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2`}
+                  style={{ borderRadius: 8 }}
+                  aria-label={`Contact via phone`}
+                >
+                  <Icons.LuPhone size={18} />
+                  {t("Call")}
+                </button>
+                <button
+                  onClick={() => onClick("whatsapp", item?.company_contact.whatsapp)}
+                  className={`flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:bg-[#9f8151] hover:text-white text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2`}
+                  style={{ borderRadius: 8 }}
+                  aria-label={`Contact via whatsapp`}
+                >
+                  <Icons.FaWhatsapp size={18} />
+                  {t("WhatsApp")}
+                </button>
+                {/* Company email (uses phone field from API as requested) */}
+                <button
+                  onClick={() =>
+                    item?.company_contact?.phone &&
+                    handleEmailClick(
+                      item.company_contact.phone,
+                      `Hello, I am interested in Property Reference Number ${item?.reference}, with Title ${item?.title}`
+                    )
+                  }
+                  className={`flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:text-white hover:bg-[#9f8151] text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2`}
+                  style={{ borderRadius: 8 }}
+                  aria-label={`Contact via email`}
+                >
+                  <Icons.MdOutlineEmail size={18} />
+                  {t("Email")}
+                </button>
+              </>
+            ) : null}
           </div>
         )}
       </div>
     </div>
   );
 };
-
+ 
 export default CardUpdated;

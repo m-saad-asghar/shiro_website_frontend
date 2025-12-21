@@ -23,7 +23,7 @@ const DataCustomerServices = () => {
         desc: t(
           "Access our dedicated team of over 400+ expert agents ready to assist you."
         ),
-        onClick: () => scrollToElement("ListYourProperty"),
+        // onClick: () => scrollToElement("ListYourProperty"),
       },
       {
         id: 2,
@@ -46,9 +46,9 @@ const DataCustomerServices = () => {
         //    onClick : () => {
         //         saveAs(File , "shirow")
         //      }
-        onClick: () => {
-          navigate("/about");
-        },
+        // onClick: () => {
+        //   navigate("/about");
+        // },
       },
       {
         id: 4,
@@ -57,9 +57,9 @@ const DataCustomerServices = () => {
         desc: t(
           "Browse and find your ideal property from our extensive portfolio of Dubai projects."
         ),
-        link: "/new-projects",
+        link: "/buy/properties-for-sale",
         onClick: () => {
-          navigate("/new-projects");
+          navigate("/buy/properties-for-sale");
         },
       },
     ],
