@@ -44,11 +44,13 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/buy/:property-name/:price?/:beds?/:area?/:developer?/:sort?",
+        // path: "/buy/:property-name/:price?/:beds?/:area?/:developer?/:sort?",
+        path: "/buy/*",
         element: <Buy />,
       },
       {
-        path: "/rent/:property-name/:price?/:beds?/:area?/:developer?/:sort?",
+        // path: "/rent/:property-name/:price?/:beds?/:area?/:developer?/:sort?",
+        path: "/rent/*",
         element: <Rent />,
       },
       // {

@@ -96,6 +96,12 @@ h6 {
   margin-bottom: 32px;
 }
 
+.amentity_badge_styling {
+padding: 10px !important;
+    color: #ffffff;
+    background-color: #9f8151;
+}
+
 .info_property_header {
   margin-bottom: 30px !important;
 }

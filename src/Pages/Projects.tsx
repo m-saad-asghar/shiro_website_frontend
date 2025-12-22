@@ -1,59 +1,46 @@
-import { ValueContext } from "@/Context/ValueContext";
+import { LoaderPage } from "@/Components";
 import { Helmet } from "react-helmet";
+import { ValueContext } from "@/Context/ValueContext";
 import useQueryGet from "@/hooks/useQueryGet";
-import UseQueryPost from "@/hooks/useQueryPost";
-import { AvailableOptions, OurTeam, Search } from "@/Sections/Buy";
-import { AllProjects } from "@/Sections/Projects";
-import { ConentProjects, ContentBottom } from "@/Sections/Projects";
+import { AllProperties, Search } from "@/Sections/Buy";
 import DevelopersServices from "@/Services/DevelopersServices";
 import PropertiesServices from "@/Services/PropertiesServices";
-import SingleDeveloperServices from "@/Services/SingleDeveloperServices";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Icons from "@/Constants/Icons";
-import { MainDropdown } from "@/Components";
-import { FormBox } from "@/Components/Buy/AllProperties";
+import { parsePropertyTypeFromUrl } from "@/helpers/propertyTypeHelper";
 import { parseUrlParams } from "@/helpers/urlParser";
-import {
-  createDefaultHandler,
-  createHighestPriceWithSearchHandler,
-  createLowestPriceWithSearchHandler,
-} from "@/helpers/sortHelpers";
+
+type ApiStatus = "idle" | "pending" | "success" | "error";
+
+type UrlFilters = {
+  search?: string[];
+  min_price?: number;
+  max_price?: number;
+  property_type?: string;
+  bedrooms?: Array<string | number>;
+  bathrooms?: Array<string | number>;
+};
 
 const Projects = () => {
   const { t } = useTranslation();
-
-  // Get view mode from localStorage or default to "grid"
-  const getInitialViewMode = (): "grid" | "list" => {
-    const savedViewMode = localStorage.getItem("projectsViewMode");
-    return (savedViewMode as "grid" | "list") || "grid";
-  };
-
-  const [viewMode, setViewMode] = useState<"grid" | "list">(getInitialViewMode);
-  const [page, setPage] = useState<number>(1);
-
-  const handleViewModeChange = (mode: "grid" | "list") => {
-    setViewMode(mode);
-    // Save to localStorage
-    localStorage.setItem("projectsViewMode", mode);
-    // Close dropdown after selection
-    setTimeout(() => {
-      const closeEvent = new KeyboardEvent("keydown", {
-        key: "Escape",
-      });
-      document.dispatchEvent(closeEvent);
-    }, 100);
-  };
-
+  const navigate = useNavigate();
   const location = useLocation();
-  // Type ID is fixed for Projects page
-  const id = "4";
+
+  // ✅ pagination
+  const [page, setPage] = useState<number>(1);
+  const PER_PAGE = 6;
+
+  // Type ID is fixed for Projects page (kept as your original)
+  const id = "1";
+
   const { data: filter } = useQueryGet(["filter"], PropertiesServices.filters);
   const { data: filterDeveloper } = useQueryGet(
     ["filterDeveloper"],
     DevelopersServices.developer
   );
+
   const {
     values,
     setValues,
@@ -63,11 +50,15 @@ const Projects = () => {
     setSearchId,
   } = useContext(ValueContext);
 
-  // Get search state from navigation
+  // ✅ local state for new endpoint response
+  const [apiStatus, setApiStatus] = useState<ApiStatus>("idle");
+  const [apiResponse, setApiResponse] = useState<any>(null);
+
+  // Navigation search state (kept as-is)
   const searchState = location.state as {
     property_ids?: number[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    valueSearch?: any[]; // Array of selected search items with full object data
+    valueSearch?: any[];
     search?: string;
     property_name?: string;
     property_type_id?: number;
@@ -87,115 +78,164 @@ const Projects = () => {
     region_names?: string[];
   } | null;
 
-  const { mutateAsync, data, status } = UseQueryPost(
-    ["search", "projects", id || ""],
-    PropertiesServices.Search
-  );
+  // ✅ NEW: read filters from URL query string and return ONLY available params
+  const getFiltersFromUrl = (): UrlFilters => {
+    const params = new URLSearchParams(location.search);
 
-  // Wrapper function to always add project-specific filters
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleSearch = (searchValues: Record<string, any>) => {
-    const projectFilters = {
-      ...searchValues,
-      type_id: 4, // Type ID for Off-plan projects
-      is_finish: false, // Always filter for unfinished properties (projects)
-      // Removed is_sale filter as projects might not have this flag set
+    const toNumOrStr = (v: string): string | number => {
+      const s = v.trim();
+      if (!s) return "";
+      return /^\d+$/.test(s) ? Number(s) : s;
     };
-    return mutateAsync(projectFilters);
+
+    const filters: UrlFilters = {};
+
+    const searchArr = params
+      .getAll("search")
+      .map((v) => v.trim())
+      .filter((v) => v.length > 0);
+    if (searchArr.length > 0) filters.search = searchArr;
+
+    const minPriceRaw = params.get("min_price");
+    if (minPriceRaw !== null && minPriceRaw.trim() !== "") {
+      const n = Number(minPriceRaw);
+      if (!Number.isNaN(n)) filters.min_price = n;
+    }
+
+    const maxPriceRaw = params.get("max_price");
+    if (maxPriceRaw !== null && maxPriceRaw.trim() !== "") {
+      const n = Number(maxPriceRaw);
+      if (!Number.isNaN(n)) filters.max_price = n;
+    }
+
+    const propertyType = params.get("property_type");
+    if (propertyType && propertyType.trim() !== "") {
+      filters.property_type = propertyType.trim();
+    }
+
+    const bedroomsArr = params
+      .getAll("bedrooms")
+      .map((v) => toNumOrStr(v))
+      .filter((v) => v !== "" && v !== null && v !== undefined);
+    if (bedroomsArr.length > 0) filters.bedrooms = bedroomsArr as any;
+
+    const bathroomsArr = params
+      .getAll("bathrooms")
+      .map((v) => toNumOrStr(v))
+      .filter((v) => v !== "" && v !== null && v !== undefined);
+    if (bathroomsArr.length > 0) filters.bathrooms = bathroomsArr as any;
+
+    return filters;
   };
 
-  // Remove auto-search - only search when user clicks search button or applies filters
-  // This useEffect is commented out to prevent automatic search on typing
+  // ✅ ONE function: POST -> show_offplan_properties (now includes URL filters)
+  const fetchOffplanProperties = async (pageToLoad: number) => {
+    try {
+      const urlFilters = getFiltersFromUrl();
 
-  // Call API when page changes
-  useEffect(() => {
-    if (values && values.type_id === 4) {
-      handleSearch({
-        ...values,
-        page: page,
+      console.log("[Projects] About to send POST request to show_offplan_properties", {
+        page: pageToLoad,
+        per_page: PER_PAGE,
+        ...urlFilters,
       });
+
+      setApiStatus("pending");
+
+      const base = (import.meta as any).env?.VITE_API_URL || "";
+      const url = `${base.replace(/\/$/, "")}/show_offplan_properties`;
+
+      const payload: any = {
+        page: pageToLoad,
+        per_page: PER_PAGE,
+        ...urlFilters,
+      };
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const json = await res.json();
+
+      console.log("[Projects] Received response from show_offplan_properties", json);
+
+      setApiResponse(json);
+      setApiStatus("success");
+    } catch (error) {
+      console.log("[Projects] Request to show_offplan_properties failed", error);
+      setApiStatus("error");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  };
 
-  // Clean up values when page changes
+  // ✅ Call API when page changes OR URL query changes
   useEffect(() => {
-    if (filter) {
-      // Use helper to parse URL parameters (eliminates code duplication)
-      const urlParams = parseUrlParams(
-        location.pathname,
-        searchState,
-        filter,
-        filterDeveloper,
-        4 // Type ID for Projects
-      );
+    fetchOffplanProperties(page);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, location.search]);
 
-      // Add Projects-specific filters (off-plan properties)
-      urlParams.type_id = 4; // Type ID for Off-plan projects
-      urlParams.is_finish = false; // Projects are typically unfinished
+  // ✅ URL parsing effect (now ensures values is ALWAYS an object)
+  useEffect(() => {
+    if (id && filter) {
+      const urlParams =
+        parseUrlParams(
+          location.pathname,
+          searchState,
+          filter,
+          filterDeveloper,
+          id
+        ) || {};
 
-      setValues(urlParams);
+      const segments = location.pathname.split("/");
+      if (segments.length >= 4) {
+        const propertyTypeSegment = segments[3];
+        if (propertyTypeSegment && filter?.property_types) {
+          const propertyType = parsePropertyTypeFromUrl(
+            propertyTypeSegment,
+            filter.property_types
+          );
+          if (propertyType) {
+            urlParams.property_type_id = propertyType.id;
+            urlParams.property_name = propertyType.name;
+          }
+        }
+      }
+
+      // ✅ IMPORTANT: values must never be undefined
+      setValues({ ...(urlParams || {}), is_sale: true });
 
       // Restore valueSearch and searchId from searchState if coming from MultiSearch
       if (searchState?.valueSearch && searchState?.valueSearch.length > 0) {
         setValueSearch(searchState.valueSearch);
         setSearchId(searchState.property_ids || []);
-      } else if (
-        searchState?.property_ids &&
-        searchState.property_ids.length > 0
-      ) {
-        // If we only have property_ids, keep existing valueSearch if it matches
+      } else if (searchState?.property_ids && searchState.property_ids.length > 0) {
         setSearchId(searchState.property_ids);
       } else {
-        // Clear only if not coming from search navigation
         setValueSearch([]);
         setSearchId([]);
       }
 
-      setPage(1); // Reset page to 1 when filters change
-
-      // Call API with parsed values and ensure project filters are included
-      mutateAsync({
-        ...urlParams,
-        type_id: 4, // Type ID for Off-plan projects
-        is_finish: false, // Ensure project filters are always included
-        page: 1,
-      });
+      // Reset to page 1 when URL filters change
+      setPage(1);
     }
-  }, [
-    location.pathname,
-    filter,
-    filterDeveloper,
-    mutateAsync,
-    searchState,
-    setValues,
-    setValueSearch,
-    setSearchId,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, location.pathname, location.search, filter]);
 
-  // Remove this useEffect to prevent double API calls
-  // useEffect(() => {
-  //   // Only call API if values exist and we're not in the cleanup phase
-  //   if (values && Object.keys(values).length > 1 && values.type_id === id) {
-  //     mutateAsync({
-  //       type_id: id,
-  //       ...values,
-  //     });
-  //   }
-  // }, [values?.sort, id]);
+  // ✅ Adapt API response to what <AllProperties /> expects
+  const adaptedData = {
+    properties: apiResponse?.data?.sale_listings || [],
+    pagination: apiResponse?.pagination || null,
+  };
 
-  const { data: singleDeveloper } = useQueryGet(["singleDeveloper"], () =>
-    SingleDeveloperServices.singleDeveloper(values?.developer_id)
-  );
-
-  // Debug: Log the API response
-
-  // Show skeleton loading state
-  if (status === "pending" || !data) {
+  // ✅ Skeleton state
+  if (apiStatus === "pending" && !apiResponse) {
     return (
-      <div className="w-full min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+      <div className="w-full min-h-screen">
         <div className="pt-[120px] md:pt-[140px] lg:pt-[127.2px]" />
-        <div className="container mx-auto px-4 py-8">
+        <div className="custom_container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, index) => (
               <div
@@ -221,175 +261,78 @@ const Projects = () => {
   return (
     <>
       <Helmet>
-        <title>Off-Plan Projects in Dubai | New Development Properties</title>
+        <title>Buy Properties in Dubai | Luxury Apartments & Villas for Sale</title>
         <meta
           name="description"
-          content="Explore off-plan projects and new developments in Dubai. Invest in luxury properties before completion with flexible payment plans from Shiro Real Estate."
+          content="Find your dream property in Dubai. Browse luxury apartments, villas, and townhouses for sale. Exclusive listings from Shiro Real Estate with expert guidance."
         />
       </Helmet>
-      <div className="w-full h-full pt-[120px] md:pt-[140px] lg:pt-[127.2px]">
-        <>
-          <Search
-            from="projects"
-            item={filter}
-            options={data}
-            filterDeveloper={filterDeveloper}
-            values={values}
-            setValues={setValues}
-            valueSearch={valueSearch}
-            setValueSearch={setValueSearch}
-            setSearchId={setSearchId}
-            searchId={searchId}
-            onClick={handleSearch}
-          />
 
-          {/* Removed HeaderProperties to avoid duplicate breadcrumb and sort dropdown */}
+      <div className="w-full">
+        {apiStatus === "error" ? (
+          <LoaderPage message="Loading properties..." size="lg" />
+        ) : (
+          <>
+            {/* ✅ Search Section */}
+            <Search
+              from="projects"
+              options={apiResponse}
+              item={filter}
+              filterDeveloper={filterDeveloper}
+              values={values ?? {}}
+              valueSearch={valueSearch ?? []}
+              setValueSearch={setValueSearch}
+              setSearchId={setSearchId}
+              searchId={searchId ?? []}
+              setValues={setValues}
+              onClick={() => {
+                setPage(1);
+                fetchOffplanProperties(1);
+              }}
+            />
 
-          {singleDeveloper && (
-            <ConentProjects item={singleDeveloper?.developer} />
-          )}
-
-          {data?.data?.data?.properties?.length === 0 ? (
-            <div className="container py-20">
-              <div className="text-center">
-                <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Icons.IoSearchOutline className="w-12 h-12 text-gray-400" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  {t("No Properties Found")}
-                </h3>
-                <p className="text-gray-600 max-w-md mx-auto">
-                  {t(
-                    "We couldn't find any properties matching your criteria. Try adjusting your filters."
-                  )}
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div className="container pb-[44px] md:pb-[64px] lg:pb-[80px] pt-[20px]">
-              <div className="w-full grid grid-cols-1 lg:grid-cols-[1fr_.4fr] gap-[32px]">
-                <div className="w-full">
-                  {/* Controls Section */}
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-                    <div className="flex items-center gap-4">
-                      {/* Sort Dropdown */}
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm font-medium text-gray-700">
-                          {t("Sort by")}:
-                        </span>
-                        <MainDropdown
-                          title={values?.sort_name || t("Default")}
-                          triggerClass="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-900 hover:bg-gray-50 transition-all duration-300"
-                        >
-                          <div className="p-2 w-40">
-                            <button
-                              className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-[#9f8151] hover:text-white rounded-lg transition-all duration-[.4s]"
-                              onClick={createDefaultHandler(
-                                values,
-                                4,
-                                {},
-                                setValues,
-                                handleSearch
-                              )}
-                            >
-                              {t("Default")}
-                            </button>
-                            <button
-                              className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-[#9f8151] hover:text-white rounded-lg transition-all duration-[.4s]"
-                              onClick={createHighestPriceWithSearchHandler(
-                                values,
-                                4,
-                                {},
-                                setValues,
-                                handleSearch
-                              )}
-                            >
-                              {t("Highest price")}
-                            </button>
-                            <button
-                              className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-[#9f8151] hover:text-white rounded-lg transition-all duration-[.4s]"
-                              onClick={createLowestPriceWithSearchHandler(
-                                values,
-                                4,
-                                {},
-                                setValues,
-                                handleSearch
-                              )}
-                            >
-                              {t("Lowest price")}
-                            </button>
-                          </div>
-                        </MainDropdown>
-                      </div>
-
-                      {/* View Mode Toggle */}
-                      <div className="flex items-center gap-3">
-                        <span className="text-sm font-medium text-gray-700">
-                          {t("View as")}:
-                        </span>
-                        <MainDropdown
-                          title={viewMode === "grid" ? t("Grid") : t("List")}
-                          triggerClass="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-900 hover:bg-gray-50 transition-all duration-300"
-                        >
-                          <div className="p-2 w-32">
-                            <button
-                              className={`w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors duration-200 ${
-                                viewMode === "grid"
-                                  ? "bg-primary text-white"
-                                  : "text-gray-700 hover:bg-primary hover:text-white"
-                              }`}
-                              onClick={() => handleViewModeChange("grid")}
-                            >
-                              <Icons.IoHomeOutline size={16} />
-                              {t("Grid")}
-                            </button>
-                            <button
-                              className={`w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors duration-200 ${
-                                viewMode === "list"
-                                  ? "bg-primary text-white"
-                                  : "text-gray-700 hover:bg-primary hover:text-white"
-                              }`}
-                              onClick={() => handleViewModeChange("list")}
-                            >
-                              <Icons.IoPerson size={16} />
-                              {t("List")}
-                            </button>
-                          </div>
-                        </MainDropdown>
-                      </div>
-                    </div>
-
-                    {/* Results Count */}
-                    <div className="text-sm text-gray-600">
-                      {data?.data?.data?.properties?.length || 0}{" "}
-                      {t("properties found")}
-                    </div>
+            {/* No properties */}
+            {adaptedData?.properties?.length === 0 ? (
+              <div className="custom_container mx-auto px-4 py-16">
+                <div className="text-center">
+                  <div className="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+                    <Icons.IoIosSearch size={48} className="text-gray-400" />
                   </div>
 
-                  {/* Properties Grid/List */}
-                  <AllProjects
-                    item={data?.data?.data}
-                    status={status}
-                    pagination={data?.data?.data?.pagination}
-                    viewMode={viewMode}
-                    page={page}
-                    setPage={setPage}
-                  />
-                </div>
-                <div>
-                  <FormBox />
+                  <h3 className="font-semibold text-primary text-2xl">
+                    {t("No properties found")}
+                  </h3>
+
+                  <p className="text-[16px] text-primary font-semibold mb-3 !text-[#9f8151] font-[16px]">
+                    {t("Try adjusting your search criteria or browse all properties")}
+                  </p>
                 </div>
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="custom_container mx-auto px-4 py-8 property_container_styling">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                  <div className="flex items-center gap-4">
+                    <h2 className="text-xl font-semibold text-[#9f8151]">
+                      {t("Off-Plan Properties")}
+                    </h2>
+                    <span className="px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full">
+                      {adaptedData?.pagination?.total || 0} {t("Listings")}
+                    </span>
+                  </div>
+                </div>
 
-          <OurTeam />
-          {singleDeveloper ? (
-            <ContentBottom item={singleDeveloper?.developer} />
-          ) : (
-            <AvailableOptions />
-          )}
-        </>
+                <AllProperties
+                  item={adaptedData}
+                  status={apiStatus}
+                  pagination={adaptedData?.pagination}
+                  viewMode={"list"}
+                  page={page}
+                  setPage={setPage}
+                />
+              </div>
+            )}
+          </>
+        )}
       </div>
     </>
   );

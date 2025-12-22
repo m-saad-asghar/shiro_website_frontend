@@ -39,7 +39,7 @@ const SingleProperty = () => {
   const [show, setShow] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [listings, setListings] = useState<Record<string, any> | null>(null);
-const [amenities, setAmenities] = useState<string[]>([]);
+const [amenities, setAmenities] = useState<Record<string, any>[]>([]);
 const [images, setImages] = useState<string[]>([]);
  const [employees, setEmployees] = useState<Record<string, any>[]>([]);
   const [error, setError] = useState<string>("");
@@ -188,7 +188,7 @@ const [images, setImages] = useState<string[]>([]);
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="bg-white  shadow-lg p-6 md:p-8 change_border"
               >
-                <InfoProperty item={listings} employee={employees[0]} />
+                <InfoProperty item={listings} employee={employees[0]} amenities={amenities} />
               </motion.div>
 
               {/* Property Map */}

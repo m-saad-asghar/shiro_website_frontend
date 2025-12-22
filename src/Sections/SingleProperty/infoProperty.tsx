@@ -10,9 +10,10 @@ import SocialShare from "@/Components/SingleProperty/SocialShare";
 type InfoPropertyProps = {
   item: any;
   employee: any;
+  amenities: any;
 };
 
-const InfoProperty: FC<InfoPropertyProps> = ({ item, employee }) => {
+const InfoProperty: FC<InfoPropertyProps> = ({ item, employee, amenities }) => {
   console.log("InfoProperty item prop debugging:", employee);
   const { t } = useTranslation();
   const location = useLocation();
@@ -369,6 +370,29 @@ console.log("InfoProperty item:", item);
         {expanded ? "Read Less" : "Read More"}
       </button>
     )}
+  </div>
+</motion.div>
+
+ <motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5, delay: 0.4 }}
+  style={{ marginTop: 15 }}
+  className="space-y-4"
+>
+  <h3 className="font-semibold text-primary text-xl key_information_heading">
+    {t("Amenities")}
+  </h3>
+
+  <div className="bg-gray-50 rounded-xl p-6">
+  {amenities.map((amenity: string, index: number) => (
+  <span
+    key={`${amenity}-${index}`}
+    className="px-3 py-1 text-sm bg-gray-100 rounded-full text-gray-700 amentity_badge_styling mr-2 mb-2 inline-block"
+  >
+    {amenity}
+  </span>
+))}
   </div>
 </motion.div>
 

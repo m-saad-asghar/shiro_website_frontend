@@ -14,6 +14,15 @@ import { parseUrlParams } from "@/helpers/urlParser";
 
 type ApiStatus = "idle" | "pending" | "success" | "error";
 
+type UrlFilters = {
+  search?: string[];
+  min_price?: number;
+  max_price?: number;
+  property_type?: string;
+  bedrooms?: Array<string | number>;
+  bathrooms?: Array<string | number>;
+};
+
 const Buy = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -69,12 +78,66 @@ const Buy = () => {
     region_names?: string[];
   } | null;
 
-  // ✅ ONE function: POST -> show_sale_properties
+  // ✅ NEW: read filters from URL query string and return ONLY available params
+  const getFiltersFromUrl = (): UrlFilters => {
+    const params = new URLSearchParams(location.search);
+
+    const toNumOrStr = (v: string): string | number => {
+      const s = v.trim();
+      if (!s) return "";
+      return /^\d+$/.test(s) ? Number(s) : s;
+    };
+
+    const filters: UrlFilters = {};
+
+    // repeated params: ?search=a&search=b
+    const searchArr = params
+      .getAll("search")
+      .map((v) => v.trim())
+      .filter((v) => v.length > 0);
+    if (searchArr.length > 0) filters.search = searchArr;
+
+    const minPriceRaw = params.get("min_price");
+    if (minPriceRaw !== null && minPriceRaw.trim() !== "") {
+      const n = Number(minPriceRaw);
+      if (!Number.isNaN(n)) filters.min_price = n;
+    }
+
+    const maxPriceRaw = params.get("max_price");
+    if (maxPriceRaw !== null && maxPriceRaw.trim() !== "") {
+      const n = Number(maxPriceRaw);
+      if (!Number.isNaN(n)) filters.max_price = n;
+    }
+
+    const propertyType = params.get("property_type");
+    if (propertyType && propertyType.trim() !== "") {
+      filters.property_type = propertyType.trim();
+    }
+
+    const bedroomsArr = params
+      .getAll("bedrooms")
+      .map((v) => toNumOrStr(v))
+      .filter((v) => v !== "" && v !== null && v !== undefined);
+    if (bedroomsArr.length > 0) filters.bedrooms = bedroomsArr as any;
+
+    const bathroomsArr = params
+      .getAll("bathrooms")
+      .map((v) => toNumOrStr(v))
+      .filter((v) => v !== "" && v !== null && v !== undefined);
+    if (bathroomsArr.length > 0) filters.bathrooms = bathroomsArr as any;
+
+    return filters;
+  };
+
+  // ✅ ONE function: POST -> show_sale_properties (now includes URL filters)
   const fetchSaleProperties = async (pageToLoad: number) => {
     try {
+      const urlFilters = getFiltersFromUrl();
+
       console.log("[Buy] About to send POST request to show_sale_properties", {
         page: pageToLoad,
         per_page: PER_PAGE,
+        ...urlFilters,
       });
 
       setApiStatus("pending");
@@ -83,16 +146,19 @@ const Buy = () => {
       // IMPORTANT: if your backend is underscore, change to /show_sale_properties
       const url = `${base.replace(/\/$/, "")}/show_sale_properties`;
 
+      const payload: any = {
+        page: pageToLoad,
+        per_page: PER_PAGE,
+        ...urlFilters, // ✅ ONLY available params are included
+      };
+
       const res = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({
-          page: pageToLoad,
-          per_page: PER_PAGE,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const json = await res.json();
@@ -107,18 +173,23 @@ const Buy = () => {
     }
   };
 
-  // ✅ Call API when page changes
+  // ✅ Call API when page changes OR URL query changes
   useEffect(() => {
     fetchSaleProperties(page);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  }, [page, location.search]);
 
   // ✅ URL parsing effect (now ensures values is ALWAYS an object)
   useEffect(() => {
     if (id && filter) {
       const urlParams =
-        parseUrlParams(location.pathname, searchState, filter, filterDeveloper, id) ||
-        {};
+        parseUrlParams(
+          location.pathname,
+          searchState,
+          filter,
+          filterDeveloper,
+          id
+        ) || {};
 
       const segments = location.pathname.split("/");
       if (segments.length >= 4) {
@@ -153,7 +224,7 @@ const Buy = () => {
       setPage(1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, location.pathname, filter]);
+  }, [id, location.pathname, location.search, filter]);
 
   // ✅ Adapt API response to what <AllProperties /> expects
   const adaptedData = {
@@ -231,48 +302,15 @@ const Buy = () => {
                     <Icons.IoIosSearch size={48} className="text-gray-400" />
                   </div>
 
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  <h3 className="font-semibold text-primary text-2xl">
                     {t("No properties found")}
                   </h3>
 
-                  <p className="text-gray-600 mb-8">
+                  <p className="text-[16px] text-primary font-semibold mb-3 !text-[#9f8151] font-[16px]">
                     {t("Try adjusting your search criteria or browse all properties")}
                   </p>
 
-                  <button
-                    onClick={() => {
-                      const cleanValues: any = {
-                        type_id: id,
-                        is_sale: true,
-                        search: "",
-                        property_type_id: undefined,
-                        property_name: undefined,
-                        price_min: undefined,
-                        price_max: undefined,
-                        bedroom_min: undefined,
-                        bedroom_max: undefined,
-                        area_min: undefined,
-                        area_max: undefined,
-                        developer_id: undefined,
-                        developer_name: undefined,
-                        sort: undefined,
-                        sort_name: undefined,
-                        page: 1,
-                      };
-
-                      setValues(cleanValues);
-                      setValueSearch([]);
-                      setSearchId([]);
-                      setPage(1);
-
-                      fetchSaleProperties(1);
-                      navigate(`/buy/properties-for-sale`);
-                    }}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary/90 transition-all duration-300"
-                  >
-                    <Icons.IoIosArrowBack size={20} />
-                    {t("Clear Filters")}
-                  </button>
+                  {/* <button ...>Clear Filters</button> */}
                 </div>
               </div>
             ) : (
