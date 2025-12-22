@@ -314,7 +314,7 @@ const Header = () => {
               </div> */}
 
               {/* Currency Dropdown */}
-              <div>
+              {/* <div>
                 <MainDropdown
                   title={
                     <div className="flex items-center gap-2">
@@ -370,7 +370,7 @@ const Header = () => {
                     </div>
                   </DropdownMenuItem>
                 </MainDropdown>
-              </div>
+              </div> */}
 
               {/* {isAuthenticated ? (
                 <button
