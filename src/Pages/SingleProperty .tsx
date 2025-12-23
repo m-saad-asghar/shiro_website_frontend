@@ -39,7 +39,7 @@ const SingleProperty = () => {
   const [show, setShow] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [listings, setListings] = useState<Record<string, any> | null>(null);
-const [amenities, setAmenities] = useState<Record<string, any>[]>([]);
+const [amenities, setAmenities] = useState<string[]>([]);
 const [images, setImages] = useState<string[]>([]);
  const [employees, setEmployees] = useState<Record<string, any>[]>([]);
   const [error, setError] = useState<string>("");

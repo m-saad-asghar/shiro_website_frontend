@@ -156,24 +156,24 @@ const HeaderItem = () => {
             //   item: t("List Your Property"),
             //   link: "/list-your-property",
             // },
-            {
-              id: 4,
-              icon: faqsIcon,
-              item: t("FAQs"),
-              link: "/faqs",
-            },
+            // {
+            //   id: 4,
+            //   icon: faqsIcon,
+            //   item: t("FAQs"),
+            //   link: "/faqs",
+            // },
             {
               id: 5,
               icon: meetTheTeamIcon,
               item: t("Meet The Team"),
               link: "/team",
             },
-            {
-              id: 6,
-              icon: testimonialIcon,
-              item: t("Testimonials"),
-              link: "/reviews",
-            },
+            // {
+            //   id: 6,
+            //   icon: testimonialIcon,
+            //   item: t("Testimonials"),
+            //   link: "/reviews",
+            // },
             {
               id: 7,
               icon: contactUsIcon,
