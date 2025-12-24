@@ -34,7 +34,7 @@ export default function ProjectFaq({ faqs }: ProjectFaqProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-white change_border border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300"
+                className="bg-white change_border border border-primary/20 overflow-hidden hover:shadow-xl transition-all duration-300"
               >
                 <button
                   onClick={() => toggleFAQ(faq.id)}

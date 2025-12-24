@@ -200,7 +200,7 @@ const ProjectDetails = () => {
       >
         {/* Hero Image */}
         {projects?.project_main_image && (
-          <section className="relative w-full h-[72vh]">
+          <section className="relative w-full h-[91vh]">
             <img
               src={ImagesUrl(projects.project_main_image)}
               alt={localizedName}
@@ -218,7 +218,7 @@ const ProjectDetails = () => {
                 md:bottom-28 md:left-0 md:translate-x-0 md:items-start md:text-left
               "
             >
-              <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold !text-white drop-shadow-lg tracking-wide leading-tight content_general">
+              <h1 className="hidden md:block w-full lg:w-[100%] font-bold !text-white drop-shadow-lg tracking-wide leading-tight content_general project_text">
                 {localizedName}
               </h1>
 
@@ -338,11 +338,11 @@ const ProjectDetails = () => {
 
             {/* Unique Selling Point */}
          <div id="selling_point" className="scroll-mt-28">
-           <div className="mt-8">
+           {/* <div className="mt-8">
              <h1 className="custom_container hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
                {t("Unique Selling Point")}
               </h1>
-           </div>
+           </div> */}
           <div className="grid grid-cols-12 items-start">
   <div className="col-span-12 md:col-span-12">
  {projects?.unique_selling_points?.length > 0 && (
@@ -393,11 +393,11 @@ const ProjectDetails = () => {
 
             {/* Project Location */}
          <div id="location" className="scroll-mt-28 floor_plan_styling">
-           <div className="mt-8">
+           {/* <div className="mt-8">
              <h1 className="custom_container hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
                {projects.name} {t("Location")}
               </h1>
-           </div>
+           </div> */}
           <div className="grid grid-cols-12 items-start">
   <div className="col-span-12 md:col-span-12">
  {projects?.location?.length > 0 && (
@@ -411,7 +411,7 @@ const ProjectDetails = () => {
 
           {/* PAYMENT PLANS */}
              <div id="paymentPlans" className="scroll-mt-28 custom_container">
-           <div className="mt-8 mb-8">
+           <div className="mt-8 ">
              <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
                 {localizedName} {t("Payment Plans")}
               </h1>
@@ -419,7 +419,13 @@ const ProjectDetails = () => {
           <div className="grid grid-cols-12 items-start">
   <div className="col-span-12 md:col-span-12">
  {projects?.payment_plans?.length > 0 && (
-<ProjectPaymentPlan payment_plans={projects?.payment_plans || []} />
+<ProjectPaymentPlan payment_plans={projects?.payment_plans || []} project_payment_plan_description={projects?.project_payment_plan_description || ""} 
+onButtonClick={() => {
+    const el = document.getElementById("contactForm");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }} />
 )}
 
   </div>
@@ -529,7 +535,7 @@ const ProjectDetails = () => {
           )}
         </section>
 
-        <div className="half_padding_bottom">
+        <div className="half_padding_bottom" id="contactForm">
           <ContactForm />
         </div>
       </div>

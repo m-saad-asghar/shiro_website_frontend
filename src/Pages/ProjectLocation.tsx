@@ -23,38 +23,59 @@ export default function ProjectLocationSection({
   return (
     <section className="w-full bg-[#094834] custom_container">
       <div className="location_container">
+        {main_image && (
+          <div
+            className="
+              relative
+              w-full
+              overflow-hidden
+              change_border
+              shadow-xl
+              min-h-[420px] md:min-h-[560px]
+            "
+          >
+            {/* BACKGROUND IMAGE (auto height) */}
+            <img
+              src={ProjectImagesUrl(main_image)}
+              alt={title || "Project Location"}
+              className="
+                absolute inset-0
+                w-full h-full
+                object-cover
+              "
+            />
 
-        {/* STACKED: TEXT → IMAGE */}
-        <div className="flex flex-col gap-8">
-
-          {/* TEXT FIRST */}
-          <div className="w-full text-white">
-            {title && (
-              <h1 className="heading_space font-semibold text-4xl">
-                {title}
-              </h1>
-            )}
-
-            {description && (
+            {/* OVERLAY LAYER */}
+            <div className="relative z-10 flex items-start md:items-center h-full">
               <div
-                className="down_styling para_styling !text-[#ffffff]"
-                dangerouslySetInnerHTML={{ __html: description }}
-              />
-            )}
-          </div>
+                className="
+                  m-4 md:m-10
+                  w-[100%] md:w-[620px] lg:w-[660px]
+                 change_border
+                  bg-[#FFFFFF66]
+                  backdrop-blur-xl
+                  shadow-2xl
+                  border border-white/30
+                  p-6 md:p-10
+                "
+              >
+                {title && (
+                  <h2 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+                    {title}
+                  </h2>
+                )}
 
-          {/* IMAGE SECOND (HALF HEIGHT) */}
-          {main_image && (
-            <div className="w-full overflow-hidden change_border shadow-xl">
-              <img
-                src={ProjectImagesUrl(main_image)}
-                alt={title || "Project Location"}
-                className="w-full object-cover max-h-[320px] md:max-h-[520px]"
-              />
+                {description && (
+                  <div
+                    className="mt-4 down_styling para_styling"
+                    dangerouslySetInnerHTML={{ __html: description }}
+                  />
+                )}
+
+              </div>
             </div>
-          )}
-
-        </div>
+          </div>
+        )}
       </div>
     </section>
   );

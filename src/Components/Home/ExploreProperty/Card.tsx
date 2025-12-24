@@ -168,7 +168,7 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
 
   return (
     <div
-      className={`group bg-white change_border  border border-gray-100 overflow-hidden relative ${
+      className={`group bg-white change_border  border border-primary/20 overflow-hidden relative ${
         viewMode === "grid"
           ? "h-auto flex flex-col"
           : // ✅ LIST MODE RESPONSIVE (mobile stacked, desktop row)

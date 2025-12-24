@@ -217,7 +217,7 @@ const DeveloperDetails = () => {
                       <div
                         key={project.id || index}
                         onClick={() => handleClick(project.slug)}
-                        className="group bg-white change_border border border-gray-100 overflow-hidden h-full flex flex-col transition-transform duration-300 cursor-pointer"
+                        className="group bg-white change_border border border-primary/20 overflow-hidden h-full flex flex-col transition-transform duration-300 cursor-pointer"
                       >
                         {/* Image with hover zoom */}
                         {project.project_main_image && (
@@ -250,7 +250,7 @@ const DeveloperDetails = () => {
 
                           {projectDescription && (
                             <p
-                              className="leading-relaxed line-clamp-3 rounded-lg text-sm transition-all duration-200 mb-1 text-primary"
+                              className="leading-relaxed line-clamp-3 rounded-lg text-sm transition-all duration-200 mb-1 text-gray-600"
                               dangerouslySetInnerHTML={{
                                 __html: projectDescription,
                               }}

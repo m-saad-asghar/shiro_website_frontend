@@ -21,9 +21,9 @@ const ListYourProperty = () => {
 
       {/* Hero Section */}
 
-     <section className="relative w-full h-[72vh]">
+     <section className="relative w-full h-[91vh]">
             <img
-              src={ImagesUrl("creek_bay_main_image.jpg")}
+              src={ImagesUrl("list_with_us_main_image.avif")}
               alt="List Your Property Main Banner"
               className="w-full h-full object-cover"
             />
@@ -39,8 +39,8 @@ const ListYourProperty = () => {
                 md:bottom-28 md:left-0 md:translate-x-0 md:items-start md:text-left
               "
             >
-              <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold !text-white drop-shadow-lg tracking-wide leading-tight content_general">
-                {t("Sell or Rent Out Your Property in Dubai")}
+              <h1 className="hidden md:block w-full lg:w-[100%] project_text font-bold !text-white drop-shadow-lg tracking-wide leading-tight content_general">
+                {t("List Your Property in Dubai")}
               </h1>
 
               <p className="text-sm sm:text-base">

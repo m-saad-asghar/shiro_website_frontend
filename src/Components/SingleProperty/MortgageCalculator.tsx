@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Icons from "@/Constants/Icons";
 
@@ -10,43 +10,75 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
   propertyPrice,
 }) => {
   const { t } = useTranslation();
-  const [downPayment, setDownPayment] = useState(20);
-  const [loanTerm, setLoanTerm] = useState(25);
-  const [interestRate, setInterestRate] = useState(4.5);
 
-  // Ensure property price is valid
-  const validPropertyPrice = (() => {
-    if (!propertyPrice) return 0;
+  const [downPayment, setDownPayment] = useState(20); // %
+  const [loanTerm, setLoanTerm] = useState(25); // years
+  const [interestRate, setInterestRate] = useState(4.5); // annual %
 
-    if (typeof propertyPrice === "string") {
-      const cleanPrice = propertyPrice.replace(/[^\d.]/g, "");
-      const numPrice = parseFloat(cleanPrice);
-      return isNaN(numPrice) ? 0 : numPrice;
-    }
+  // ✅ Parse and validate property price robustly
+  const validPropertyPrice = useMemo(() => {
+    if (propertyPrice === null || propertyPrice === undefined) return 0;
 
     if (typeof propertyPrice === "number") {
-      return isNaN(propertyPrice) ? 0 : propertyPrice;
+      return Number.isFinite(propertyPrice) ? propertyPrice : 0;
+    }
+
+    if (typeof propertyPrice === "string") {
+      // remove commas first, then remove non-digit/non-dot
+      const cleanPrice = propertyPrice.replace(/,/g, "").replace(/[^\d.]/g, "");
+      const numPrice = parseFloat(cleanPrice);
+      return Number.isFinite(numPrice) ? numPrice : 0;
     }
 
     return 0;
-  })();
+  }, [propertyPrice]);
 
-  // Calculate loan
-  const loanAmount = validPropertyPrice * (1 - downPayment / 100);
-  const monthlyRate = interestRate / 100 / 12;
-  const numberOfPayments = loanTerm * 12;
+  // ✅ Core calculations (fixed-rate amortized mortgage)
+  const loanAmount = useMemo(() => {
+    const dp = Math.min(Math.max(downPayment, 0), 100);
+    return validPropertyPrice * (1 - dp / 100);
+  }, [validPropertyPrice, downPayment]);
 
-  const monthlyPayment =
-    (loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments))) /
-    (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+  const monthlyRate = useMemo(() => {
+    const r = interestRate / 100;
+    return r / 12;
+  }, [interestRate]);
 
-  const totalPayment = monthlyPayment * numberOfPayments;
-  const totalInterest = totalPayment - loanAmount;
+  const numberOfPayments = useMemo(() => loanTerm * 12, [loanTerm]);
 
-  // Format numbers
+  // ✅ Guard against 0% interest / invalid math
+  const monthlyPayment = useMemo(() => {
+    if (!Number.isFinite(loanAmount) || loanAmount <= 0) return 0;
+    if (!Number.isFinite(numberOfPayments) || numberOfPayments <= 0) return 0;
+
+    if (!Number.isFinite(monthlyRate) || monthlyRate < 0) return 0;
+
+    if (monthlyRate === 0) {
+      return loanAmount / numberOfPayments;
+    }
+
+    const pow = Math.pow(1 + monthlyRate, numberOfPayments);
+    const denom = pow - 1;
+
+    if (denom === 0) return 0;
+
+    return (loanAmount * (monthlyRate * pow)) / denom;
+  }, [loanAmount, monthlyRate, numberOfPayments]);
+
+  const totalPayment = useMemo(() => {
+    if (!Number.isFinite(monthlyPayment) || monthlyPayment <= 0) return 0;
+    return monthlyPayment * numberOfPayments;
+  }, [monthlyPayment, numberOfPayments]);
+
+  const totalInterest = useMemo(() => {
+    if (!Number.isFinite(totalPayment) || totalPayment <= 0) return 0;
+    return totalPayment - loanAmount;
+  }, [totalPayment, loanAmount]);
+
+  // ✅ Currency formatting (safe + clean)
   const formatCurrency = (amount: number) => {
-    if (isNaN(amount) || amount === 0) return "$0";
-    return `$${amount.toLocaleString()}`;
+    if (!Number.isFinite(amount) || amount <= 0) return "Đ0";
+    return `Đ${Math.round(amount).toLocaleString()}`;
   };
 
   return (
@@ -77,6 +109,7 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
               {formatCurrency((validPropertyPrice * downPayment) / 100)}
             </span>
           </div>
+
           <div className="relative">
             <input
               type="range"
@@ -110,6 +143,7 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
               {loanTerm} {t("Years")}
             </span>
           </div>
+
           <div className="relative">
             <input
               type="range"
@@ -143,10 +177,11 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
               {interestRate}%
             </span>
           </div>
+
           <div className="relative">
             <input
               type="range"
-              min="2"
+              min="0"
               max="8"
               step="0.1"
               value={interestRate}
@@ -154,14 +189,14 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
               className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-thumb"
               style={{
                 background: `linear-gradient(to right, #094834 0%, #094834 ${
-                  ((interestRate - 2) / (8 - 2)) * 100
+                  ((interestRate - 0) / (8 - 0)) * 100
                 }%, #e5e7eb ${
-                  ((interestRate - 2) / (8 - 2)) * 100
+                  ((interestRate - 0) / (8 - 0)) * 100
                 }%, #e5e7eb 100%)`,
               }}
             />
             <div className="flex justify-between font-semibold rounded-lg text-sm mt-1 transition-all duration-200 mb-1 text-[#9f8151]">
-              <span>2%</span>
+              <span>0%</span>
               <span>8%</span>
             </div>
           </div>
@@ -170,11 +205,14 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
         {/* Results */}
         <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-xl p-6 space-y-4">
           <div className="flex justify-between items-center">
-            <span className="font-semibold rounded-lg text-sm transition-all duration-200 text-[#9f8151]">{t("Loan Amount")}</span>
+            <span className="font-semibold rounded-lg text-sm transition-all duration-200 text-[#9f8151]">
+              {t("Loan Amount")}
+            </span>
             <span className="font-bold text-lg text-primary">
               {formatCurrency(loanAmount)}
             </span>
           </div>
+
           <div className="flex justify-between items-center">
             <span className="font-semibold rounded-lg text-sm transition-all duration-200 text-[#9f8151]">
               {t("Monthly Payment")}
@@ -183,6 +221,7 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
               {formatCurrency(monthlyPayment)}
             </span>
           </div>
+
           <div className="flex justify-between items-center">
             <span className="font-semibold rounded-lg text-sm transition-all duration-200 text-[#9f8151]">
               {t("Total Interest")}
@@ -191,10 +230,6 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
               {formatCurrency(totalInterest)}
             </span>
           </div>
-          {/* <div className="flex justify-between items-center text-xs text-gray-500">
-            <span>{t("Total Interest")}</span>
-            <span>{formatCurrency(totalInterest)}</span>
-          </div> */}
         </div>
       </div>
     </div>

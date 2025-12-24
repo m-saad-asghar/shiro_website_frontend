@@ -1,23 +1,23 @@
 // Import all developer logos
-import amaal from "../../Images/developer-logos/amaal.svg";
-import arada from "../../Images/developer-logos/arada.svg";
-import azizi from "../../Images/developer-logos/azizi.svg";
-import binghatti from "../../Images/developer-logos/binghatti.svg";
-import damac from "../../Images/developer-logos/damac.svg";
+import amaal from "../../Images/developer-logos/amaal.png";
+import arada from "../../Images/developer-logos/arada.png";
+import azizi from "../../Images/developer-logos/azizi.png";
+import binghatti from "../../Images/developer-logos/binghatti.png";
+import damac from "../../Images/developer-logos/damac.png";
 import dar from "../../Images/developer-logos/dar.svg";
-import ellington from "../../Images/developer-logos/ellington.svg";
-import emaar from "../../Images/developer-logos/emaar.svg";
-import hre from "../../Images/developer-logos/hre.svg";
-import imtiaz from "../../Images/developer-logos/imtiaz.svg";
-import mag from "../../Images/developer-logos/mag.svg";
-import majid from "../../Images/developer-logos/majid.svg";
-import meraas from "../../Images/developer-logos/meraas.svg";
-import nakheel from "../../Images/developer-logos/nakheel.svg";
-import omniyat from "../../Images/developer-logos/omniyat.svg";
-import one_development from "../../Images/developer-logos/one_development.svg";
-import reef from "../../Images/developer-logos/reef.svg";
-import samana from "../../Images/developer-logos/samana.svg";
-import sobha from "../../Images/developer-logos/sobha.svg";
+import ellington from "../../Images/developer-logos/ellington.png";
+import emaar from "../../Images/developer-logos/emaar.png";
+import hre from "../../Images/developer-logos/hre.png";
+import imtiaz from "../../Images/developer-logos/imtiaz.png";
+import mag from "../../Images/developer-logos/mag.png";
+import majid from "../../Images/developer-logos/majid.png";
+import meraas from "../../Images/developer-logos/meraas.png";
+import nakheel from "../../Images/developer-logos/nakheel.png";
+import omniyat from "../../Images/developer-logos/omniyat.png";
+import one_development from "../../Images/developer-logos/one_development.png";
+import reef from "../../Images/developer-logos/reef.png";
+import samana from "../../Images/developer-logos/samana.png";
+import sobha from "../../Images/developer-logos/sobha.png";
 
 
 // import EMAAR from "../../Images/developer-logos/EMAAR.webp";

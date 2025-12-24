@@ -148,7 +148,7 @@ const CardUpdated: FC<CardType> = ({ item, viewMode = "grid" }) => {
   return (
    <div
    style={{minHeight: 600}}
-  className={`group bg-white change_border border border-gray-100 transition-all duration-300 overflow-hidden relative ${
+  className={`group bg-white change_border border border-primary/20 transition-all duration-300 overflow-hidden relative ${
     viewMode === "grid"
       ? "flex flex-col h-auto"     // ✅ auto height
       : "h-[140px] flex flex-row"  // list view still fixed

@@ -191,7 +191,9 @@ console.log("InfoProperty item:", item);
               {t("Property Type")}
             </p>
             <p className="text-primary text_stying text-sm">
-              {item?.property_type}
+              {item?.property_type
+    ? item.property_type.charAt(0).toUpperCase() + item.property_type.slice(1)
+    : ""}
             </p>
           </div>
 

@@ -106,6 +106,10 @@ padding: 10px !important;
   margin-bottom: 30px !important;
 }
 
+.project_text {
+  font-size: 70px !important;
+}
+
 input::placeholder,
 textarea::placeholder {
   font-size: 16px !important;
@@ -230,7 +234,7 @@ textarea::placeholder {
 }
 
 .navbar_styling_down {
-  border: 1px solid #f0f3f8;
+  border: 1px solid #09483433;
 }
 
 .explore_properties_styling {
@@ -587,6 +591,10 @@ video {
 
 @media(max-width: 1199px) {
 
+  .project_text {
+    font-size: 40px !important;
+}
+
   .hover_external_btn {
     font-size: 12px;
 }
@@ -908,6 +916,10 @@ video {
 
 /* Responsive adjustments for team slider */
 @media (max-width: 767px) {
+
+   .project_text {
+    font-size: 24px !important;
+}
 
   input::placeholder,
 textarea::placeholder {
