@@ -34,7 +34,7 @@ const Footer = () => {
           className="border-b border-white/10 py-4"
         >
           <AccordionItem value={`item-${item.id}`} className="border-none">
-            <AccordionTrigger className="text-sm font-semibold text-white hover:text-[#d3c294] transition-colors duration-300 py-2">
+            <AccordionTrigger className="footer_text_styling text-md font-semibold text-white hover:text-[#d3c294] transition-colors duration-300 py-2">
               {item.title}
             </AccordionTrigger>
             <AccordionContent className="mt-2 space-y-2">
@@ -43,7 +43,7 @@ const Footer = () => {
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="text-sm text-gray-300 list-none font-normal hover:text-[#d3c294] duration-300 cursor-pointer transition-all py-1"
+                  className="footer_text_styling footer_text_styling_hover text-sm text-gray-300 list-none font-normal hover:text-[#d3c294] duration-300 cursor-pointer transition-all py-1"
                   key={li.id}
                   onClick={() => {
                     if ((li as any)?.property_type_id) {
@@ -66,13 +66,13 @@ const Footer = () => {
         </Accordion>
       ) : (
         <div key={item.id} className="space-y-4">
-          <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
+          <h3 className="text-md font-semibold uppercase tracking-wider footer_text_styling">
             {item.title}
           </h3>
           <ul className="space-y-2">
             {item.option.map((li) => (
               <li
-                className="text-sm text-gray-300 font-normal capitalize hover:text-[#d3c294] duration-300 cursor-pointer transition-all"
+                className="footer_text_styling footer_text_styling_hover text-sm text-gray-300 font-normal capitalize hover:text-[#d3c294] duration-300 cursor-pointer transition-all"
                 key={li.id}
                 onClick={() => {
                   if ((li as any)?.property_type_id) {
@@ -101,7 +101,8 @@ const Footer = () => {
       key={item.id}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
-      className="w-10 h-10 bg-white/10 hover:bg-[#9c8050] rounded-xl border border-white/20 flex items-center justify-center cursor-pointer transition-all duration-300 group"
+      className="w-10 h-10 flex items-center justify-center cursor-pointer transition-all duration-300 group"
+      // className="w-10 h-10 bg-white/10 hover:bg-[#9c8050] rounded-xl border border-white/20 flex items-center justify-center cursor-pointer transition-all duration-300 group"
       onClick={() => window.open(item.link, "_blank")}
     >
       <div className="text-white group-hover:text-white transition-colors duration-300">
@@ -131,7 +132,7 @@ const Footer = () => {
 
       <div className="relative">
         {/* Main Footer Content */}
-        <div className="container mx-auto px-4 py-12 lg:py-16">
+        <div className="custom_container mx-auto px-4 py-12 lg:py-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
             {/* Logo & Description Section */}
             <div className="lg:col-span-4 space-y-6">
@@ -144,7 +145,7 @@ const Footer = () => {
                 onClick={() => navigate("/")}
               >
                 <img
-                  src={Images.logoLight}
+                  src={Images.LogoGold}
                   alt="Shiro Real Estate - Homepage"
                   className="h-10 md:h-12"
                 />
@@ -156,10 +157,12 @@ const Footer = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="space-y-3"
+                style={{width: 'fit-content'}}
               >
-                <motion.div
+               <div className="flex">
+                 <motion.div
                   whileHover={{ x: 5 }}
-                  className="flex items-center gap-3 text-gray-300 hover:text-[#d3c294] cursor-pointer transition-colors duration-300"
+                  className="footer_text_styling footer_text_styling_hover flex items-center gap-3 hover:text-[#d3c294] cursor-pointer transition-colors duration-300"
                   onClick={() =>
                     handleContactClick("phone", contact?.contact_info?.phone)
                   }
@@ -169,9 +172,10 @@ const Footer = () => {
                     {contact?.contact_info?.phone}
                   </span>
                 </motion.div>
+                <div className="separator_styling">|</div>
                 <motion.div
                   whileHover={{ x: 5 }}
-                  className="flex items-center gap-3 text-gray-300 hover:text-[#d3c294] cursor-pointer transition-colors duration-300"
+                  className="footer_text_styling footer_text_styling_hover flex items-center gap-3 hover:text-[#d3c294] cursor-pointer transition-colors duration-300"
                   onClick={() =>
                     handleContactClick("email", contact?.contact_info?.email)
                   }
@@ -181,14 +185,15 @@ const Footer = () => {
                     {contact?.contact_info?.email}
                   </span>
                 </motion.div>
+               </div>
                 <motion.div
                   whileHover={{ x: 5 }}
-                  className="flex items-start gap-3 text-gray-300 hover:text-[#d3c294] cursor-pointer transition-colors duration-300"
+                  className="footer_text_styling footer_text_styling_hover flex items-start gap-3 hover:text-[#d3c294] cursor-pointer transition-colors duration-300"
                   onClick={() => handleContactClick("location")}
                 >
-                  <Icons.CiLocationOn className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                  <Icons.CiLocationOn className="w-4 h-4 flex-shrink-0 mt-0.5" style={{color: "#ffffff"}}/>
                   <span className="text-sm leading-relaxed">
-                    {contact?.contact_info?.address || "Dubai, UAE"}
+                    {contact?.contact_info?.address || "Boulevard Plaza Tower 1 - Downtown - Office No. 2101 - 21st Floor - Dubai"}
                   </span>
                 </motion.div>
               </motion.div>
@@ -199,7 +204,7 @@ const Footer = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
+                <h4 className="text-white font-semibold mb-4 text-md uppercase tracking-wider footer_text_styling">
                   {t("Follow Us")}
                 </h4>
                 <div className="flex items-center gap-3">
@@ -219,7 +224,7 @@ const Footer = () => {
 
         {/* Bottom Section */}
         <div className="border-t border-white/10">
-          <div className="container mx-auto px-4 py-6 lg:py-8">
+          <div className="custom_container mx-auto px-4 py-6 lg:py-8">
             <div className="flex flex-col lg:flex-row justify-between items-center gap-4 lg:gap-6">
               {/* Copyright */}
               <motion.div
@@ -228,13 +233,13 @@ const Footer = () => {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="text-center lg:text-left"
               >
-                <p className="text-gray-400 text-sm">
-                  © 2025 Shiro Real Estate. {t("All Rights Reserved")}.
+                <p className="text-gray-400 text-sm footer_text_styling">
+                  © 2025–{new Date().getFullYear()} Shiro Real Estate. {t("All Rights Reserved")}.
                 </p>
               </motion.div>
 
               {/* Legal Links */}
-              <motion.div
+              {/* <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
@@ -260,7 +265,7 @@ const Footer = () => {
                 >
                   {t("Sitemap")}
                 </a>
-              </motion.div>
+              </motion.div> */}
             </div>
           </div>
         </div>

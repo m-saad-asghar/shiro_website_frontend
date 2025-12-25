@@ -60,6 +60,7 @@ import ListingGreenGold from "../assets/Images/CustomImages/listing_green_gold.s
 import SpecialistGreenGold from "../assets/Images/CustomImages/specialist_green_gold.svg";
 import VisionGreenGold from "../assets/Images/CustomImages/vision_green_gold.svg";
 import EmaarDeveloperImage from "../assets/Images/Developer/emaar_developer_image.webp";
+import LogoGold from "../assets/Images/logo_gold.png"
 export default {
   ExploreGreen,
   EmaarDeveloperImage,
@@ -122,5 +123,6 @@ export default {
   imgFind,
   imgCareer,
   logoLight,
+  LogoGold,
   unknownPerson,
 };

@@ -96,6 +96,13 @@ h6 {
   margin-bottom: 32px;
 }
 
+.separator_styling {
+    margin-left: 20px !important;
+    margin-right: 20px !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+
 .amentity_badge_styling {
 padding: 10px !important;
     color: #ffffff;
@@ -126,6 +133,17 @@ textarea::placeholder {
 
 .premiere_marketplace_styling {
   margin-bottom: 45px;
+}
+
+.footer_text_styling {
+ /* font-weight: 600; */
+ color: white;
+}
+
+.footer_text_styling_hover:hover {
+  text-decoration: underline;
+  color: #9f8151;
+  width: fit-content !important;
 }
 
 .property_container_styling {
