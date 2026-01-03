@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import Icons from "@/Constants/Icons";
 import contactFormValidationSchema from "@/Utils/Validations/contactFormValidation";
+import { Form } from "../Components/Home";
 
 interface ContactFormProps {
   title?: string;
@@ -71,7 +72,8 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
       {/* Form */}
       <div className="space-y-6">
-        <FormikContainer
+        <Form/>
+        {/* <FormikContainer
           conClassName="w-full space-y-6"
           onSubmit={onSubmit}
           initialValues={initialValues}
@@ -79,7 +81,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
           schema={contactFormValidationSchema}
           btnClass="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 cursor-pointer flex items-center justify-center gap-2"
           btnText={t("Submit Details")}
-        />
+        /> */}
       </div>
 
       {/* Additional Info */}

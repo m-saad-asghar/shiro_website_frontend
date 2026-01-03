@@ -73,18 +73,14 @@ const Partners: React.FC<PartnersProps> = ({ conClass }) => {
         }
       }}
     >
-      {/* <div className="bg-white rounded-xl p-3 md:p-4 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary/20 h-full flex flex-col justify-center items-center"> */}
-        {/* <div className="relative overflow-hidden rounded-lg flex items-center justify-center h-16 md:h-20 w-full"> */}
-          <img
-            src={item.img}
-            className="w-4/5 h-4/5 object-contain transition-transform duration-300 group-hover:scale-105"
-            alt={`${
-              item.name || "Partner"
-            } - Official Partner | Dubai Real Estate Developer`}
-            loading="lazy"
-          />
-        {/* </div> */}
-      {/* </div> */}
+      <img
+        src={item.img}
+        className="w-4/5 h-4/5 object-contain transition-transform duration-300 group-hover:scale-105"
+        alt={`${
+          item.name || "Partner"
+        } - Official Partner | Dubai Real Estate Developer`}
+        loading="lazy"
+      />
     </div>
   );
 
@@ -108,57 +104,58 @@ const Partners: React.FC<PartnersProps> = ({ conClass }) => {
         </div>
       </div>
 
-        {/* Two-row auto-moving carousel */}
-       <div
-  className="bg-[#0b4a35]"
-  style={{ paddingTop: "50px", paddingBottom: "40px" }} // or className="p-[30px]"
->
-         <div className="min-h-[100px] md:min-h-[120px] relative pb-2 md:pb-4 overflow-hidden">
-          <div className="flex flex-col gap-1 md:gap-1">
-            {/* TOP ROW – moves left ➜ right */}
-            <motion.div
-              className="flex items-center gap-6 md:gap-10 lg:gap-12 min-w-max"
-              animate={{ x: ["-50%", "0%"] }}
-              transition={{
-                duration: 50, // adjust for speed
-                repeat: Infinity,
-                ease: "linear",
-              }}
-              style={{ willChange: "transform" }}
-            >
-              {[...topRow, ...topRow].map((item, index) => (
-                <div
-                  key={`top-${item.id}-${index}`}
-                  className="flex items-center justify-center shrink-0"
-                >
-                  {renderPartnerCard(item)}
-                </div>
-              ))}
-            </motion.div>
+      {/* Two-row auto-moving carousel */}
+      <div
+        className="bg-[#0b4a35]"
+        // style={{ paddingTop: "30px", paddingBottom: "30px" }}
+      >
+        <div className="relative overflow-hidden">
+          {/* TOP ROW – moves left ➜ right (centered vertically) */}
+          <motion.div
+            className="flex items-center justify-center gap-6 md:gap-10 lg:gap-12 min-w-max h-[80px] md:h-[90px]"
+            animate={{ x: ["-50%", "0%"] }}
+            transition={{
+              duration: 50,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            style={{ willChange: "transform" }}
+          >
+            {[...topRow, ...topRow].map((item, index) => (
+              <div
+                key={`top-${item.id}-${index}`}
+                className="flex items-center justify-center shrink-0 h-full"
+              >
+                {renderPartnerCard(item)}
+              </div>
+            ))}
+          </motion.div>
 
-            {/* BOTTOM ROW – moves right ➜ left */}
-            <motion.div
-              className="flex items-center gap-6 md:gap-10 lg:gap-12 min-w-max"
-              animate={{ x: ["0%", "-50%"] }}
-              transition={{
-                duration: 50,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-              style={{ willChange: "transform" }}
-            >
-              {[...bottomRow, ...bottomRow].map((item, index) => (
-                <div
-                  key={`bottom-${item.id}-${index}`}
-                  className="flex items-center justify-center shrink-0"
-                >
-                  {renderPartnerCard(item)}
-                </div>
-              ))}
-            </motion.div>
-          </div>
+          {/* ✅ WHITE GAP (5px) */}
+          <div className="h-[5px] bg-white w-full" />
+
+          {/* BOTTOM ROW – moves right ➜ left (centered vertically) */}
+          <motion.div
+            className="flex items-center justify-center gap-6 md:gap-10 lg:gap-12 min-w-max h-[80px] md:h-[90px]"
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{
+              duration: 50,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            style={{ willChange: "transform" }}
+          >
+            {[...bottomRow, ...bottomRow].map((item, index) => (
+              <div
+                key={`bottom-${item.id}-${index}`}
+                className="flex items-center justify-center shrink-0 h-full"
+              >
+                {renderPartnerCard(item)}
+              </div>
+            ))}
+          </motion.div>
         </div>
-       </div>
+      </div>
 
       {/* Schema Markup for SEO */}
       <script

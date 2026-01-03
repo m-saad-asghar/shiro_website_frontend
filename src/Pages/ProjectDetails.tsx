@@ -230,13 +230,11 @@ const ProjectDetails = () => {
               </p>
 
               <button
-        onClick={() => {
-   window.location.href = `${import.meta.env.VITE_API_URL}/download-brochure`;
-  }}
-
-
+                onClick={() => {
+                  window.location.href = `${import.meta.env.VITE_API_URL}/download-brochure?project_id=${projects.id}`;
+                }}
                 className="
-                  w-full bg-[#094834] hover:bg-[#9f8151] text-white font-semibold py-4 px-6 border-radius shadow-lg hover:shadow-xl cursor-pointer transition
+                  w-fit bg-[#094834] hover:bg-[#9f8151] text-white font-semibold py-4 px-6 border-radius shadow-lg hover:shadow-xl cursor-pointer transition
                 "
               >
                 {t("Download Brochure")}

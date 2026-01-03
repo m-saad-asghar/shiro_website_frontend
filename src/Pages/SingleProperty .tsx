@@ -26,7 +26,8 @@ type ApiResponse = {
       whatsapp: string | null;
     } | null;
     images: string[];
-    amenities: string[];
+    private_amenities: string[];
+    commercial_amenities: string[];
   };
 };
 
@@ -40,6 +41,7 @@ const SingleProperty = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [listings, setListings] = useState<Record<string, any> | null>(null);
 const [amenities, setAmenities] = useState<string[]>([]);
+const [commercialAmenities, setCommercialAmenities] = useState<string[]>([]);
 const [images, setImages] = useState<string[]>([]);
  const [employees, setEmployees] = useState<Record<string, any>[]>([]);
   const [error, setError] = useState<string>("");
@@ -77,9 +79,10 @@ const [images, setImages] = useState<string[]>([]);
           throw new Error((json as any)?.message || "Failed to fetch listing details");
         }
         setListings(json.data.listing || []);
-        setAmenities(json.data.amenities || []);
+        setAmenities(json.data.private_amenities || []);
         setEmployees(json.data.employee ? [json.data.employee] : []);
         setImages(json.data.images || []);
+        setCommercialAmenities(json.data.commercial_amenities || []);
 
         if (isMounted) setShow(json);
       } catch (e: any) {
@@ -104,7 +107,8 @@ const [images, setImages] = useState<string[]>([]);
     if (!listing) return null;
 
     const images = show?.data?.images || [];
-    const amenities = show?.data?.amenities || [];
+    const amenities = show?.data?.private_amenities || [];
+    const commercialAmenities = show?.data?.commercial_amenities || [];
     const employee = show?.data?.employee || null;
 
     // Shape data to match existing UI components WITHOUT changing UI/CSS
@@ -112,6 +116,7 @@ const [images, setImages] = useState<string[]>([]);
       ...listing,
       images, // Gallery uses this
       amenities,
+      commercialAmenities,
       employee,
       is_favorite: listing?.is_favorite ?? 0,
 
@@ -188,7 +193,7 @@ const [images, setImages] = useState<string[]>([]);
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="bg-white  shadow-lg p-6 md:p-8 change_border"
               >
-                <InfoProperty item={listings} employee={employees[0]} amenities={amenities} />
+                <InfoProperty item={listings} employee={employees[0]} amenities={amenities} commercialAmenities={commercialAmenities} />
               </motion.div>
 
               {/* Property Map */}

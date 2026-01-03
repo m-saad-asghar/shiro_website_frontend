@@ -96,11 +96,46 @@ h6 {
   margin-bottom: 32px;
 }
 
+.ach_spacing {
+  margin-bottom: 40px;
+}
+
+/* Country search input placeholder font size */
+.react-tel-input .search-box::placeholder {
+  font-size: 14px !important;
+}
+
+
 .separator_styling {
     margin-left: 20px !important;
     margin-right: 20px !important;
     color: #ffffff !important;
     font-weight: 700 !important;
+}
+
+.services_form_styling {
+  margin-bottom: 60px;
+}
+
+.leadership_styling {
+  margin-top: 100px;
+}
+
+.leadership_styling_inside {
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+.left_styling {
+  padding-left: 50px;
+}
+
+.message_styling_inside {
+  min-height: 740px;
+}
+
+.right_styling {
+  padding-right: 50px;
 }
 
 .amentity_badge_styling {

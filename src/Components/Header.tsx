@@ -87,8 +87,7 @@ const Header = () => {
         title={item.li}
         content={item?.content}
         onClick={() => {
-          // For items with dropdown, allow navigation on click
-          if (item.li === t("More Options")) {
+          if (item.li === t("More")) {
             return; // More Options has no main page
           } else {
             navigate(item.link);
@@ -103,13 +102,13 @@ const Header = () => {
             : item.li
         }
       >
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2">
           {item.content &&
             item?.content?.option?.map((item1: any) => (
               <motion.div
                 key={item1.id}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-3 cursor-pointer text-[14px] font-[600] text-gray-700 py-2 px-3 rounded-lg hover:bg-gray-100 transition-all duration-200"
+                className="flex items-center gap-3 cursor-pointer text-[14px] text-gray-900 py-2 px-3 rounded-lg hover:bg-[#9f8151] hover:text-[#ffffff] transition-all duration-200"
                 onClick={() => {
                   if (item1?.link) {
                     // For projects with property type, pass state

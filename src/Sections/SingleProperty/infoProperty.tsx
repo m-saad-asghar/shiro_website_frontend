@@ -11,9 +11,10 @@ type InfoPropertyProps = {
   item: any;
   employee: any;
   amenities: any;
+  commercialAmenities: any;
 };
 
-const InfoProperty: FC<InfoPropertyProps> = ({ item, employee, amenities }) => {
+const InfoProperty: FC<InfoPropertyProps> = ({ item, employee, amenities, commercialAmenities }) => {
   console.log("InfoProperty item prop debugging:", employee);
   const { t } = useTranslation();
   const location = useLocation();
@@ -240,7 +241,8 @@ console.log("InfoProperty item:", item);
               {t("Broker License")}
             </p>
             <p className="text-primary text_stying text-sm">
-               {employee?.orn ? employee.orn : "-"}
+               {employee?.orn && employee.orn !== 0 ? employee.orn : "-"}
+
             </p>
           </div>
 
@@ -287,13 +289,19 @@ console.log("InfoProperty item:", item);
               {t("Purpose")}
             </p> */}
             <p className="text-primary text_stying text-sm">
-               {item?.furnishing == "furnished"
+              {item?.furnishing?.toLowerCase() == "yes"
+  ? t("Furnished")
+  : item?.furnishing?.toLowerCase() == "partly"
+  ? t("Partly Furnished")
+  : t("Not Furnished")}
+
+               {/* {item?.furnishing == "furnished"
   ? t("Furnished")
   : item?.furnishing == "unfurnished"
   ? t("Not Furnished")
   : item?.furnishing == "semifurnished"
   ? t("Semi Furnished")
-  : "-"}
+  : "-"} */}
             </p>
           </div>
 
@@ -358,11 +366,16 @@ console.log("InfoProperty item:", item);
   </h3>
 
   <div className="bg-gray-50 rounded-xl p-6">
-    <div
+
+    <div className={`down_styling para_styling ${expanded ? "" : "line-clamp-4"}`}
+     style={{ whiteSpace: "pre-line" }}>
+  {item?.description || "-"}
+</div>
+
+    {/* <div
       className={`down_styling para_styling ${expanded ? "" : "line-clamp-4"}`}
-      // render HTML from backend
       dangerouslySetInnerHTML={{ __html: item?.description || "" }}
-    />
+    /> */}
 
     {(item?.description?.length || 0) > 200 && (
       <button
@@ -383,11 +396,34 @@ console.log("InfoProperty item:", item);
   className="space-y-4"
 >
   <h3 className="font-semibold text-primary text-xl key_information_heading">
-    {t("Amenities")}
+    {t("Private Amenities")}
   </h3>
 
   <div className="bg-gray-50 rounded-xl p-6">
   {amenities.map((amenity: string, index: number) => (
+  <span
+    key={`${amenity}-${index}`}
+    className="px-3 py-1 text-sm bg-gray-100 rounded-full text-gray-700 amentity_badge_styling mr-2 mb-2 inline-block"
+  >
+    {amenity}
+  </span>
+))}
+  </div>
+</motion.div>
+
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5, delay: 0.4 }}
+  style={{ marginTop: 15 }}
+  className="space-y-4"
+>
+  <h3 className="font-semibold text-primary text-xl key_information_heading">
+    {t("Commercial Amenities")}
+  </h3>
+
+  <div className="bg-gray-50 rounded-xl p-6">
+  {commercialAmenities.map((amenity: string, index: number) => (
   <span
     key={`${amenity}-${index}`}
     className="px-3 py-1 text-sm bg-gray-100 rounded-full text-gray-700 amentity_badge_styling mr-2 mb-2 inline-block"

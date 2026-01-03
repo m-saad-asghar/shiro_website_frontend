@@ -32,6 +32,7 @@ import {
 import DeveloperDetails from "@/Pages/DeveloperDetails";
 import ProjectDetails from "@/Pages/ProjectDetails";
 import Communities from "@/Pages/Communities";
+import ShiroServices from "@/Pages/ShiroServices";
 import ProtectedRoute from "./ProtectedRoute";
 import Cookies from "js-cookie";
 const router = createBrowserRouter([
@@ -63,7 +64,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/property-services",
-        element: <Services />,
+        element: <ShiroServices />,
       },
       {
         path: "/about",

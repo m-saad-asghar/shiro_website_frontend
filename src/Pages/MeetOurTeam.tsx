@@ -33,23 +33,26 @@ const MeetOurTeam = () => {
         />
       </Helmet>
       <>
-        <div className="w-full h-full pt-[120px] md:pt-[140px] lg:pt-[127.2px]">
-          {/* Team Members Section */}
+        <div>
           <AllOurTeam
+          />
+          {/* <AllOurTeam
             item={ourTeam?.team}
             pagination={ourTeam?.pagination}
             currentPage={currentPage}
             onPageChange={setCurrentPage}
-          />
+          /> */}
 
           {/* Company Video Section */}
-          <BannerVideo video="video" status="error" />
+          {/* <BannerVideo video="video" status="error" /> */}
 
           {/* Contact Form Section */}
-          <ContactForm />
+          <div className="pb-16">
+            <ContactForm/>
+          </div>
 
           {/* Newsletter Section */}
-          <StayInTheLoop />
+          {/* <StayInTheLoop /> */}
         </div>
       </>
     </>

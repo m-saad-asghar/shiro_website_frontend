@@ -36,7 +36,7 @@ const FooterItem = () => {
         { id: 2, item: t("Apartment for Sale"), link: "/buy/properties-for-sale?property_type=apartment" },
         { id: 3, item: t("Townhouse for Sale"), link: "/buy/properties-for-sale?property_type=townhouse" },
         { id: 4, item: t("Villa for Sale"), link: "/buy/properties-for-sale?property_type=villa" },
-        { id: 5, item: t("Off Plan Properties"), link: "/new-projects" },
+        { id: 5, item: t("Off-Plan Properties"), link: "/new-projects" },
         // ...(propertyTypes?.map((pt: any, index: number) => ({
         //   id: index + 2,
         //   item: pt.name,
@@ -50,11 +50,11 @@ const FooterItem = () => {
   const offPlanSection: FooterItemType = useMemo(
     () => ({
       id: 2,
-      title: "",
+     title: t("Popular Searches"),
       option: [
-        { id: 1, item: t("Off Plan Apartment"), link: "/new-projects?property_type=apartment" },
-        { id: 2, item: t("Off Plan Townhouse"), link: "/new-projects?property_type=townhouse" },
-        { id: 3, item: t("Off Plan Villa"), link: "/new-projects?property_type=villa" },
+        { id: 1, item: t("Off-Plan Apartment"), link: "/new-projects?property_type=apartment" },
+        { id: 2, item: t("Off-Plan Townhouse"), link: "/new-projects?property_type=townhouse" },
+        { id: 3, item: t("Off-Plan Villa"), link: "/new-projects?property_type=villa" },
         { id: 4, item: t("Properties for Rent"), link: "/rent/properties-for-rent" },
         { id: 5, item: t("Apartment for Rent"), link: "/rent/properties-for-rent?property_type=apartment" },
        
@@ -73,7 +73,7 @@ const FooterItem = () => {
   const rentSection: FooterItemType = useMemo(
     () => ({
       id: 3,
-      title: "",
+      title: t("Popular Searches"),
       option: [
          
         { id: 1, item: t("Townhouse for Rent"), link: "/rent/properties-for-rent?property_type=townhouse" },
@@ -95,7 +95,7 @@ const FooterItem = () => {
   const supportSection: FooterItemType = useMemo(
     () => ({
       id: 4,
-      title: "",
+      title: t("Popular Searches"),
       option: [
         { id: 1, item: t("Services"), link: "/property-services" },
         { id: 2, item: t("About Us"), link: "/about" },

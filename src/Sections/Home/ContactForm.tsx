@@ -135,14 +135,14 @@ const ContactForm = () => {
 
           {/* RIGHT SIDE – Form card */}
           <div className="bg-white change_border border border-gray-100 shadow-lg p-6 sm:p-8 lg:p-10">
-            <div className="mb-6 sm:mb-8">
-               <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
-           {t("Get In Touch")}
+            <div className="mb-4 sm:mb-6">
+               <h1 className="font-semibold text-primary text-2xl">
+           {t("GET IN TOUCH")}
           </h1>
               {/* <h3 className="text-xl sm:text-2xl font-bold text-[#094834] mb-2">
                 {t("Get In Touch")}
               </h3> */}
-                <p className="down_styling para_styling !text-[#9f8151]">
+                <p className="rounded-lg text-sm transition-all duration-200 mb-1 mt-1 text-[#9f8151] text_stying">
                 {t("Fill out the form below and we'll get back to you shortly")}
 </p>
               {/* <p className="text-sm sm:text-base text-gray-600">

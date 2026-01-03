@@ -23,6 +23,8 @@ const DataCustomerServices = () => {
         desc: t(
           "Access our dedicated team of over 400+ expert agents ready to assist you."
         ),
+         link: "/contact",
+        onClick: () => navigate("/contact"),
         // onClick: () => scrollToElement("ListYourProperty"),
       },
       {
@@ -42,7 +44,9 @@ const DataCustomerServices = () => {
         desc: t(
           "Learn how our vision is redefining real estate with innovation and long-term value"
         ),
-        link: "../../PDF/SHIRO ESTATE - Company Profile.pdf",
+        link: "/about",
+        onClick: () => navigate("/about"),
+        // link: "../../PDF/SHIRO ESTATE - Company Profile.pdf",
         //    onClick : () => {
         //         saveAs(File , "shirow")
         //      }

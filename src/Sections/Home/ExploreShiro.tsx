@@ -34,7 +34,7 @@ interface TypeItem {
   for_developer: boolean;
 }
 
-const ExploreProperty = () => {
+const ExploreShiro = () => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
   const navigate = useNavigate();
@@ -113,6 +113,7 @@ const ExploreProperty = () => {
       // };
 
       try {
+        console.log("[ExploreProperty] About to send request to show_featured_properties");
         setPropertiesStatus("pending");
 
         // Build URL from environment base or relative path
@@ -188,11 +189,6 @@ const ExploreProperty = () => {
             key={item?.id || index}
           >
             <CardUpdated item={item} />
-            {/* {isOffPlan ? (
-              <ProjectCard item={item} viewMode="grid" />
-            ) : (
-              <CardUpdated item={item} />
-            )} */}
           </CarouselItem>
         );
       }
@@ -216,7 +212,7 @@ const ExploreProperty = () => {
               {t("Explore Property in Dubai.")}
             </h2> */}
              <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
-            {t("Featured Properties")}
+            {t("Explore Shiro")}
           </h1>
 
             
@@ -306,4 +302,4 @@ const ExploreProperty = () => {
   );
 };
 
-export default ExploreProperty;
+export default ExploreShiro;

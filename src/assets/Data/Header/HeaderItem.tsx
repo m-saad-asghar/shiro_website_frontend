@@ -133,20 +133,20 @@ const HeaderItem = () => {
 
       {
         id: 7,
-        li: t("More Options"),
+        li: t("More"),
         link: "/about",
         content: {
-          title: t("More Options"),
+          title: t("More"),
           option: [
             {
               id: 1,
-              icon: aboutUsIcon,
-              item: t("About Us"),
+              // icon: aboutUsIcon,
+              item: t("About Shiro"),
               link: "/about",
             },
             {
               id: 2,
-              icon: servicesIcon,
+              // icon: servicesIcon,
               item: t("Services"),
               link: "/property-services",
             },
@@ -164,7 +164,7 @@ const HeaderItem = () => {
             // },
             {
               id: 5,
-              icon: meetTheTeamIcon,
+              // icon: meetTheTeamIcon,
               item: t("Meet The Team"),
               link: "/team",
             },
@@ -176,7 +176,7 @@ const HeaderItem = () => {
             // },
             {
               id: 7,
-              icon: contactUsIcon,
+              // icon: contactUsIcon,
               item: t("Contact Us"),
               link: "/contact",
             },

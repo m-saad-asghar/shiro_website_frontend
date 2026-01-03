@@ -25,20 +25,29 @@ const Footer = () => {
   // Fetch contact information
   const { data: contact } = useQueryGet(["contact"], StaticServices.contact);
 
-  const renderItem = FooterItem().map((item) => (
-    <div key={item.id}>
+  // ✅ Get footer items once
+  const footerItems = FooterItem();
+
+  // ✅ Collect ONLY "Popular Searches" options from all footer sections
+  // (assumes all columns are meant to be under one heading like your screenshot)
+  const popularSearchOptions = footerItems.flatMap((section) => section.option);
+
+  const renderItem = (
+    <div className={isMobile ? "" : "space-y-4"}>
+      {/* ✅ Single heading (NOT repeated) */}
       {isMobile ? (
         <Accordion
           type="single"
           collapsible
           className="border-b border-white/10 py-4"
         >
-          <AccordionItem value={`item-${item.id}`} className="border-none">
+          <AccordionItem value="popular-searches" className="border-none">
             <AccordionTrigger className="footer_text_styling text-md font-semibold text-white hover:text-[#d3c294] transition-colors duration-300 py-2">
-              {item.title}
+              Popular Searches
             </AccordionTrigger>
+
             <AccordionContent className="mt-2 space-y-2">
-              {item.option.map((li) => (
+              {popularSearchOptions.map((li) => (
                 <motion.li
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -65,12 +74,14 @@ const Footer = () => {
           </AccordionItem>
         </Accordion>
       ) : (
-        <div key={item.id} className="space-y-4">
+        <>
           <h3 className="text-md font-semibold uppercase tracking-wider footer_text_styling">
-            {item.title}
+            Popular Searches
           </h3>
-          <ul className="space-y-2">
-            {item.option.map((li) => (
+
+          {/* ✅ 4 columns like screenshot */}
+          <ul className="grid grid-flow-col grid-rows-5 lg:grid-rows-5 gap-y-2 gap-x-10">
+            {popularSearchOptions.map((li) => (
               <li
                 className="footer_text_styling footer_text_styling_hover text-sm text-gray-300 font-normal capitalize hover:text-[#d3c294] duration-300 cursor-pointer transition-all"
                 key={li.id}
@@ -91,10 +102,10 @@ const Footer = () => {
               </li>
             ))}
           </ul>
-        </div>
+        </>
       )}
     </div>
-  ));
+  );
 
   const renderSocialMedia = FooterSocialMedia().map((item) => (
     <motion.div
@@ -102,7 +113,6 @@ const Footer = () => {
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
       className="w-10 h-10 flex items-center justify-center cursor-pointer transition-all duration-300 group"
-      // className="w-10 h-10 bg-white/10 hover:bg-[#9c8050] rounded-xl border border-white/20 flex items-center justify-center cursor-pointer transition-all duration-300 group"
       onClick={() => window.open(item.link, "_blank")}
     >
       <div className="text-white group-hover:text-white transition-colors duration-300">
@@ -157,43 +167,47 @@ const Footer = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="space-y-3"
-                style={{width: 'fit-content'}}
+                style={{ width: "fit-content" }}
               >
-               <div className="flex">
-                 <motion.div
-                  whileHover={{ x: 5 }}
-                  className="footer_text_styling footer_text_styling_hover flex items-center gap-3 hover:text-[#d3c294] cursor-pointer transition-colors duration-300"
-                  onClick={() =>
-                    handleContactClick("phone", contact?.contact_info?.phone)
-                  }
-                >
-                  <Icons.LuPhone className="w-4 h-4 flex-shrink-0" />
-                  <span className="text-sm truncate">
-                    {contact?.contact_info?.phone}
-                  </span>
-                </motion.div>
-                <div className="separator_styling">|</div>
-                <motion.div
-                  whileHover={{ x: 5 }}
-                  className="footer_text_styling footer_text_styling_hover flex items-center gap-3 hover:text-[#d3c294] cursor-pointer transition-colors duration-300"
-                  onClick={() =>
-                    handleContactClick("email", contact?.contact_info?.email)
-                  }
-                >
-                  <Icons.MdOutlineEmail className="w-4 h-4 flex-shrink-0" />
-                  <span className="text-sm truncate">
-                    {contact?.contact_info?.email}
-                  </span>
-                </motion.div>
-               </div>
+                <div className="flex">
+                  <motion.div
+                    whileHover={{ x: 5 }}
+                    className="footer_text_styling footer_text_styling_hover flex items-center gap-3 hover:text-[#d3c294] cursor-pointer transition-colors duration-300"
+                    onClick={() =>
+                      handleContactClick("phone", contact?.contact_info?.phone)
+                    }
+                  >
+                    <Icons.LuPhone className="w-4 h-4 flex-shrink-0" />
+                    <span className="text-sm truncate">
+                      {contact?.contact_info?.phone}
+                    </span>
+                  </motion.div>
+                  <div className="separator_styling">|</div>
+                  <motion.div
+                    whileHover={{ x: 5 }}
+                    className="footer_text_styling footer_text_styling_hover flex items-center gap-3 hover:text-[#d3c294] cursor-pointer transition-colors duration-300"
+                    onClick={() =>
+                      handleContactClick("email", contact?.contact_info?.email)
+                    }
+                  >
+                    <Icons.MdOutlineEmail className="w-4 h-4 flex-shrink-0" />
+                    <span className="text-sm truncate">
+                      {contact?.contact_info?.email}
+                    </span>
+                  </motion.div>
+                </div>
                 <motion.div
                   whileHover={{ x: 5 }}
                   className="footer_text_styling footer_text_styling_hover flex items-start gap-3 hover:text-[#d3c294] cursor-pointer transition-colors duration-300"
                   onClick={() => handleContactClick("location")}
                 >
-                  <Icons.CiLocationOn className="w-4 h-4 flex-shrink-0 mt-0.5" style={{color: "#ffffff"}}/>
+                  <Icons.CiLocationOn
+                    className="w-4 h-4 flex-shrink-0 mt-0.5"
+                    style={{ color: "#ffffff" }}
+                  />
                   <span className="text-sm leading-relaxed">
-                    {contact?.contact_info?.address || "Boulevard Plaza Tower 1 - Downtown - Office No. 2101 - 21st Floor - Dubai"}
+                    {contact?.contact_info?.address ||
+                      "Boulevard Plaza Tower 1 - Downtown - Office No. 2101 - 21st Floor - Dubai"}
                   </span>
                 </motion.div>
               </motion.div>
@@ -207,17 +221,14 @@ const Footer = () => {
                 <h4 className="text-white font-semibold mb-4 text-md uppercase tracking-wider footer_text_styling">
                   {t("Follow Us")}
                 </h4>
-                <div className="flex items-center gap-3">
-                  {renderSocialMedia}
-                </div>
+                <div className="flex items-center gap-3">{renderSocialMedia}</div>
               </motion.div>
             </div>
 
             {/* Links Sections */}
             <div className="lg:col-span-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-                {renderItem}
-              </div>
+              {/* ✅ Now we only show ONE block instead of 4 blocks */}
+              <div className="grid grid-cols-1 gap-6 lg:gap-8">{renderItem}</div>
             </div>
           </div>
         </div>
@@ -234,38 +245,13 @@ const Footer = () => {
                 className="text-center lg:text-left"
               >
                 <p className="text-gray-400 text-sm footer_text_styling">
-                  © 2025–{new Date().getFullYear()} Shiro Real Estate. {t("All Rights Reserved")}.
+                  © 2025–{new Date().getFullYear()} Shiro Real Estate.{" "}
+                  {t("All Rights Reserved")}.
                 </p>
               </motion.div>
 
               {/* Legal Links */}
-              {/* <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="flex flex-wrap items-center justify-center gap-4 lg:gap-6 text-sm"
-              >
-                <Link
-                  to="/privacy-policy"
-                  className="text-gray-400 hover:text-[#d3c294] cursor-pointer transition-colors duration-300"
-                >
-                  {t("Privacy Policy")}
-                </Link>
-                <Link
-                  to="/terms-conditions"
-                  className="text-gray-400 hover:text-[#d3c294] cursor-pointer transition-colors duration-300"
-                >
-                  {t("Terms & Conditions")}
-                </Link>
-                <a
-                  href="/sitemap.xml"
-                  className="text-gray-400 hover:text-[#d3c294] cursor-pointer transition-colors duration-300"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t("Sitemap")}
-                </a>
-              </motion.div> */}
+              {/* <motion.div ...>...</motion.div> */}
             </div>
           </div>
         </div>

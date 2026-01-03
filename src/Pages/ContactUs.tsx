@@ -3,12 +3,14 @@ import { Helmet } from "react-helmet";
 import { Deatils, Map, RecommendedForYou } from "@/Sections/ContactUs";
 import { StayInTheLoop } from "@/Sections/Home";
 import StaticServices from "@/Services/StaticServices";
+import Details from "@/Sections/ContactUs/Details";
+import {ContactForm} from "@/Sections/Home";
 
 const ContactUs = () => {
-  const { data: contactUs, status } = useQueryGet(
-    ["contactUs"],
-    StaticServices.contact
-  );
+  // const { data: contactUs, status } = useQueryGet(
+  //   ["contactUs"],
+  //   StaticServices.contact
+  // );
 
   return (
     <>
@@ -20,16 +22,21 @@ const ContactUs = () => {
         />
       </Helmet>
       <>
-        <div className="w-full h-full pt-[120px] md:pt-[140px] lg:pt-[127.2px]">
+      <div className="">
+        {/* <div className="w-full h-full pt-[120px] md:pt-[140px] lg:pt-[127.2px]"> */}
           {/* <Bennar
             pathName="Contact"
             title="Contact Shiro"
             desc="Shiro is dedicated to providing outstanding service across Dubai and even beyond. This is your direct line to our experienced team, whether you're questioning, seeking information, or requiring personalized help. Your needs come first, and we're here to make sure every interaction with us leaves you feeling heard, valued, and empowered."
           /> */}
-          <Deatils item={contactUs?.contact_info?.office} status={status} />
+          {/* <Deatils item={contactUs?.contact_info?.office} status={status} /> */}
+          <Details />
+          <div className="pb-16">
+            <ContactForm/>
+          </div>
           <Map />
-          <RecommendedForYou />
-          <StayInTheLoop />
+          {/* <RecommendedForYou /> */}
+          {/* <StayInTheLoop /> */}
         </div>
       </>
     </>

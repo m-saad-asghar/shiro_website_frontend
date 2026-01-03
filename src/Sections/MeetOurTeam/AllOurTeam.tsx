@@ -1,95 +1,126 @@
-import { Card } from "@/Components/MeetOurTeam";
-import { useMemo, type FC, useState } from "react";
+import { useEffect, useMemo, useState, type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { LoaderPage } from "@/Components";
+import employeeImagesUrl from "@/helpers/employeeImagesURL";
 
 interface TeamMember {
-  id: string;
+  id: number | string;
   name: string;
   position: string;
-  image?: string;
-  image_url?: string;
-  team_type?: string;
-  [key: string]: unknown;
+  slug: string;
+  profile_picture: string | null;
 }
 
-interface PaginationInfo {
-  current_page: number;
-  total: number;
-  per_page: number;
-  last_page: number;
-  from: number;
-  to: number;
-  next_page_url: string | null;
-  prev_page_url: string | null;
-}
-
-type AllOurTeamProps = {
-  item?:
-    | TeamMember[] // Old structure: direct array
-    | {
-        // New structure: object with team_by_type
-        team_by_type?: {
-          management?: TeamMember[];
-          brokers?: TeamMember[];
-        };
-      };
-  pagination?: PaginationInfo;
-  currentPage?: number;
-  onPageChange?: (page: number) => void;
-};
-
-const AllOurTeam: FC<AllOurTeamProps> = ({
-  item,
-  pagination,
-  currentPage = 1,
-  onPageChange,
-}) => {
+const AllOurTeam: FC = () => {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<"management" | "brokers">(
-    "management"
+
+  const [loading, setLoading] = useState<boolean>(true);
+  const [team, setTeam] = useState<TeamMember[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  // ✅ Change these if your base URL or images path differs
+  const API_URL = `${import.meta.env.VITE_API_URL}/fetch_employees`;
+  const EMPLOYEE_IMG_BASE = `${import.meta.env.VITE_IMAGE_URL || ""}`; // optional if you have it
+  const PLACEHOLDER = employeeImagesUrl("default_employee.png");
+  // const PLACEHOLDER = `${EMPLOYEE_IMG_BASE}/default_employee.png`.replace(
+  //   "//default_employee.png",
+  //   "/default_employee.png"
+  // );
+
+  useEffect(() => {
+    let mounted = true;
+
+    const fetchEmployees = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const res = await fetch(API_URL, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
+        });
+
+        const json = await res.json();
+
+        if (!mounted) return;
+
+        if (res.ok && json?.status === 1 && Array.isArray(json?.data)) {
+          setTeam(json.data);
+        } else {
+          setError(t("Failed to load team members"));
+          setTeam([]);
+        }
+      } catch (e) {
+        if (!mounted) return;
+        setError(t("Failed to load team members"));
+        setTeam([]);
+      } finally {
+        if (!mounted) return;
+        setLoading(false);
+      }
+    };
+
+    fetchEmployees();
+
+    return () => {
+      mounted = false;
+    };
+  }, [API_URL, t]);
+
+  const cards = useMemo(() => {
+    const buildImg = (file: string | null) => {
+      // If backend returns absolute URL someday, keep it
+      if (file && (file.startsWith("http://") || file.startsWith("https://"))) {
+        return file;
+      }
+
+      if (!file) return PLACEHOLDER;
+
+      // If you store images in something like /storage/employees/
+      // adjust this path to match your backend.
+      // Example: `${EMPLOYEE_IMG_BASE}/employees/${file}`
+      const path = `${EMPLOYEE_IMG_BASE}/${file}`.replace(/([^:]\/)\/+/g, "$1");
+      return path;
+    };
+
+   return team.map((m) => {
+  const imgSrc = m.profile_picture
+    ? employeeImagesUrl(m.profile_picture)
+    : PLACEHOLDER;
+
+  return (
+    <div key={m.id} className="flex flex-col items-center text-center">
+      {/* Image Container */}
+      <div className="w-[270px] h-[270px] rounded-full overflow-hidden bg-gray-100 shadow-sm">
+  <img
+    src={imgSrc}
+    alt={m.name}
+    className="w-full h-full cursor-pointer object-cover transition-transform ease-in-out hover:scale-105"
+    onError={(e) => {
+      (e.currentTarget as HTMLImageElement).src = PLACEHOLDER;
+    }}
+    loading="lazy"
+  />
+</div>
+
+
+      {/* Text OUTSIDE container */}
+      <h3 className="mt-6 font-semibold text-primary text-2xl">
+        {m.name}
+      </h3>
+
+      <p className="mt-1 font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
+        {m.position}
+      </p>
+    </div>
   );
+});
 
-  // Extract management and brokers from team_by_type
-  // Support both new API structure and old structure
-  const managementTeam = useMemo(() => {
-    // New API structure: item.team_by_type.management
-    if (item && !Array.isArray(item) && item.team_by_type?.management) {
-      return item.team_by_type.management;
-    }
-    // Old structure: item as array, filter by team_type
-    if (Array.isArray(item)) {
-      return item.filter((member) => member.team_type === "management");
-    }
-    return [];
-  }, [item]);
+  }, [team, PLACEHOLDER, EMPLOYEE_IMG_BASE]);
 
-  const brokersTeam = useMemo(() => {
-    // New API structure: item.team_by_type.brokers
-    if (item && !Array.isArray(item) && item.team_by_type?.brokers) {
-      return item.team_by_type.brokers;
-    }
-    // Old structure: item as array, filter by team_type
-    if (Array.isArray(item)) {
-      return item.filter((member) => member.team_type === "brokers");
-    }
-    return [];
-  }, [item]);
-
-  const renderManagementCards = useMemo(() => {
-    return managementTeam?.map((member: TeamMember) => (
-      <Card item={member} key={member.id} />
-    ));
-  }, [managementTeam]);
-
-  const renderBrokersCards = useMemo(() => {
-    return brokersTeam?.map((member: TeamMember) => (
-      <Card item={member} key={member.id} />
-    ));
-  }, [brokersTeam]);
-
-  // Show loading or no data message
-  if (!item) {
+  if (loading) {
     return (
       <section className="w-full py-12 md:py-16 lg:py-20">
         <div className="container mx-auto px-4">
@@ -101,17 +132,24 @@ const AllOurTeam: FC<AllOurTeamProps> = ({
     );
   }
 
-  if (managementTeam.length === 0 && brokersTeam.length === 0) {
+  if (error) {
     return (
       <section className="w-full py-12 md:py-16 lg:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto text-center">
-            <p className="text-gray-600 text-lg">
-              {t("No team members found")}
-            </p>
-            <p className="text-sm text-gray-500 mt-2">
-              API Response: Check console for details
-            </p>
+            <p className="text-gray-600 text-lg">{error}</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!team.length) {
+    return (
+      <section className="w-full py-12 md:py-16 lg:py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto text-center">
+            <p className="text-gray-600 text-lg">{t("No team members found")}</p>
           </div>
         </div>
       </section>
@@ -119,184 +157,27 @@ const AllOurTeam: FC<AllOurTeamProps> = ({
   }
 
   return (
-    <section className="w-full pt-12 md:pb-2 md:pt-16 lg:pt-20 lg:pb-2">
-      <div className="container mx-auto px-4">
-        <div className="max-w-6xl mx-auto">
-          {/* Header Section */}
-          <div className="text-center mb-8 md:mb-12">
-            <div className="inline-flex items-center gap-2 bg-[#d3c294]/20 border border-[#d3c294]/30 rounded-full px-6 py-3 mb-6">
-              <div className="w-2 h-2 bg-[#094834] rounded-full"></div>
-              <span className="text-[#094834] font-medium text-sm">
-                {t("Our Team")}
-              </span>
-            </div>
+    <>
+    <section className="py-10 lg:py-20 pb-10 lg:pb-10">
+      <div className="custom_container mx-auto px-4">
+         <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+        {t("Shiro Estate Team")}
+      </h1>
+       <p className="down_styling para_styling">
+                {t(
+            "Our robust leadership and management team is dedicated to driving excellence across all departments and property verticals in Dubai. Going beyond operational oversight, the experienced managers and senior professionals at Shiro Estate provide strategic direction, governance, and a complete suite of integrated real estate solutions."
+          )}
+</p>
 
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#094834] mb-6 leading-tight">
-              {t("Meet Our Expert Team")}
-            </h2>
-
-            <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
-              {t(
-                "Each team member brings a unique skill set to Shiro Dubai. We use those skills to provide you with the best possible Estate Agent service."
-              )}
-            </p>
+        <div className="mx-auto">
+          {/* ✅ 4 per row on xl, 1 per row on mobile */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 py-16">
+            {cards}
           </div>
-
-          {/* Tab Buttons */}
-          <div className="flex justify-center gap-4 mb-8">
-            <button
-              onClick={() => setActiveTab("management")}
-              className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                activeTab === "management"
-                  ? "bg-[#094834] text-white shadow-lg"
-                  : "bg-white text-[#094834] border-2 border-[#094834] hover:bg-[#094834]/10"
-              }`}
-            >
-              {t("Management")}{" "}
-              {managementTeam.length > 0 && `(${managementTeam.length})`}
-            </button>
-            <button
-              onClick={() => setActiveTab("brokers")}
-              className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                activeTab === "brokers"
-                  ? "bg-[#094834] text-white shadow-lg"
-                  : "bg-white text-[#094834] border-2 border-[#094834] hover:bg-[#094834]/10"
-              }`}
-            >
-              {t("Brokers")}{" "}
-              {brokersTeam.length > 0 && `(${brokersTeam.length})`}
-            </button>
-          </div>
-
-          {/* Team Grid */}
-          {activeTab === "management" && managementTeam.length > 0 && (
-            <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-10">
-                {renderManagementCards}
-              </div>
-            </div>
-          )}
-
-          {activeTab === "brokers" && brokersTeam.length > 0 && (
-            <div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-10">
-                {renderBrokersCards}
-              </div>
-            </div>
-          )}
-
-          {activeTab === "management" && managementTeam.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-500">
-                {t("No management team members found")}
-              </p>
-            </div>
-          )}
-
-          {activeTab === "brokers" && brokersTeam.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-500">{t("No brokers found")}</p>
-            </div>
-          )}
-
-          {/* Pagination Controls */}
-          {pagination && pagination.last_page > 1 && onPageChange && (
-            <div className="mt-12 flex flex-col items-center gap-6">
-              {/* Pagination Info */}
-              <div className="text-sm text-gray-600">
-                {t("Showing")} {pagination.from} - {pagination.to} {t("of")}{" "}
-                {pagination.total} {t("members")}
-              </div>
-
-              {/* Pagination Buttons */}
-              <div className="flex items-center gap-2">
-                {/* First Page Button */}
-                <button
-                  onClick={() => onPageChange(1)}
-                  disabled={currentPage === 1}
-                  className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
-                    currentPage === 1
-                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                      : "bg-white text-[#094834] border-2 border-[#094834] hover:bg-[#094834] hover:text-white"
-                  }`}
-                >
-                  {t("First")}
-                </button>
-
-                {/* Previous Button */}
-                <button
-                  onClick={() => onPageChange(currentPage - 1)}
-                  disabled={!pagination.prev_page_url}
-                  className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
-                    !pagination.prev_page_url
-                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                      : "bg-white text-[#094834] border-2 border-[#094834] hover:bg-[#094834] hover:text-white"
-                  }`}
-                >
-                  {t("Previous")}
-                </button>
-
-                {/* Page Numbers */}
-                <div className="flex items-center gap-2">
-                  {Array.from({ length: pagination.last_page }, (_, i) => i + 1)
-                    .filter((page) => {
-                      // Show 5 pages around current page
-                      return (
-                        Math.abs(page - currentPage) <= 2 ||
-                        page === 1 ||
-                        page === pagination.last_page
-                      );
-                    })
-                    .map((page, index, array) => (
-                      <div key={page} className="flex items-center gap-2">
-                        {index > 0 && array[index - 1] !== page - 1 && (
-                          <span className="text-gray-400">...</span>
-                        )}
-                        <button
-                          onClick={() => onPageChange(page)}
-                          className={`w-10 h-10 rounded-lg font-semibold transition-all duration-200 ${
-                            currentPage === page
-                              ? "bg-[#094834] text-white shadow-lg"
-                              : "bg-white text-[#094834] border-2 border-[#094834] hover:bg-[#094834]/10"
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      </div>
-                    ))}
-                </div>
-
-                {/* Next Button */}
-                <button
-                  onClick={() => onPageChange(currentPage + 1)}
-                  disabled={!pagination.next_page_url}
-                  className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
-                    !pagination.next_page_url
-                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                      : "bg-white text-[#094834] border-2 border-[#094834] hover:bg-[#094834] hover:text-white"
-                  }`}
-                >
-                  {t("Next")}
-                </button>
-
-                {/* Last Page Button */}
-                <button
-                  onClick={() => onPageChange(pagination.last_page)}
-                  disabled={currentPage === pagination.last_page}
-                  className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
-                    currentPage === pagination.last_page
-                      ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                      : "bg-white text-[#094834] border-2 border-[#094834] hover:bg-[#094834] hover:text-white"
-                  }`}
-                >
-                  {t("Last")}
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </section>
+    </>
   );
 };
 

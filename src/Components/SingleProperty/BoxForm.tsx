@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import employeeImagesUrl from "@/helpers/employeeImagesURL";
 import contactAgentValidationSchema from "@/Utils/Validations/contactAgentValidation";
 import ArrayInputsContact from "@/assets/Data/Home/ArrayInputsContact";
+import { Form } from "../../Components/Home";
 
 type BoxFormProps = {
   item: any;
@@ -127,6 +128,12 @@ const BoxForm: FC<BoxFormProps> = ({ item , employee}) => {
           </p>
           <p className="text-primary text_stying text-sm">
             <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
+              {t("ORN")}:
+            </span>{" "}
+            {employee?.orn && employee.orn != 0 ? employee.orn : "-"}
+          </p>
+          {/* <p className="text-primary text_stying text-sm">
+            <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
               {t("Email")}:
             </span>{" "}
             {employee?.email}
@@ -136,7 +143,7 @@ const BoxForm: FC<BoxFormProps> = ({ item , employee}) => {
               {t("Position")}:
             </span>{" "}
             {employee?.position}
-          </p>
+          </p> */}
         </div>
       </div>
 
@@ -151,17 +158,17 @@ const BoxForm: FC<BoxFormProps> = ({ item , employee}) => {
           {t("Request Information")}
         </h4>
 
-        <FormikContainer
+        <Form />
+
+        {/* <FormikContainer
           conClassName="space-y-4"
           onSubmit={onSubmit}
           initialValues={initialValues}
-          // ✅ Use the same form input generator style as your other Form
           arrayOnInputs={ArrayInputsContact()}
           schema={contactAgentValidationSchema}
-          // ✅ Keep BoxForm UI same as before (your existing button design)
           btnClass="search_btn_styling change_border rounded-[4px] font-NeueHaasGrotesk !text-[16px] md:text-[14px] capitalize flex-center cursor-pointer search_btn_styling h-12 md:h-10 px-6 bg-primary hover:bg-[#9f8151] text-white font-semibold change_border transition-all duration-[.4s] flex items-center justify-center gap-2 flex-center w-fit min-h-[50px] min-w-[200px]"
           btnText={t("request information")}
-        />
+        /> */}
       </div>
     </motion.div>
   );

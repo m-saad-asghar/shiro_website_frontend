@@ -3,6 +3,7 @@ import { RecommendedCard } from "@/Components/ContactUs";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import ExploreShiro from "../Home/ExploreShiro";
 
 const RecommendedForYou = () => {
   const { t } = useTranslation();
@@ -24,17 +25,17 @@ const RecommendedForYou = () => {
   };
 
   return (
-    <section className="py-16 md:py-20 lg:py-24 bg-white">
-      <div className="container mx-auto px-4">
+    <section className="">
+      <div className="mx-auto px-4">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12 lg:mb-16"
+          className="mb-12 lg:mb-16"
         >
           {/* Badge */}
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -42,20 +43,20 @@ const RecommendedForYou = () => {
           >
             <span className="w-2 h-2 bg-primary rounded-full"></span>
             {t("explore Shiro")}
-          </motion.div>
+          </motion.div> */}
 
           {/* Title */}
-          <motion.h2
+          {/* <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
           >
             {t("Recommended for you")}
-          </motion.h2>
+          </motion.h2> */}
 
           {/* Description */}
-          <motion.p
+          {/* <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
@@ -64,31 +65,25 @@ const RecommendedForYou = () => {
             {t(
               "Discover our curated selection of premium properties and services tailored to your needs"
             )}
-          </motion.p>
+          </motion.p> */}
         </motion.div>
 
         {/* Cards Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8"
-        >
-          {renderCard}
-        </motion.div>
+
+        <ExploreShiro/>
 
         {/* Call to Action */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-center mt-12 lg:mt-16"
+          className="text-center mt-12 lg:mt-16 !flex !justify-center"
         >
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={handleViewAllProperties}
-            className="inline-flex items-center gap-2 bg-primary text-white font-semibold py-4 px-8 rounded-xl hover:bg-primary/90 transition-all duration-300 shadow-lg hover:shadow-xl group"
+            className="search_btn_styling change_border rounded-[4px] font-NeueHaasGrotesk !text-[16px] md:text-[14px] capitalize flex-center cursor-pointer search_btn_styling h-12 md:h-10 px-6 bg-primary hover:bg-[#9f8151] text-white font-semibold change_border transition-all duration-[.4s] flex items-center justify-center gap-2 flex-center w-full min-h-[50px] min-w-[200px] disabled:opacity-70 disabled:cursor-not-allowed !w-fit"
           >
             <span>{t("View All Properties")}</span>
             <svg

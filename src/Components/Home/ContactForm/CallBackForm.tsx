@@ -6,10 +6,7 @@ import toast from "react-hot-toast";
 
 type FormValues = {
   name: string;
-  email: string;
   phone: string;
-  language: string;
-  message: string; // optional
 };
 
 type FormErrors = Partial<Record<keyof FormValues, string>>;
@@ -17,13 +14,10 @@ type FormTouched = Record<keyof FormValues, boolean>;
 
 const initialValues: FormValues = {
   name: "",
-  email: "",
   phone: "",
-  language: "",
-  message: "",
 };
 
-const Form: React.FC = () => {
+const CallBackForm: React.FC = () => {
   const [values, setValues] = useState<FormValues>(initialValues);
 
   // ✅ FIXED: must be inside component + start false
@@ -31,10 +25,7 @@ const Form: React.FC = () => {
 
   const [touched, setTouched] = useState<FormTouched>({
     name: false,
-    email: false,
     phone: false,
-    language: false,
-    message: false,
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -46,20 +37,11 @@ const Form: React.FC = () => {
 
     if (!vals.name.trim()) e.name = "Full name is required";
 
-    if (!vals.email.trim()) {
-      e.email = "Email is required";
-    } else {
-      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(vals.email.trim());
-      if (!emailOk) e.email = "Enter a valid email";
-    }
-
     if (!vals.phone.trim()) {
       e.phone = "Phone number is required";
     } else if (!isPossiblePhoneNumber("+" + vals.phone)) {
       e.phone = "Enter a valid phone number";
     }
-
-    if (!vals.language.trim()) e.language = "Preferred language is required";
 
     return e;
   };
@@ -100,46 +82,34 @@ const Form: React.FC = () => {
   try {
     const target_page = window.location.href;
 
-     const crmPayload = {
+    const crmPayload = {
       fields: {
-        Name: values.name,
-        Email: values.email,
-        Phone: values.phone,
-        Message: values.message,
-        Language: values.language,
-        Target_Page: target_page,
-        Request_For: "Lead From Website Form",
+        TITLE: "Lead From Website Callback Form",
+        UF_CRM_1760777561731: target_page,
+        NAME: values.name,
+        PHONE_TEXT: values.phone,
+        PHONE: [
+          {
+            VALUE: values.phone,
+            VALUE_TYPE: "WORK",
+          },
+        ],
+        EMAIL: [
+          {
+            VALUE: "",
+            VALUE_TYPE: "WORK",
+          },
+        ],
+        SOURCE_DESCRIPTION: "",
+        SOURCE_ID: "WEB",
+        ASSIGNED_BY_ID: 25,
+        UF_CRM_1754652292782: target_page,
+        UF_CRM_1761206533: "",
+      },
+      params: {
+        REGISTER_SONET_EVENT: "Y",
       },
     };
-
-    // const crmPayload = {
-    //   fields: {
-    //     TITLE: "Lead From Website Form",
-    //     UF_CRM_1760777561731: target_page,
-    //     NAME: values.name,
-    //     PHONE_TEXT: values.phone,
-    //     PHONE: [
-    //       {
-    //         VALUE: values.phone,
-    //         VALUE_TYPE: "WORK",
-    //       },
-    //     ],
-    //     EMAIL: [
-    //       {
-    //         VALUE: values.email,
-    //         VALUE_TYPE: "WORK",
-    //       },
-    //     ],
-    //     SOURCE_DESCRIPTION: values.message,
-    //     SOURCE_ID: "WEB",
-    //     ASSIGNED_BY_ID: 25,
-    //     UF_CRM_1754652292782: target_page,
-    //     UF_CRM_1761206533: "",
-    //   },
-    //   params: {
-    //     REGISTER_SONET_EVENT: "Y",
-    //   },
-    // };
     const CRM_URL = import.meta.env.VITE_CRM_URL;
 
     await fetch(CRM_URL, {
@@ -154,16 +124,12 @@ const Form: React.FC = () => {
   }
 };
 
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const nextTouched: FormTouched = {
       name: true,
-      email: true,
       phone: true,
-      language: true,
-      message: true,
     };
     setTouched(nextTouched);
 
@@ -182,7 +148,7 @@ const Form: React.FC = () => {
     try {
       const BASE_URL = import.meta.env.VITE_API_URL;
 
-      const res = await fetch(`${BASE_URL}/form_submission`, {
+      const res = await fetch(`${BASE_URL}/form_submission_get_a_call`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -202,10 +168,7 @@ const Form: React.FC = () => {
         setErrors({});
         setTouched({
           name: false,
-          email: false,
           phone: false,
-          language: false,
-          message: false,
         });
       } else {
         toast.error("Something went wrong. Please try again.");
@@ -237,26 +200,6 @@ const Form: React.FC = () => {
           />
           {touched.name && errors.name ? (
             <div style={errorStyle}>{errors.name}</div>
-          ) : null}
-        </div>
-
-        {/* Email */}
-        <div className="space-y-2 mb-[15px]">
-          <label className={labelClass} htmlFor="email">
-            Email Address
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="Enter Email Address"
-            value={values.email}
-            onChange={onChange}
-            onBlur={onBlur}
-            className={inputBaseClass}
-          />
-          {touched.email && errors.email ? (
-            <div style={errorStyle}>{errors.email}</div>
           ) : null}
         </div>
 
@@ -348,46 +291,6 @@ const Form: React.FC = () => {
           ) : null}
         </div>
 
-        {/* Preferred Language */}
-        <div className="space-y-2 mb-[15px]">
-          <label className={labelClass} htmlFor="language">
-            Preferred Language
-          </label>
-          <select
-            id="language"
-            name="language"
-            value={values.language}
-            onChange={onChange}
-            onBlur={onBlur}
-            className={inputBaseClass}
-          >
-            <option value="" disabled>
-              Select Preferred Language
-            </option>
-            <option value="English">English</option>
-            <option value="Arabic">Arabic</option>
-          </select>
-          {touched.language && errors.language ? (
-            <div style={errorStyle}>{errors.language}</div>
-          ) : null}
-        </div>
-
-        {/* Message */}
-        <div className="space-y-2 mb-[15px]">
-          <label className={labelClass} htmlFor="message">
-            Message
-          </label>
-          <textarea
-            id="message"
-            name="message"
-            placeholder="Tell Us About your Requirements and We'll Get Back to you Shortly..."
-            value={values.message}
-            onChange={onChange}
-            onBlur={onBlur}
-            className={`${inputBaseClass} min-h-[160px] resize-y`}
-          />
-        </div>
-
         {/* Button */}
         <button
           type="submit"
@@ -405,4 +308,4 @@ const Form: React.FC = () => {
   );
 };
 
-export default Form;
+export default CallBackForm;
