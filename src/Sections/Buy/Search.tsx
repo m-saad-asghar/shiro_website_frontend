@@ -26,7 +26,8 @@ type ListingOption = {
   type: "community" | "sub_community" | "property" | string;
 };
 
-type PropertyTypeItem = { id: number; name: string; slug: string };
+// ✅ CHANGED: slug -> code (slug optional if API still returns it)
+type PropertyTypeItem = { id: number; name: string; code: string; slug?: string };
 
 const Search: FC<SearchProps> = ({
   item,
@@ -65,7 +66,7 @@ const Search: FC<SearchProps> = ({
   const [listingOptions, setListingOptions] = useState<ListingOption[]>([]);
   const [isTypingLoading, setIsTypingLoading] = useState(false);
 
-  // ✅ SAME AS MAIN SEARCHBAR: property types from endpoint (slug needed)
+  // ✅ SAME AS MAIN SEARCHBAR: property types from endpoint (code needed)
   const [propertyTypes, setPropertyTypes] = useState<PropertyTypeItem[]>([]);
   useEffect(() => {
     const controller = new AbortController();
@@ -183,133 +184,132 @@ const Search: FC<SearchProps> = ({
   };
 
   // ✅ IMPORTANT: URL → VALUES (so filters show after refresh / direct link)
-  // We also wait for propertyTypes to load so we can set property_name by slug.
+  // We also wait for propertyTypes to load so we can set property_name by code.
 
   useEffect(() => {
-  let isMounted = true;
+    let isMounted = true;
 
-  (async () => {
-    const sp = new URLSearchParams(location.search);
+    (async () => {
+      const sp = new URLSearchParams(location.search);
 
-    // ---- search chips (multi "search=") ----
-    const searchValues = sp
-      .getAll("search")
-      .map((s) => String(s || "").trim())
-      .filter(Boolean);
+      // ---- search chips (multi "search=") ----
+      const searchValues = sp
+        .getAll("search")
+        .map((s) => String(s || "").trim())
+        .filter(Boolean);
 
-    // fallback chips (if endpoint fails)
-    const fallbackChips = searchValues.map((slug) => ({
-      id: slug,
-      name: slug,
-      title: slug.replace(/-/g, " "),
-      slug,
-      type: "property",
-      uniqueId: `property_${slug}`,
-    }));
+      // fallback chips (if endpoint fails)
+      const fallbackChips = searchValues.map((slug) => ({
+        id: slug,
+        name: slug,
+        title: slug.replace(/-/g, " "),
+        slug,
+        type: "property",
+        uniqueId: `property_${slug}`,
+      }));
 
-    // ---- price ----
-    const minRaw = sp.get("min_price");
-    const maxRaw = sp.get("max_price");
+      // ---- price ----
+      const minRaw = sp.get("min_price");
+      const maxRaw = sp.get("max_price");
 
-    const min_price =
-      minRaw !== null && minRaw !== "" && !isNaN(Number(minRaw))
-        ? Number(minRaw)
+      const min_price =
+        minRaw !== null && minRaw !== "" && !isNaN(Number(minRaw))
+          ? Number(minRaw)
+          : undefined;
+
+      const max_price =
+        maxRaw !== null && maxRaw !== "" && !isNaN(Number(maxRaw))
+          ? Number(maxRaw)
+          : undefined;
+
+      // ---- property type (CODE) ----
+      const propertyTypeCode = sp.get("property_type")?.trim() || undefined;
+
+      const matchedType = propertyTypeCode
+        ? propertyTypes.find((p) => String(p.code) === String(propertyTypeCode))
         : undefined;
 
-    const max_price =
-      maxRaw !== null && maxRaw !== "" && !isNaN(Number(maxRaw))
-        ? Number(maxRaw)
-        : undefined;
+      // ---- bedrooms ----
+      const bedroomsRaw = sp
+        .getAll("bedrooms")
+        .map((x) => String(x || "").trim())
+        .filter(Boolean);
+      const selected_bedrooms = bedroomsRaw.map(normalizeBedFromUrl);
 
-    // ---- property type ----
-    const propertyTypeSlug = sp.get("property_type")?.trim() || undefined;
+      // ---- bathrooms ----
+      const bathroomsRaw = sp
+        .getAll("bathrooms")
+        .map((x) => String(x || "").trim())
+        .filter(Boolean);
+      const selected_bathrooms = bathroomsRaw.map(normalizeBathFromUrl);
 
-    const matchedType = propertyTypeSlug
-      ? propertyTypes.find((p) => p.slug === propertyTypeSlug)
-      : undefined;
+      // ---- resolve chips using backend (slug -> name) ----
+      let resolvedChips: any[] = fallbackChips;
 
-    // ---- bedrooms ----
-    const bedroomsRaw = sp
-      .getAll("bedrooms")
-      .map((x) => String(x || "").trim())
-      .filter(Boolean);
-    const selected_bedrooms = bedroomsRaw.map(normalizeBedFromUrl);
+      try {
+        if (searchValues.length > 0) {
+          const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-    // ---- bathrooms ----
-    const bathroomsRaw = sp
-      .getAll("bathrooms")
-      .map((x) => String(x || "").trim())
-      .filter(Boolean);
-    const selected_bathrooms = bathroomsRaw.map(normalizeBathFromUrl);
+          const res = await fetch(`${API_BASE_URL}/resolve_search_slugs`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify({ search: searchValues }),
+          });
 
-    // ---- resolve chips using backend (slug -> name) ----
-    let resolvedChips: any[] = fallbackChips;
+          const json = await res.json();
+          const data = Array.isArray(json?.data) ? json.data : [];
 
-    try {
-      if (searchValues.length > 0) {
-        const API_BASE_URL = import.meta.env.VITE_API_URL;
-
-        const res = await fetch(`${API_BASE_URL}/resolve_search_slugs`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({ search: searchValues }),
-        });
-
-        const json = await res.json();
-        const data = Array.isArray(json?.data) ? json.data : [];
-
-        resolvedChips = data.map((x: any) => ({
-          ...x,
-          uniqueId: `${x.type}_${x.id}`,
-          title: x.name, // ✅ show name in bar
-        }));
+          resolvedChips = data.map((x: any) => ({
+            ...x,
+            uniqueId: `${x.type}_${x.id}`,
+            title: x.name, // ✅ show name in bar
+          }));
+        }
+      } catch (err) {
+        console.error("resolve_search_slugs error:", err);
+        resolvedChips = fallbackChips;
       }
-    } catch (err) {
-      console.error("resolve_search_slugs error:", err);
-      resolvedChips = fallbackChips;
-    }
 
-    if (!isMounted) return;
+      if (!isMounted) return;
 
-    // Apply to state
-    setValueSearch(resolvedChips);
-    setSearchId([]);
+      // Apply to state
+      setValueSearch(resolvedChips);
+      setSearchId([]);
 
-    setValues((prev: any) => ({
-      ...prev,
-      type_id: id,
-      search: "",
+      setValues((prev: any) => ({
+        ...prev,
+        type_id: id,
+        search: "",
 
-      price_min: min_price,
-      price_max: max_price,
+        price_min: min_price,
+        price_max: max_price,
 
-      selected_bedrooms: Array.isArray(selected_bedrooms)
-        ? selected_bedrooms
-        : getCurrentSelectedBeds(prev),
+        selected_bedrooms: Array.isArray(selected_bedrooms)
+          ? selected_bedrooms
+          : getCurrentSelectedBeds(prev),
 
-      selected_bathrooms: Array.isArray(selected_bathrooms)
-        ? selected_bathrooms
-        : getCurrentSelectedBaths(prev),
+        selected_bathrooms: Array.isArray(selected_bathrooms)
+          ? selected_bathrooms
+          : getCurrentSelectedBaths(prev),
 
-      ...(propertyTypeSlug ? { property_type_slug: propertyTypeSlug } : {}),
-      ...(matchedType
-        ? {
-            property_type_id: matchedType.id,
-            property_name: matchedType.name,
-          }
-        : {}),
-    }));
-  })();
+        ...(propertyTypeCode ? { property_type_code: propertyTypeCode } : {}),
+        ...(matchedType
+          ? {
+              property_type_id: matchedType.id,
+              property_name: matchedType.name,
+            }
+          : {}),
+      }));
+    })();
 
-  return () => {
-    isMounted = false;
-  };
-// eslint-disable-next-line react-hooks/exhaustive-deps
-}, [location.search, id, propertyTypes]);
-
+    return () => {
+      isMounted = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search, id, propertyTypes]);
 
   // ✅ Fetch listing options on typing (same endpoint as main)
   useEffect(() => {
@@ -442,9 +442,9 @@ const Search: FC<SearchProps> = ({
       params.set("max_price", String(values.price_max));
     }
 
-    // property type (slug)
-    if ((values as any)?.property_type_slug) {
-      params.set("property_type", String((values as any).property_type_slug));
+    // ✅ CHANGED: property type (code)
+    if ((values as any)?.property_type_code) {
+      params.set("property_type", String((values as any).property_type_code));
     }
 
     // bedrooms / bathrooms
@@ -466,37 +466,23 @@ const Search: FC<SearchProps> = ({
 
     const currentPath = location.pathname;
 
-// keep same page base if already on one of these
-let basePath = "/buy/properties-for-sale";
+    // keep same page base if already on one of these
+    let basePath = "/buy/properties-for-sale";
 
-if (currentPath.includes("properties-for-rent")) {
-  basePath = "/rent/properties-for-rent";
-} else if (currentPath.includes("properties-for-sale")) {
-  basePath = "/buy/properties-for-sale";
-} else if (currentPath.includes("new-projects")) {
-  basePath = "/new-projects";
-} else {
-  // fallback to from if user is on some other route
-  if (from === "projects") basePath = "/new-projects";
-  else if (from === "rent") basePath = "/rent/properties-for-rent";
-  else basePath = "/buy/properties-for-sale";
-}
+    if (currentPath.includes("properties-for-rent")) {
+      basePath = "/rent/properties-for-rent";
+    } else if (currentPath.includes("properties-for-sale")) {
+      basePath = "/buy/properties-for-sale";
+    } else if (currentPath.includes("new-projects")) {
+      basePath = "/new-projects";
+    } else {
+      // fallback to from if user is on some other route
+      if (from === "projects") basePath = "/new-projects";
+      else if (from === "rent") basePath = "/rent/properties-for-rent";
+      else basePath = "/buy/properties-for-sale";
+    }
 
-navigate(`${basePath}${queryString ? `?${queryString}` : ""}`);
-
-
-    // if (from === "projects") {
-    //   navigate(`/new-projects${queryString ? `?${queryString}` : ""}`);
-    //   return;
-    // }
-
-    // if (from === "rent") {
-    //   navigate(`/rent/properties-for-rent${queryString ? `?${queryString}` : ""}`);
-    //   return;
-    // }
-
-    // navigate(`/buy/properties-for-sale${queryString ? `?${queryString}` : ""}`);
-  
+    navigate(`${basePath}${queryString ? `?${queryString}` : ""}`);
   };
 
   return (
@@ -829,7 +815,7 @@ navigate(`${basePath}${queryString ? `?${queryString}` : ""}`);
                 </div>
               </MainDropdown>
 
-              {/* Type Dropdown (same as main: uses slug) */}
+              {/* Type Dropdown (same as main: uses CODE) */}
               <MainDropdown
                 title={values?.property_name ? values.property_name : t("Type")}
                 triggerClass="h-12 md:h-10 px-3 text-gray-700 text-sm  hover:bg-gray-100 rounded-xl transition-colors duration-200 flex items-center gap-1 bg-white/90 border border-gray-200 w-full md:w-auto justify-center md:justify-start"
@@ -847,7 +833,7 @@ navigate(`${basePath}${queryString ? `?${queryString}` : ""}`);
                             ...prev,
                             property_type_id: undefined,
                             property_name: undefined,
-                            property_type_slug: undefined,
+                            property_type_code: undefined, // ✅ CHANGED
                           }));
                           setTimeout(() => {
                             const closeEvent = new KeyboardEvent("keydown", { key: "Escape" });
@@ -867,7 +853,7 @@ navigate(`${basePath}${queryString ? `?${queryString}` : ""}`);
                               ...prev,
                               property_type_id: pt.id,
                               property_name: pt.name,
-                              property_type_slug: pt.slug,
+                              property_type_code: pt.code, // ✅ CHANGED
                             }));
                             setTimeout(() => {
                               const closeEvent = new KeyboardEvent("keydown", { key: "Escape" });

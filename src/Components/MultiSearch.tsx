@@ -55,7 +55,7 @@ const MultiSearch = () => {
     setSelectedOptions((prev: any) => prev.filter((x: any) => x.uniqueId !== uniqueId));
   };
 
-  type PropertyTypeItem = { id: number; name: string; slug: string };
+  type PropertyTypeItem = { id: number; name: string; slug: string, code: string };
 const [propertyTypes, setPropertyTypes] = useState<PropertyTypeItem[]>([]);
 
 useEffect(() => {
@@ -270,8 +270,8 @@ useEffect(() => {
     params.set("max_price", String(values.price_max));
   }
 
-  if ((values as any)?.property_type_slug) {
-  params.set("property_type", String((values as any).property_type_slug));
+  if ((values as any)?.property_type_code) {
+  params.set("property_type", String((values as any).property_type_code));
 }
 
     // -------- TYPE --------
@@ -752,6 +752,7 @@ useEffect(() => {
           property_type_id: item?.id,
           property_name: item?.name,
           property_type_slug: item?.slug, // ✅ store slug for URL
+          property_type_code: item?.code, // Clear code if previously set
         };
       });
       setTimeout(() => {
