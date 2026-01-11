@@ -9,6 +9,7 @@ import { RxArrowTopRight } from "react-icons/rx";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaFacebook } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa6";
+import { FaYoutube } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa";
 import { BiLogoTelegram } from "react-icons/bi";
 import { FaAngleDown } from "react-icons/fa";
@@ -88,6 +89,8 @@ import {
   IoHelpCircleOutline,
   IoChatbubbleOutline,
   IoBusiness,
+  IoPricetagOutline,
+  IoMegaphoneOutline,
 } from "react-icons/io5";
 
 export default {
@@ -102,6 +105,7 @@ export default {
   MdOutlineEmail,
   FaFacebook,
   FaInstagram,
+  FaYoutube,
   FaLinkedin,
   BiLogoTelegram,
   FaAngleDown,
@@ -179,4 +183,6 @@ export default {
   FaInfoCircle,
   FaClock,
   IoBusiness,
+  IoMegaphoneOutline,
+  IoPricetagOutline,
 };

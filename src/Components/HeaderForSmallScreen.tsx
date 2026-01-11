@@ -16,7 +16,7 @@ const HeaderForSmallScreen = () => {
   // Translation
   const [currentLanguage, setCurrentLanguage] = useState("En");
   const { t, i18n } = useTranslation();
-  const { currentUnit, setCurrentUnit } = useAreaUnit();
+  // const { currentUnit, setCurrentUnit } = useAreaUnit();
 
   const changeLanguage = (lang: string) => {
     window.localStorage.setItem("lang", lang);
@@ -114,11 +114,18 @@ const HeaderForSmallScreen = () => {
                 >
                   <Icons.LiaTimesSolid size={16} />
                 </motion.button>
-                <div className="flex items-center justify-between mb-4">
-                  <img src={Images.Logo} className="h-8" alt="Shiro" />
-                </div>
-                <p className="text-sm text-gray-600">
-                  {t("Navigate through our services")}
+                {/* Mobile Image */}
+                <NavLink to="/" onClick={() => setOpen(false)} >
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-[100px] md:w-[120px] h-full cursor-pointer"
+          >
+            <img src={Images.Logo} className="w-full h-full object-contain" />
+          </motion.div>
+        </NavLink>
+                <p className="text-[16px] text-primary font-semibold !text-[#9f8151] font-[16px]">
+                  {t("Excellence Beyond Compare")}
                 </p>
               </div>
 
@@ -134,7 +141,8 @@ const HeaderForSmallScreen = () => {
                     >
                       <motion.div
                         whileHover={{ x: 5 }}
-                        className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-all duration-300 cursor-pointer"
+                        className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-all duration-200 cursor-pointer
+                        text-[16px] font-[500] rounded-lg duration-200 hover:bg-primary/10 relative group text-gray-900"
                         onClick={() => {
                           if (item.link) {
                             navigate(item.link);
@@ -142,12 +150,12 @@ const HeaderForSmallScreen = () => {
                           }
                         }}
                       >
-                        <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                        {/* <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
                           <Icons.IoHomeOutline
                             size={16}
                             className="text-primary"
                           />
-                        </div>
+                        </div> */}
                         <span className="font-medium text-gray-900">
                           {item.li}
                         </span>
@@ -157,7 +165,7 @@ const HeaderForSmallScreen = () => {
                 </AnimatePresence>
 
                 {/* Additional Links */}
-                <div className="mt-6 pt-6 border-t border-gray-100">
+                {/* <div className="mt-6 pt-6 border-t border-gray-100">
                   <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
                     {t("More")}
                   </h3>
@@ -199,16 +207,15 @@ const HeaderForSmallScreen = () => {
                       </span>
                     </motion.div>
                   </div>
-                </div>
+                </div> */}
               </div>
 
               {/* Settings Section */}
-              <div className="p-6 border-t border-gray-100 space-y-4">
+              {/* <div className="p-6 border-t border-gray-100 space-y-4">
                 <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
                   {t("Settings")}
                 </h3>
 
-                {/* Language Settings */}
                 <div className="space-y-2">
                   <motion.div
                     whileHover={{ x: 5 }}
@@ -263,7 +270,6 @@ const HeaderForSmallScreen = () => {
                   </motion.div>
                 </div>
 
-                {/* Area Unit Settings */}
                 <div className="space-y-2">
                   <motion.div
                     whileHover={{ x: 5 }}
@@ -308,7 +314,6 @@ const HeaderForSmallScreen = () => {
                   </motion.div>
                 </div>
 
-                {/* My Property Button */}
                 {isAuthenticated && (
                   <motion.div
                     whileHover={{ scale: 1.02 }}
@@ -329,7 +334,6 @@ const HeaderForSmallScreen = () => {
                   </motion.div>
                 )}
 
-                {/* Account/Login Button */}
                 {!isAuthenticated && (
                   <motion.div
                     whileHover={{ scale: 1.02 }}
@@ -349,7 +353,7 @@ const HeaderForSmallScreen = () => {
                     </button>
                   </motion.div>
                 )}
-              </div>
+              </div> */}
             </div>
           </SheetContent>
         </Sheet>

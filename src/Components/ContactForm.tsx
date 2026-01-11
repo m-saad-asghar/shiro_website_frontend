@@ -57,7 +57,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       viewport={{ once: true }}
-      className="w-full bg-white change_border shadow-xl border border-gray-100 p-8"
+      className="w-full max-w-full min-w-0 overflow-x-hidden bg-white change_border shadow-xl border border-gray-100 p-6 sm:p-8"
     >
       {/* Header */}
       {/* <div className="text-center mb-8">

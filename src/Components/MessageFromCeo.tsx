@@ -34,7 +34,7 @@ const MessageFromceo: React.FC = () => {
             Accept: "application/json",
           },
           body: JSON.stringify({
-            name: "Mr. Ali Sulaiman",
+            name: "Ali Sulaiman",
           }),
         });
 
@@ -61,54 +61,61 @@ const MessageFromceo: React.FC = () => {
   }, [API_URL]);
 
   return (
-    <section className="w-full h-full flex">
-      <div className="bg-[#0b4a35] text-white">
-        <div className="grid grid-cols-1 lg:grid-cols-2 leadership_styling_inside">
+    <section className="change_border border border-primary/20 bg-white shadow-sm">
+      {/* same padding as reference */}
+      <div className="px-[20px] py-[20px] sm:px-[20px] sm:py-[20px] md:px-[20px] md:py-[20px] lg:px-[45px] lg:py-[45px]">
+        {/* ✅ SAME layout as MessageFromFounder reference: mobile stack (image top), desktop 2 columns */}
+        <div className="flex flex-col gap-2 lg:gap-3 lg:grid lg:grid-cols-2 lg:items-center">
+          
+          {/* IMAGE (mobile top, desktop right) */}
+          <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+            <div className="w-[200px] sm:w-[240px] lg:w-[270px] aspect-square rounded-full overflow-hidden bg-gray-100 shadow-sm">
+              {!loading && founder?.image ? (
+                <img
+                  src={employeeImagesUrl(founder.image)}
+                  alt={founder.position}
+                  className="w-full h-full object-cover transition-transform duration-300 lg:hover:scale-105"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-primary/60">
+                  {loading ? "Loading image..." : "No image available"}
+                </div>
+              )}
+            </div>
+          </div>
 
-          {/* LEFT SECTION */}
-          <div className="px-6 sm:px-10 lg:px-16 py-12 lg:py-20 flex items-center">
-            <div className="max-w-xl w-full">
-
+          {/* TEXT (mobile below image, desktop left) */}
+          <div className="order-2 lg:order-1 flex items-center">
+            <div className="w-full max-w-none lg:max-w-2xl">
               {loading && (
-                <p className="text-white/80 text-sm">Loading message...</p>
+                <p className="text-primary/70 text-sm">Loading message...</p>
               )}
 
               {!loading && error && (
-                <p className="text-red-200 text-sm">{error}</p>
+                <p className="text-red-500 text-sm">{error}</p>
               )}
 
               {!loading && !error && founder && (
                 <>
                   <p
-                    className="down_styling para_styling !text-white"
-                    dangerouslySetInnerHTML={{
-                      __html: founder.message,
+                    className="down_styling para_styling message_font !text-[#0b4a35] w-full max-w-none text-left leading-relaxed text-[16px] sm:text-[18px] lg:text-[18px]"
+                    style={{
+                      wordBreak: "normal",
+                      overflowWrap: "normal",
+                      hyphens: "none",
+                      whiteSpace: "normal",
                     }}
+                    dangerouslySetInnerHTML={{ __html: founder.message }}
                   />
 
-                  {/* NAME + POSITION */}
-                  <p className="mt-[10px] text-white font-medium !text-[#9f8151] font-semibold">
-                    {founder.name}{", "}
-      {founder.position}
-                  </p>
+                  <p className="mt-4 message_font text-[#9f8151] flex flex-col leading-tight">
+  <span className="font-bold">{founder.name}</span>
+  <span>{founder.position}</span>
+</p>
+
                 </>
               )}
             </div>
-          </div>
-
-          {/* RIGHT SECTION (IMAGE) */}
-          <div className="w-[270px] h-[270px] rounded-full overflow-hidden bg-gray-100 shadow-sm">
-            {!loading && founder?.image ? (
-              <img
-                src={employeeImagesUrl(founder.image)}
-                alt={founder.position}
-                className="w-full h-full cursor-pointer object-cover transition-transform ease-in-out hover:scale-105"
-              />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center text-white/70">
-                {loading ? "Loading image..." : "No image available"}
-              </div>
-            )}
           </div>
 
         </div>

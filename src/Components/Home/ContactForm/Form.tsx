@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { isPossiblePhoneNumber } from "libphonenumber-js";
@@ -67,9 +67,9 @@ const Form: React.FC = () => {
   const errorStyle = useMemo(() => ({ fontSize: 12, color: "red" }), []);
 
   const inputBaseClass =
-    "w-full change_border border border-gray-200 px-4 py-4 outline-none focus:border-[#094834] focus:ring-2 focus:ring-[#094834]/20 transition";
+    "mobile_form_text w-full change_border border border-gray-200 px-4 py-4 outline-none focus:border-[#094834] focus:ring-2 focus:ring-[#094834]/20 transition";
 
-  const labelClass = "text-sm text-[#0b3c2b]";
+  const labelClass = "";
 
   const onChange = (
     e: React.ChangeEvent<
@@ -97,63 +97,50 @@ const Form: React.FC = () => {
   };
 
   const sendToCrm = async (values: typeof initialValues) => {
-  try {
-    const target_page = window.location.href;
+    try {
+      const target_page = window.location.href;
 
-     const crmPayload = {
-      fields: {
-        Name: values.name,
-        Email: values.email,
-        Phone: values.phone,
-        Message: values.message,
-        Language: values.language,
-        Target_Page: target_page,
-        Request_For: "Lead From Website Form",
+      const crmPayload = {
+  fields: {
+    TITLE: "Website Lead",
+
+    NAME: values.name,
+
+    EMAIL: [
+      {
+        VALUE: values.email,
+        VALUE_TYPE: "WORK",
       },
-    };
+    ],
 
-    // const crmPayload = {
-    //   fields: {
-    //     TITLE: "Lead From Website Form",
-    //     UF_CRM_1760777561731: target_page,
-    //     NAME: values.name,
-    //     PHONE_TEXT: values.phone,
-    //     PHONE: [
-    //       {
-    //         VALUE: values.phone,
-    //         VALUE_TYPE: "WORK",
-    //       },
-    //     ],
-    //     EMAIL: [
-    //       {
-    //         VALUE: values.email,
-    //         VALUE_TYPE: "WORK",
-    //       },
-    //     ],
-    //     SOURCE_DESCRIPTION: values.message,
-    //     SOURCE_ID: "WEB",
-    //     ASSIGNED_BY_ID: 25,
-    //     UF_CRM_1754652292782: target_page,
-    //     UF_CRM_1761206533: "",
-    //   },
-    //   params: {
-    //     REGISTER_SONET_EVENT: "Y",
-    //   },
-    // };
-    const CRM_URL = import.meta.env.VITE_CRM_URL;
-
-    await fetch(CRM_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
+    PHONE: [
+      {
+        VALUE: values.phone,
+        VALUE_TYPE: "WORK",
       },
-      body: JSON.stringify(crmPayload),
-    });
-  } catch (e) {
-  }
+    ],
+
+    COMMENTS: values.message,
+
+    UF_CRM_1768051861: values.language,
+    UF_CRM_1768053169: target_page,
+    UF_CRM_1768053313: "Lead From Contact Us Form",
+  },
 };
 
+
+      const CRM_URL = import.meta.env.VITE_CRM_URL;
+
+      await fetch(CRM_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(crmPayload),
+      });
+    } catch (e) {}
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -194,7 +181,7 @@ const Form: React.FC = () => {
       const data = await res.json();
 
       if (res.ok && data?.status === 1) {
-         sendToCrm(values);
+        sendToCrm(values);
         toast.success(
           "Your Details have been Submitted Successfully. Our Team will Contact you Shortly."
         );
@@ -217,9 +204,26 @@ const Form: React.FC = () => {
     }
   };
 
+  // ✅ FIX: custom language dropdown for mobile (native select popover bug)
+  const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const onDown = (e: MouseEvent | TouchEvent) => {
+      if (!langRef.current) return;
+      if (!langRef.current.contains(e.target as Node)) setLangOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("touchstart", onDown);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("touchstart", onDown);
+    };
+  }, []);
+
   return (
     <div className={containerClass}>
-      <form className={containerClass} onSubmit={handleSubmit}>
+      <form className={`${containerClass} mobile-form`} onSubmit={handleSubmit}>
         {/* Full Name */}
         <div className="space-y-2 mb-[15px]">
           <label className={labelClass} htmlFor="name">
@@ -233,7 +237,7 @@ const Form: React.FC = () => {
             value={values.name}
             onChange={onChange}
             onBlur={onBlur}
-            className={inputBaseClass}
+            className={`${inputBaseClass} mobile_form_text`}
           />
           {touched.name && errors.name ? (
             <div style={errorStyle}>{errors.name}</div>
@@ -253,7 +257,7 @@ const Form: React.FC = () => {
             value={values.email}
             onChange={onChange}
             onBlur={onBlur}
-            className={inputBaseClass}
+            className={`${inputBaseClass} mobile_form_text`}
           />
           {touched.email && errors.email ? (
             <div style={errorStyle}>{errors.email}</div>
@@ -329,6 +333,7 @@ const Form: React.FC = () => {
                 background: "transparent",
                 paddingLeft: "58px",
               }}
+              inputClass="mobile_form_text"
               buttonStyle={{
                 border: "none",
                 background: "transparent",
@@ -348,25 +353,72 @@ const Form: React.FC = () => {
           ) : null}
         </div>
 
-        {/* Preferred Language */}
-        <div className="space-y-2 mb-[15px]">
+        {/* Preferred Language (✅ custom dropdown, fixes mobile popover issue) */}
+        <div className="space-y-2 mb-[15px]" ref={langRef}>
           <label className={labelClass} htmlFor="language">
             Preferred Language
           </label>
-          <select
+
+          {/* keeps same form field name */}
+          <input
+            type="hidden"
             id="language"
             name="language"
             value={values.language}
-            onChange={onChange}
-            onBlur={onBlur}
-            className={inputBaseClass}
+            className="mobile_form_text"
+          />
+
+          <button
+            type="button"
+            onClick={() => setLangOpen((p) => !p)}
+            onBlur={() => {
+              setTouched((prev) => ({ ...prev, language: true }));
+              setErrors(validate(values));
+            }}
+            className={`${inputBaseClass} flex items-center justify-between bg-white`}
+            aria-haspopup="listbox"
+            aria-expanded={langOpen}
           >
-            <option value="" disabled>
-              Select Preferred Language
-            </option>
-            <option value="English">English</option>
-            <option value="Arabic">Arabic</option>
-          </select>
+            <span
+              className={`${values.language ? "text-[#5E5C59]" : "text-gray-400"}`}
+            >
+              {values.language ? values.language : "Select Preferred Language"}
+            </span>
+            <span className="text-gray-500">▾</span>
+          </button>
+
+          {langOpen && (
+            <div className="relative">
+              <div
+                className="absolute left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl z-[9999] overflow-hidden"
+                role="listbox"
+              >
+                {["English", "Arabic"].map((opt) => (
+                  <button
+                    key={opt}
+                    type="button"
+                    className="w-full text-left px-4 py-3 text-sm hover:bg-gray-50 transition flex items-center justify-between"
+                    onClick={() => {
+                      setValues((prev) => ({ ...prev, language: opt }));
+                      setTouched((prev) => ({ ...prev, language: true }));
+                      setErrors((prevErrors) => {
+                        const nextErrors = { ...prevErrors };
+                        delete nextErrors.language;
+                        return nextErrors;
+                      });
+                      setLangOpen(false);
+                    }}
+                  >
+                    <span>{opt}</span>
+                    {values.language === opt ? (
+                      <span className="text-[#094834] font-semibold">✓</span>
+                    ) : null}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {touched.language && errors.language ? (
             <div style={errorStyle}>{errors.language}</div>
           ) : null}
@@ -377,15 +429,15 @@ const Form: React.FC = () => {
           <label className={labelClass} htmlFor="message">
             Message
           </label>
-          <textarea
-            id="message"
-            name="message"
-            placeholder="Tell Us About your Requirements and We'll Get Back to you Shortly..."
-            value={values.message}
-            onChange={onChange}
-            onBlur={onBlur}
-            className={`${inputBaseClass} min-h-[160px] resize-y`}
-          />
+         <textarea
+  id="message"
+  name="message"
+  placeholder="Tell Us About your Requirements and We'll Get Back to you Shortly..."
+  value={values.message}
+  onChange={onChange}
+  onBlur={onBlur}
+  className={`${inputBaseClass} min-h-[160px] resize-y mobile-message-textarea`}
+/>
         </div>
 
         {/* Button */}

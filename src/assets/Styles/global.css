@@ -84,12 +84,40 @@ h6 {
   margin-bottom: 25px;
 }
 
+.develop_heading_styling {
+  position: absolute;
+    bottom: 7rem;            /* md:bottom-28 */
+    left: 0;                 /* md:left-0 */
+    transform: translateX(0);/* md:translate-x-0 */
+
+    display: flex;           /* flex */
+    flex-direction: column;  /* flex-col */
+    align-items: flex-start; /* md:items-start */
+    text-align: left;        /* md:text-left */
+    gap: 1.25rem;            /* gap-5 */
+    color: #ffffff;          /* text-white */
+}
+
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 .properties_details_heading {
   margin-bottom: 5px;
 }
 
+.message_font {
+  font-size: 22px !important;
+}
+
 .margin_key_information_section {
   margin-bottom: 30px;
+}
+
+.height_styling_message {
+    min-height: max-content;
+    height: max-content;
 }
 
 .map_styling {
@@ -118,7 +146,7 @@ h6 {
 }
 
 .leadership_styling {
-  margin-top: 100px;
+  margin-top: 80px;
 }
 
 .leadership_styling_inside {
@@ -184,6 +212,11 @@ textarea::placeholder {
 .property_container_styling {
   padding-top: 75px;
     padding-bottom: 85px;
+}
+
+.centerize {
+  display: flex;
+  justify-content: center;
 }
 
 /* Additional Safari fixes for text rendering */
@@ -970,6 +1003,127 @@ video {
 /* Responsive adjustments for team slider */
 @media (max-width: 767px) {
 
+  .message_font {
+  font-size: 16px !important;
+}
+
+  .gallery_image_mobile {
+    height: 300px !important;
+  }
+
+  .developer_logo_styling {
+    margin-top: 20px;
+    justify-content: center;
+  }
+
+  .developer_details_styling {
+    margin-top: 50px;
+  }
+
+  .developer_listing_styling {
+    margin-top: 70px;
+  }
+
+  .listing_details_styling {
+    padding-top: 70px;
+  }
+
+  .property_container_styling{
+     padding-top: 45px;
+    padding-bottom: 55px;
+  }
+
+   .extra_gap {
+    gap: 5px !important;
+  }
+
+  .internal_search_bar {
+  margin-top: 85px;
+}
+
+  .remove_extra_margin {
+    padding-bottom: 0px !important;
+  }
+
+    .mobile_btns {
+    display: flex;
+    /* flex-direction: column; */
+    /* align-items: center; */
+    justify-content: center;
+}
+
+  .mobile_form_text {
+    font-size: 14px !important;
+  /* color: #0b3c2b !important;  */
+  }
+
+  .mobile_form_text::placeholder {
+  font-size: 14px !important;
+}
+
+/* Safari / older browsers */
+.mobile_form_text::-webkit-input-placeholder {
+  font-size: 14px !important;
+}
+
+.mobile_form_text:-ms-input-placeholder {
+  font-size: 14px !important;
+}
+
+.mobile-form .mobile_form_text {
+    font-size: 14px !important;
+  }
+
+  /* Placeholder for input + textarea */
+  .mobile-form .mobile_form_text::placeholder {
+    font-size: 14px !important;
+  }
+
+  /* iOS Safari */
+  .mobile-form .mobile_form_text::-webkit-input-placeholder {
+    font-size: 14px !important;
+  }
+
+  .mobile-form .mobile_form_text:-ms-input-placeholder {
+    font-size: 14px !important;
+  }
+
+  /* message textarea text size */
+  .mobile-form textarea.mobile_form_text {
+    font-size: 14px !important;
+  }
+
+  /* textarea placeholder (all major browsers) */
+  .mobile-form textarea.mobile_form_text::placeholder {
+    font-size: 14px !important;
+  }
+
+  .mobile-form textarea.mobile_form_text::-webkit-input-placeholder {
+    font-size: 14px !important;
+  }
+
+  .mobile-form textarea.mobile_form_text::-moz-placeholder {
+    font-size: 14px !important;
+  }
+
+  .mobile-form textarea.mobile_form_text:-ms-input-placeholder {
+    font-size: 14px !important;
+  }
+
+  textarea.mobile-message-textarea {
+    font-size: 16px !important;        /* keep 16 to avoid iOS override */
+    line-height: 1.4 !important;
+    transform: scale(0.875);           /* 16 * 0.875 = 14px visually */
+    transform-origin: top left;
+    width: calc(100% / 0.875);         /* keep same visual width */
+    min-height: calc(160px / 0.875);   /* keep same visual height */
+  }
+
+  textarea.mobile-message-textarea::placeholder {
+    font-size: 16px !important;        /* placeholder follows the same scale */
+    line-height: 1.4 !important;
+  }
+
    .project_text {
     font-size: 24px !important;
 }
@@ -993,7 +1147,7 @@ textarea::placeholder {
 
   .selling_points_container {
   padding-top: 50px;
-  padding-bottom: 0px;
+  padding-bottom: 50px;
   margin-top: 30px;
 }
 
@@ -1060,10 +1214,32 @@ display: block !important;
 }
 
 @media (max-width: 407px) {
+
+  .down_direction {
+  display: flex;
+  flex-direction: column;
+}
+
+  .centerize_mobile {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+  .down_phone_spacing {
+    margin-bottom: 15px;
+  }
+  .hidden_styling {
+    display: none;
+  }
+  .down_position {
+    display: flex;
+    flex-direction: column;
+  }
   .mobile_btns {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
   }
 
@@ -1123,3 +1299,4 @@ option,
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
 }
+

@@ -65,7 +65,6 @@ export default function ProjectFloorPlan({
 
   return (
     <section className="fp-wrap" id="floorPlans">
-
       {/* Grid (3 per row on desktop) */}
       <div className="fp-grid">
         {plans.map((p, i) => {
@@ -127,7 +126,6 @@ export default function ProjectFloorPlan({
           aria-modal="true"
           aria-label="Floorplan viewer"
           onMouseDown={(e) => {
-            // close when clicking overlay only
             if (e.target === e.currentTarget) closeViewer();
           }}
         >
@@ -353,8 +351,10 @@ export default function ProjectFloorPlan({
           align-items: center;
           justify-content: center;
           padding: 10px;
+          text-align: center; /* ✅ helps on mobile too */
         }
 
+        /* ✅ Desktop: keep as before (contain + centered) */
         .fp-modalImg{
           width: 100%;
           height: 82vh;
@@ -365,16 +365,29 @@ export default function ProjectFloorPlan({
           background: #fff;
         }
 
+        /* ✅ MOBILE FIX: force image to fill width so it stays visually centered */
         @media (max-width: 640px){
           .fp-modalInner{
             width: 100%;
           }
-          .fp-modalImg{
-            height: 78vh;
+
+          .fp-modalCard{
+            padding: 8px;
           }
+
+          .fp-modalImg{
+            width: 100%;
+            height: auto;
+            max-height: 78vh;
+            margin: 0 auto;
+            object-fit: contain;
+            object-position: center;
+            display: block;
+          }
+
           .fp-close{
             top: -12px;
-            right: -6px;
+            right: 0px;
           }
         }
       `}</style>

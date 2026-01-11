@@ -24,6 +24,13 @@ const Footer = () => {
 
   // Fetch contact information
   const { data: contact } = useQueryGet(["contact"], StaticServices.contact);
+  const rawPhone = String(contact?.contact_info?.phone ?? "");
+  const spacedPhone = rawPhone.replace(
+  /^(\+\d{3})(\d)(\d{3})(\d{4})$/,
+  "$1 $2 $3 $4"
+);
+
+
 
   // ✅ Get footer items once
   const footerItems = FooterItem();
@@ -142,8 +149,8 @@ const Footer = () => {
 
       <div className="relative">
         {/* Main Footer Content */}
-        <div className="custom_container mx-auto px-4 py-12 lg:py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+        <div className="custom_container mx-auto px-4 py-12 lg:py-16 remove_extra_margin">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 md:gap-8 lg:gap-12">
             {/* Logo & Description Section */}
             <div className="lg:col-span-4 space-y-6">
               {/* Logo */}
@@ -151,7 +158,7 @@ const Footer = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="flex items-center cursor-pointer"
+                className="flex items-center cursor-pointer centerize_mobile"
                 onClick={() => navigate("/")}
               >
                 <img
@@ -169,20 +176,20 @@ const Footer = () => {
                 className="space-y-3"
                 style={{ width: "fit-content" }}
               >
-                <div className="flex">
+                <div className="flex down_position">
                   <motion.div
                     whileHover={{ x: 5 }}
-                    className="footer_text_styling footer_text_styling_hover flex items-center gap-3 hover:text-[#d3c294] cursor-pointer transition-colors duration-300"
+                    className="footer_text_styling footer_text_styling_hover flex items-center gap-3 hover:text-[#d3c294] cursor-pointer transition-colors duration-300 down_phone_spacing"
                     onClick={() =>
                       handleContactClick("phone", contact?.contact_info?.phone)
                     }
                   >
                     <Icons.LuPhone className="w-4 h-4 flex-shrink-0" />
                     <span className="text-sm truncate">
-                      {contact?.contact_info?.phone}
+                      {spacedPhone || "—"}
                     </span>
                   </motion.div>
-                  <div className="separator_styling">|</div>
+                  <div className="separator_styling hidden_styling">|</div>
                   <motion.div
                     whileHover={{ x: 5 }}
                     className="footer_text_styling footer_text_styling_hover flex items-center gap-3 hover:text-[#d3c294] cursor-pointer transition-colors duration-300"
@@ -221,7 +228,7 @@ const Footer = () => {
                 <h4 className="text-white font-semibold mb-4 text-md uppercase tracking-wider footer_text_styling">
                   {t("Follow Us")}
                 </h4>
-                <div className="flex items-center gap-3">{renderSocialMedia}</div>
+                <div className="flex items-center gap-3 centerize_mobile">{renderSocialMedia}</div>
               </motion.div>
             </div>
 
@@ -245,7 +252,7 @@ const Footer = () => {
                 className="text-center lg:text-left"
               >
                 <p className="text-gray-400 text-sm footer_text_styling">
-                  © 2025–{new Date().getFullYear()} Shiro Real Estate.{" "}
+                  © {new Date().getFullYear()} Shiro Real Estate.{" "}
                   {t("All Rights Reserved")}.
                 </p>
               </motion.div>

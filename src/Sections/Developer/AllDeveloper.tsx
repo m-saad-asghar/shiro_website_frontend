@@ -3,6 +3,7 @@ import { Skeleton } from "@/Components/ui/skeleton";
 import { useMemo, type FC } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import ImagesUrl from "@/helpers/ImagesURL";
 
 type AllDeveloperProps = {
   data: any;
@@ -41,6 +42,7 @@ const AllDeveloper: FC<AllDeveloperProps> = ({ data, status }) => {
 
   return (
     <div className="custom_container mx-auto px-4">
+      
       {/* Section Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}

@@ -15,9 +15,12 @@ const ServicesContent: React.FC = () => {
 
             <p className="down_styling para_styling">
             With Shiro Estate, you gain a strategic partner with world-class expertise. We manage real estate transactions remotely, ensuring safety, efficiency, and optimal terms, no matter where you are. Our role is more than advisory — we act as your strategic operator, sourcing properties, crafting strategies, leading negotiations, and overseeing every legal and financial detail.
+            </p><br/>
+             <p className="down_styling para_styling">
+            We focus on what matters most to our clients — whether it’s identifying and analyzing high-yield properties, securing optimal mortgage and financing solutions, or providing full rental management, oversight, and asset value enhancement. Our specialists ensure a seamless and transparent process from start to finish.
             </p>
 
-            <button
+            {/* <button
               onClick={() => {
   const section = document.getElementById("list_with_us");
   if (section) {
@@ -28,7 +31,7 @@ const ServicesContent: React.FC = () => {
               className="mt-10 w-fit bg-[#094834] hover:bg-[#9f8151] text-white font-semibold py-4 px-6 border-radius shadow-lg hover:shadow-xl cursor-pointer transition"
             >
               Enquire now
-            </button>
+            </button> */}
           </div>
 
           {/* RIGHT: IMAGE */}

@@ -1,7 +1,7 @@
 import { MortgageCalculator, BoxForm } from "@/Components/SingleProperty";
 import { PropertyMap } from "@/Components";
 import { Helmet } from "react-helmet";
-import ExploreProperty from "@/Sections/Home/ExploreProperty";
+import ExplorePropertyWithType from "@/Sections/Home/ExplorePropertyWithType";
 import {
   Gallery,
   HeaderSingleProperty,
@@ -151,7 +151,7 @@ const [images, setImages] = useState<string[]>([]);
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="custom_container"
+          className="custom_container listing_details_styling"
         >
           {/* OPTIONAL: keep UI same, but prevent crashes if data missing */}
           {/* If you already have loaders inside components, you can remove this */}
@@ -238,7 +238,11 @@ const [images, setImages] = useState<string[]>([]);
             transition={{ duration: 0.6, delay: 0.8 }}
             className="mt-16 mb-20"
           >
-            <ExploreProperty />
+            <ExplorePropertyWithType
+              reference={property?.reference}
+              property_category={property?.property_category}
+              project_status={property?.project_status}
+            />
             {/* <RecommendedProperties
               currentPropertyId={id || ""}
               propertyType={property?.property_type?.name}

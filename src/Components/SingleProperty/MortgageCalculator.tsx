@@ -77,8 +77,8 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
 
   // ✅ Currency formatting (safe + clean)
   const formatCurrency = (amount: number) => {
-    if (!Number.isFinite(amount) || amount <= 0) return "Đ0";
-    return `Đ${Math.round(amount).toLocaleString()}`;
+    if (!Number.isFinite(amount) || amount <= 0) return "Đ 0";
+    return `Đ ${Math.round(amount).toLocaleString()}`;
   };
 
   return (

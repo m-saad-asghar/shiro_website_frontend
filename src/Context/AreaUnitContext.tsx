@@ -12,7 +12,7 @@ interface AreaUnitContextType {
   currentUnit: AreaUnit;
   setCurrentUnit: (unit: AreaUnit) => void;
   convertArea: (area: number) => number;
-  formatArea: (area: number) => string;
+  formatArea: (area: number | string | null | undefined) => string; // ✅ updated to be defensive
 }
 
 const AreaUnitContext = createContext<AreaUnitContextType | undefined>(
@@ -59,10 +59,19 @@ export const AreaUnitProvider: React.FC<AreaUnitProviderProps> = ({
     return area;
   };
 
-  // Format area with unit
-  const formatArea = (area: number): string => {
-    const convertedArea = convertArea(area);
-    return `${convertedArea} ${currentUnit}`;
+  // ✅ Format area with commas + unit (keeps existing unit conversion)
+  const formatArea = (area: number | string | null | undefined): string => {
+    const num = Number(area);
+    if (!isFinite(num)) return `0 ${currentUnit}`;
+
+    const convertedArea = convertArea(num);
+
+    const formatted = convertedArea.toLocaleString("en-US", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    });
+
+    return `${formatted} ${currentUnit}`;
   };
 
   const value: AreaUnitContextType = {

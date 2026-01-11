@@ -92,12 +92,22 @@ const Gallery: FC<GalleryProps> = ({ item, status }) => {
     >
       <img
         src={ListingImagesUrl(validImages[0])}
-        className="w-full 
-          h-[360px] 
-          sm:h-[420px] 
-          md:h-[480px] 
-          lg:h-[680px]   /* ⬅️ +30% height */
-          object-cover change_border"
+        className="
+  w-full
+  h-[360px]
+  sm:h-[420px]
+  md:h-[480px]
+  lg:h-[680px]
+
+  max-md:h-[240px]
+  max-md:sm:h-[280px]
+  max-md:md:h-[320px]
+  max-md:lg:h-[330px]
+
+  object-cover
+  change_border
+"
+
         alt="Main Property"
       />
 

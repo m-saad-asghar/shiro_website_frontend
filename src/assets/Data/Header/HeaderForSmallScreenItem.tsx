@@ -33,49 +33,74 @@ const HeaderForSmallScreenItem = () => {
       },
       {
         id: 3,
-        li: t("Projects"),
-        link: `/new-projects`,
-      },
-      {
-        id: 4,
         li: t("Developers"),
         link: `/developers`,
       },
-      {
+       {
+        id: 4,
+        li: t("List With Us"),
+        link: "/list-your-property",
+      },
+       {
         id: 5,
-        li: t("Areas"),
-        link: "/area-guides",
+        li: t("About Shiro"),
+        link: `/about`,
       },
-      {
+       {
         id: 6,
-        li: t("About Us"),
-        link: "/about",
-      },
-      {
-        id: 7,
         li: t("Services"),
         link: "/property-services",
       },
-      {
-        id: 8,
+       {
+        id: 7,
         li: t("Meet The Team"),
         link: "/team",
       },
       {
-        id: 9,
-        li: t("Blog"),
-        link: "/blog",
-      },
-      {
-        id: 10,
-        li: t("Testimonials"),
-        link: "/reviews",
-      },
-      {
-        id: 11,
+        id: 8,
         li: t("Contact Us"),
         link: "/contact",
       },
+      // {
+      //   id: 3,
+      //   li: t("Projects"),
+      //   link: `/new-projects`,
+      // },
+      // {
+      //   id: 5,
+      //   li: t("Areas"),
+      //   link: "/area-guides",
+      // },
+      // {
+      //   id: 6,
+      //   li: t("About Us"),
+      //   link: "/about",
+      // },
+      // {
+      //   id: 7,
+      //   li: t("Services"),
+      //   link: "/property-services",
+      // },
+      // {
+      //   id: 8,
+      //   li: t("Meet The Team"),
+      //   link: "/team",
+      // },
+      // {
+      //   id: 9,
+      //   li: t("Blog"),
+      //   link: "/blog",
+      // },
+      // {
+      //   id: 10,
+      //   li: t("Testimonials"),
+      //   link: "/reviews",
+      // },
+      // {
+      //   id: 11,
+      //   li: t("Contact Us"),
+      //   link: "/contact",
+      // },
     ],
     [filteredData, filterDeveloper, t]
   );

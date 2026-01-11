@@ -53,51 +53,61 @@ export default function ProjectPaymentPlan({
           </div>
 
           {/* RIGHT */}
-          <div className="ppx-right">
-            <div className="ppx-timeline">
-              {payment_plans.map((item, i) => {
-                const isLast = i === payment_plans.length - 1;
+         <div className="ppx-right">
+  <div className="ppx-timeline">
+    {payment_plans.map((item, i) => {
+      const isLast = i === payment_plans.length - 1;
 
-                return (
-                  <div
-                    key={`${item.title}-${item.value}-${i}`}
-                    className="ppx-row"
-                  >
-                    {/* dot + line column */}
-                    <div className="ppx-rail" aria-hidden>
-                      <span 
-                      className="ppx-dot"
-                       />
-                      {!isLast && <span className="ppx-vline" />}
-                    </div>
+      return (
+        <div
+          key={`${item.title}-${item.value}-${i}`}
+          className="ppx-row"
+        >
+          {/* dot + line column */}
+          <div className="ppx-rail" aria-hidden>
+            <span className="ppx-dot" />
+            {!isLast && <span className="ppx-vline" />}
+          </div>
 
-                    {/* text */}
-                    <div className="ppx-text">
-                      <div 
-                      className="font-semibold text-primary text-2xl"
-                      // className="ppx-label"
-                      >{item.value}</div>
-                      {item.sub_title && (
-                        <div 
-                        className="down_styling para_styling"
-                        // className="ppx-sub"
-                        >{item.sub_title}</div>
-                      )}
-                    </div>
+          {/* ================= DESKTOP (UNCHANGED) ================= */}
+          <div className="ppx-text hidden md:block">
+            <div className="font-semibold text-primary text-2xl">
+              {item.value}
+            </div>
 
-                    {/* percent */}
-                    <div 
-                    // className="ppx-percent"
-                    className="font-semibold text-primary text-4xl text-[#0B2B1C]"
-                    >{item.title}</div>
+            {item.sub_title && (
+              <div className="down_styling para_styling">
+                {item.sub_title}
+              </div>
+            )}
+          </div>
 
-                    {/* row divider */}
-                    {/* <div className="ppx-row-divider" /> */}
-                  </div>
-                );
-              })}
+          <div className="font-semibold text-primary text-4xl text-[#0B2B1C] hidden md:block">
+            {item.title}
+          </div>
+
+          {/* ================= MOBILE ONLY ================= */}
+          <div className="md:hidden flex flex-col gap-2">
+            <div className="font-semibold text-primary text-lg">
+              {item.value}
+            </div>
+
+            {item.sub_title && (
+              <div className="down_styling para_styling text-sm">
+                {item.sub_title}
+              </div>
+            )}
+
+            <div className="font-semibold text-primary text-2xl text-[#0B2B1C]">
+              {item.title}
             </div>
           </div>
+        </div>
+      );
+    })}
+  </div>
+</div>
+
         </div>
 
         {/* bottom divider */}

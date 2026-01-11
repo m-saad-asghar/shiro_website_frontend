@@ -21,7 +21,7 @@ const ListYourProperty = () => {
 
       {/* Hero Section */}
 
-     <section className="relative w-full h-[91vh]">
+     <section className="relative w-full h-[91vh] developer_listing_styling">
             <img
               src={ImagesUrl("list_with_us_main_image.avif")}
               alt="List Your Property Main Banner"
@@ -33,20 +33,17 @@ const ListYourProperty = () => {
             <div
               className="
                 custom_container
-                absolute bottom-14 left-1/2 -translate-x-1/2 
-                flex flex-col items-center text-center gap-5 text-white
-                sm:bottom-18
-                md:bottom-28 md:left-0 md:translate-x-0 md:items-start md:text-left
+                develop_heading_styling
               "
             >
               <h1 className="hidden md:block w-full lg:w-[100%] project_text font-bold !text-white drop-shadow-lg tracking-wide leading-tight content_general">
-                {t("List Your Property in Dubai")}
+                {t("Sell Your Property with Shiro Estate")}
               </h1>
 
               <p className="text-sm sm:text-base">
                 <span className="text-white text-xl">by</span>{" "}
                 <span className="font-semibold text-white text-xl">
-                  {t("One of the Top Real Estate Agencies in Dubai")}
+                  {t("Fast. Profitable. Transparent.")}
                 </span>
               </p>
 
@@ -254,7 +251,12 @@ const ListYourProperty = () => {
             </h2>
             <p className="down_styling para_styling">
               {t(
-                "We provide comprehensive real estate services that ensure your property gets the attention it deserves"
+                "Selling your property in the UAE and internationally — with in-depth market analysis, a proven strategy, precise pricing, and professional marketing."
+              )}
+            </p><br/>
+            <p className="down_styling para_styling">
+              {t(
+                "We Sell Property in 5 Steps:"
               )}
             </p>
           </motion.div>
@@ -262,35 +264,35 @@ const ListYourProperty = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
-                icon: <Icons.IoGlobeOutline size={32} />,
-                title: t("Global Reach"),
-                description: t("Access to international buyers and investors"),
+                icon: <Icons.IoSearchOutline size={32} />,
+                title: t("Consultation & Property Analysis"),
+                description: t("We begin with a comprehensive analysis of your property and target audience, assessing market conditions, demand, competition, and investment potential."),
               },
               {
-                icon: <Icons.IoCameraOutline size={32} />,
-                title: t("Professional Photography"),
-                description: t("High-quality photos and virtual tours"),
+                icon: <Icons.IoPricetagOutline size={32} />,
+                title: t("Professional Valuation & Pricing Strategy"),
+                description: t("Based on the collected data, we set a well-grounded market price that attracts buyers while maximizing your return."),
               },
               {
-                icon: <Icons.IoAnalyticsOutline size={32} />,
-                title: t("Market Analysis"),
-                description: t("Detailed market insights and pricing strategy"),
+                icon: <Icons.IoMegaphoneOutline size={32} />,
+                title: t("Property Preparation & Marketing"),
+                description: t("We consult with you, develop a tailored promotion plan, analyze the audience and market, and run targeted marketing campaigns through the most effective channels."),
               },
               {
                 icon: <Icons.IoPeopleOutline size={32} />,
-                title: t("Negotiation Support"),
-                description: t("Expert negotiation to get the best deal"),
+                title: t("Viewings & Buyer Selection"),
+                description: t("We work exclusively with serious, financially qualified buyers."),
               },
               {
-                icon: <Icons.IoDocumentTextOutline size={32} />,
-                title: t("Legal Assistance"),
-                description: t("Complete legal support throughout the process"),
+                icon: <Icons.IoShieldCheckmarkOutline size={32} />,
+                title: t("Legal Support & Deal Closure"),
+                description: t("Full transaction support until completion — documentation, approvals, transfer of ownership, and control of every stage until the final result."),
               },
-              {
-                icon: <Icons.IoHeadsetOutline size={32} />,
-                title: t("24/7 Support"),
-                description: t("Round-the-clock customer service"),
-              },
+              // {
+              //   icon: <Icons.IoHeadsetOutline size={32} />,
+              //   title: t("24/7 Support"),
+              //   description: t("Round-the-clock customer service"),
+              // },
             ].map((feature, index) => (
               <motion.div
                 key={index}
@@ -329,11 +331,16 @@ const ListYourProperty = () => {
             >
               <div className="space-y-4">
                 <h2 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
-                  {t("Ready to List Your Property?")}
+                  {t("Delivering Value Beyond the Sale")}
                 </h2>
                 <p className="down_styling para_styling">
                   {t(
-                    "Fill out the form below and our team will contact you within 24 hours to discuss your property listing."
+                    "Our core expertise lies in luxury real estate sales and capital management for HNWI clients. We deliver a strategic approach, full confidentiality, and maximum value in every transaction."
+                  )}
+                </p><br/>
+                <p className="down_styling para_styling">
+                  {t(
+                    "What We Offer to Investors and Owners of Premium Property:"
                   )}
                 </p>
               </div>
@@ -345,7 +352,7 @@ const ListYourProperty = () => {
                     <Icons.IoCheckmark size={16} className="text-white" />
                   </div>
                   <span className="tfont-semibold text-primary text-xl">
-                    {t("Free Property Valuation")}
+                    {t("A tailored sales strategy based on ROI, demand, and market cycles")}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
@@ -353,7 +360,7 @@ const ListYourProperty = () => {
                     <Icons.IoCheckmark size={16} className="text-white" />
                   </div>
                   <span className="tfont-semibold text-primary text-xl">
-                    {t("Professional Marketing Materials")}
+                    {t("Access to a private network of investors and high-net-worth buyers")}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
@@ -361,7 +368,7 @@ const ListYourProperty = () => {
                     <Icons.IoCheckmark size={16} className="text-white" />
                   </div>
                   <span className="tfont-semibold text-primary text-xl">
-                    {t("Dedicated Property Manager")}
+                    {t("Off-market promotion for properties where discretion is essential")}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
@@ -369,9 +376,22 @@ const ListYourProperty = () => {
                     <Icons.IoCheckmark size={16} className="text-white" />
                   </div>
                   <span className="tfont-semibold text-primary text-xl">
-                    {t("Regular Market Updates")}
+                    {t("Seamless work with international clients — no language barriers")}
                   </span>
                 </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                    <Icons.IoCheckmark size={16} className="text-white" />
+                  </div>
+                  <span className="tfont-semibold text-primary text-xl">
+                    {t("Negotiations at the asset level, not at the listing level")}
+                  </span>
+                </div><br/>
+                <p className="down_styling para_styling">
+                  {t(
+                    "Ready to sell your property? We will make the process fast, transparent, and profitable."
+                  )}
+                </p>
               </div>
             </motion.div>
 

@@ -50,7 +50,7 @@ export default function Gallery({ images }: GalleryProps) {
               <img
                  src={ProjectImagesUrl(src)}
                 alt={`Gallery image ${i + 1}`}
-                className="gallery-image"
+                className="gallery-image gallery_image_mobile"
                 loading="lazy"
               />
             </button>

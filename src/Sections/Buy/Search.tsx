@@ -497,7 +497,7 @@ const Search: FC<SearchProps> = ({
                     <Icons.IoIosSearch size={16} />
                   </div>
 
-                  <div className="flex flex-wrap items-center flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center flex-1 min-w-0 extra_gap">
                     {valueSearch[0] && (
                       <div className="selected_badge flex items-center gap-1 px-3 py-2 rounded-full text-sm font-medium bg-primary/10 text-primary">
                         <span className="truncate">
@@ -692,126 +692,143 @@ const Search: FC<SearchProps> = ({
                 triggerClass="h-12 md:h-10 px-3 text-gray-700 text-sm hover:bg-gray-100 rounded-xl transition-colors duration-200 flex items-center gap-1 bg-white/90 border border-gray-200 w-full md:w-auto justify-center md:justify-start"
               >
                 <div className="w-full p-4 bg-white rounded-xl shadow-lg">
-                  <div className="mb-4">
-                    <p className="py-2 rounded-lg font-semibold text-sm transition-all duration-200 mb-3 text-[#0b4a35]">
-                      {t("Bedrooms")}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      <button
-                        onClick={() =>
-                          setValues((prev: any) => {
-                            const current = getCurrentSelectedBeds(prev);
-                            const exists = current.includes(StudioLabel);
-                            const next = exists
-                              ? current.filter((v: any) => v !== StudioLabel)
-                              : [...current.filter((v: any) => v !== "7+"), StudioLabel];
-                            return { ...prev, selected_bedrooms: next };
-                          })
-                        }
-                        className={`px-4 py-2 rounded-lg text-sm transition-all duration-200 input_text_badge ${
-                          (values?.selected_bedrooms || []).includes(StudioLabel) ||
-                          (values?.selected_bedrooms || []).includes(0)
-                            ? "bg-primary text-white shadow-md"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                        }`}
-                      >
-                        {t("Studio")}
-                      </button>
+                 <div className="mb-4">
+  <p className="py-2 rounded-lg font-semibold text-sm transition-all duration-200 mb-3 text-[#0b4a35]">
+    {t("Bedrooms")}
+  </p>
 
-                      {[1, 2, 3, 4, 5, 6, 7].map((num) => (
-                        <button
-                          key={num}
-                          onClick={() =>
-                            setValues((prev: any) => {
-                              const current = getCurrentSelectedBeds(prev);
-                              const currentFiltered = current.filter((v: any) => v !== StudioLabel);
-                              const exists = currentFiltered.includes(num);
-                              const next = exists
-                                ? currentFiltered.filter((v: any) => v !== num)
-                                : [...currentFiltered, num];
-                              return { ...prev, selected_bedrooms: next };
-                            })
-                          }
-                          className={`px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
-                            (values?.selected_bedrooms || []).includes(num)
-                              ? "bg-primary text-white shadow-md"
-                              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                          }`}
-                        >
-                          {num}
-                        </button>
-                      ))}
+  {/* ✅ Mobile: grid | ✅ Desktop: flex-wrap */}
+  <div className="grid grid-cols-4 gap-2 md:flex md:flex-wrap">
+    <button
+      onClick={() =>
+        setValues((prev: any) => {
+          const current = getCurrentSelectedBeds(prev);
+          const exists = current.includes(StudioLabel);
 
-                      <button
-                        onClick={() =>
-                          setValues((prev: any) => {
-                            const current = getCurrentSelectedBeds(prev);
-                            const currentFiltered = current.filter((v: any) => v !== StudioLabel);
-                            const exists = currentFiltered.includes("7+");
-                            const next = exists
-                              ? currentFiltered.filter((v: any) => v !== "7+")
-                              : [...currentFiltered, "7+"];
-                            return { ...prev, selected_bedrooms: next };
-                          })
-                        }
-                        className={`px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
-                          (values?.selected_bedrooms || []).includes("7+")
-                            ? "bg-primary text-white shadow-md"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                        }`}
-                      >
-                        7+
-                      </button>
-                    </div>
-                  </div>
+          // ✅ keep Studio, just toggle it (DON'T remove on other clicks)
+          const next = exists
+            ? current.filter((v: any) => v !== StudioLabel)
+            : [...current, StudioLabel];
+
+          return { ...prev, selected_bedrooms: next };
+        })
+      }
+      className={`w-full md:w-auto px-4 py-2 rounded-lg text-sm transition-all duration-200 input_text_badge ${
+        (values?.selected_bedrooms || []).includes(StudioLabel) ||
+        (values?.selected_bedrooms || []).includes(0)
+          ? "bg-primary text-white shadow-md"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`}
+    >
+      {t("Studio")}
+    </button>
+
+    {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+      <button
+        key={num}
+        onClick={() =>
+          setValues((prev: any) => {
+            const current = getCurrentSelectedBeds(prev);
+
+            // ✅ DO NOT filter out Studio here
+            const exists = current.includes(num);
+            const next = exists
+              ? current.filter((v: any) => v !== num)
+              : [...current, num];
+
+            return { ...prev, selected_bedrooms: next };
+          })
+        }
+        className={`w-full md:w-auto px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
+          (values?.selected_bedrooms || []).includes(num)
+            ? "bg-primary text-white shadow-md"
+            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+        }`}
+      >
+        {num}
+      </button>
+    ))}
+
+    <button
+      onClick={() =>
+        setValues((prev: any) => {
+          const current = getCurrentSelectedBeds(prev);
+
+          // ✅ DO NOT filter out Studio here
+          const exists = current.includes("7+");
+          const next = exists
+            ? current.filter((v: any) => v !== "7+")
+            : [...current, "7+"];
+
+          return { ...prev, selected_bedrooms: next };
+        })
+      }
+      className={`w-full md:w-auto px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
+        (values?.selected_bedrooms || []).includes("7+")
+          ? "bg-primary text-white shadow-md"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`}
+    >
+      7+
+    </button>
+  </div>
+</div>
+
 
                   <div className="border-t border-gray-200 my-4"></div>
 
-                  <div className="mb-4">
-                    <p className="py-2 rounded-lg font-semibold text-sm transition-all duration-200 mb-3 text-[#0b4a35]">
-                      {t("Bathrooms")}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {[1, 2, 3, 4, 5, 6, 7].map((num) => (
-                        <button
-                          key={num}
-                          onClick={() =>
-                            setValues((prev: any) => {
-                              const current = prev.selected_bathrooms || [];
-                              const exists = current.includes(num);
-                              const next = exists ? current.filter((v: number) => v !== num) : [...current, num];
-                              return { ...prev, selected_bathrooms: next };
-                            })
-                          }
-                          className={`px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
-                            (values?.selected_bathrooms || []).includes(num)
-                              ? "bg-primary text-white shadow-md"
-                              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                          }`}
-                        >
-                          {num}
-                        </button>
-                      ))}
+                 <div className="mb-4">
+  <p className="py-2 rounded-lg font-semibold text-sm transition-all duration-200 mb-3 text-[#0b4a35]">
+    {t("Bathrooms")}
+  </p>
 
-                      <button
-                        onClick={() =>
-                          setValues((prev: any) => {
-                            const current = prev.selected_bathrooms || [];
-                            const exists = current.includes("7+");
-                            const next = exists ? current.filter((v: any) => v !== "7+") : [...current, "7+"];
-                            return { ...prev, selected_bathrooms: next };
-                          })
-                        }
-                        className={`px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
-                          (values?.selected_bathrooms || []).includes("7+")
-                            ? "bg-primary text-white shadow-md"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                        }`}
-                      >
-                        7+
-                      </button>
-                    </div>
-                  </div>
+  {/* ✅ Mobile: grid | ✅ Desktop: flex-wrap */}
+  <div className="grid grid-cols-4 gap-2 md:flex md:flex-wrap">
+    {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+      <button
+        key={num}
+        onClick={() =>
+          setValues((prev: any) => {
+            const current = prev.selected_bathrooms || [];
+            const exists = current.includes(num);
+            const next = exists
+              ? current.filter((v: number) => v !== num)
+              : [...current, num];
+            return { ...prev, selected_bathrooms: next };
+          })
+        }
+        className={`w-full md:w-auto px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
+          (values?.selected_bathrooms || []).includes(num)
+            ? "bg-primary text-white shadow-md"
+            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+        }`}
+      >
+        {num}
+      </button>
+    ))}
+
+    <button
+      onClick={() =>
+        setValues((prev: any) => {
+          const current = prev.selected_bathrooms || [];
+          const exists = current.includes("7+");
+          const next = exists
+            ? current.filter((v: any) => v !== "7+")
+            : [...current, "7+"];
+          return { ...prev, selected_bathrooms: next };
+        })
+      }
+      className={`w-full md:w-auto px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
+        (values?.selected_bathrooms || []).includes("7+")
+          ? "bg-primary text-white shadow-md"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`}
+    >
+      7+
+    </button>
+  </div>
+</div>
+
                 </div>
               </MainDropdown>
 
@@ -945,7 +962,7 @@ const Search: FC<SearchProps> = ({
               className="search_btn_styling h-12 md:h-10 px-6 bg-primary hover:bg-[#9f8151] text-white font-semibold change_border transition-all duration-[.4s] flex items-center justify-center gap-2"
             >
               <Icons.IoIosSearch size={18} />
-              <span className="hidden sm:inline">{t("Search")}</span>
+              <span className="">{t("Search")}</span>
             </button>
           </div>
         </div>

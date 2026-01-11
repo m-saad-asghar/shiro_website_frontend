@@ -624,84 +624,89 @@ useEffect(() => {
               triggerClass="h-12 md:h-10 px-3 text-gray-700 text-sm hover:bg-gray-100 rounded-xl transition-colors duration-200 flex items-center gap-1 bg-white/90 border border-gray-200 w-full md:w-auto justify-center md:justify-start"
             >
               <div className="w-full p-4 bg-white rounded-xl shadow-lg">
-                {/* Bedrooms */}
-                <div className="mb-4">
-                  <p className="py-2 rounded-lg font-semibold text-sm transition-all duration-200 mb-3 text-[#0b4a35]">
-                    {t("Bedrooms")}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      onClick={() => toggleBedroom("Studio")}
-                      className={`px-4 py-2 rounded-lg text-sm transition-all duration-200 input_text_badge ${
-                        (values?.selected_bedrooms || []).includes("Studio")
-                          ? "bg-primary text-white shadow-md"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
-                    >
-                      {t("Studio")}
-                    </button>
+              {/* Bedrooms */}
+<div className="mb-4">
+  <p className="py-2 rounded-lg font-semibold text-sm transition-all duration-200 mb-3 text-[#0b4a35]">
+    {t("Bedrooms")}
+  </p>
 
-                    {[1, 2, 3, 4, 5, 6, 7].map((num) => (
-                      <button
-                        key={num}
-                        onClick={() => toggleBedroom(num)}
-                        className={`px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
-                          (values?.selected_bedrooms || []).includes(num)
-                            ? "bg-primary text-white shadow-md"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                        }`}
-                      >
-                        {num}
-                      </button>
-                    ))}
+  {/* ✅ Mobile: grid (no cut) | ✅ Desktop: same flex-wrap */}
+  <div className="grid grid-cols-4 gap-2 md:flex md:flex-wrap">
+    <button
+      onClick={() => toggleBedroom("Studio")}
+      className={`w-full md:w-auto px-4 py-2 rounded-lg text-sm transition-all duration-200 input_text_badge ${
+        (values?.selected_bedrooms || []).includes("Studio")
+          ? "bg-primary text-white shadow-md"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`}
+    >
+      {t("Studio")}
+    </button>
 
-                    <button
-                      onClick={() => toggleBedroom("7+")}
-                      className={`px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
-                        (values?.selected_bedrooms || []).includes("7+")
-                          ? "bg-primary text-white shadow-md"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
-                    >
-                      7+
-                    </button>
-                  </div>
-                </div>
+    {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+      <button
+        key={num}
+        onClick={() => toggleBedroom(num)}
+        className={`w-full md:w-auto px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
+          (values?.selected_bedrooms || []).includes(num)
+            ? "bg-primary text-white shadow-md"
+            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+        }`}
+      >
+        {num}
+      </button>
+    ))}
+
+    <button
+      onClick={() => toggleBedroom("7+")}
+      className={`w-full md:w-auto px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
+        (values?.selected_bedrooms || []).includes("7+")
+          ? "bg-primary text-white shadow-md"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`}
+    >
+      7+
+    </button>
+  </div>
+</div>
+
 
                 <div className="border-t border-gray-200 my-4"></div>
+{/* Bathrooms */}
+<div className="mb-4">
+  <p className="py-2 rounded-lg font-semibold text-sm transition-all duration-200 mb-3 text-[#0b4a35]">
+    {t("Bathrooms")}
+  </p>
 
-                {/* Bathrooms */}
-                <div className="mb-4">
-                  <p className="py-2 rounded-lg font-semibold text-sm transition-all duration-200 mb-3 text-[#0b4a35]">
-                    {t("Bathrooms")}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {[1, 2, 3, 4, 5, 6, 7].map((num) => (
-                      <button
-                        key={num}
-                        onClick={() => toggleBathroom(num)}
-                        className={`px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
-                          (values?.selected_bathrooms || []).includes(num)
-                            ? "bg-primary text-white shadow-md"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                        }`}
-                      >
-                        {num}
-                      </button>
-                    ))}
+  {/* ✅ Mobile: grid (no cut) | ✅ Desktop: same flex-wrap */}
+  <div className="grid grid-cols-4 gap-2 md:flex md:flex-wrap">
+    {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+      <button
+        key={num}
+        onClick={() => toggleBathroom(num)}
+        className={`w-full md:w-auto px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
+          (values?.selected_bathrooms || []).includes(num)
+            ? "bg-primary text-white shadow-md"
+            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+        }`}
+      >
+        {num}
+      </button>
+    ))}
 
-                    <button
-                      onClick={() => toggleBathroom("7+")}
-                      className={`px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
-                        (values?.selected_bathrooms || []).includes("7+")
-                          ? "bg-primary text-white shadow-md"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
-                    >
-                      7+
-                    </button>
-                  </div>
-                </div>
+    <button
+      onClick={() => toggleBathroom("7+")}
+      className={`w-full md:w-auto px-4 py-2 rounded-lg input_text_badge text-sm transition-all duration-200 ${
+        (values?.selected_bathrooms || []).includes("7+")
+          ? "bg-primary text-white shadow-md"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`}
+    >
+      7+
+    </button>
+  </div>
+</div>
+
               </div>
             </MainDropdown>
           </div>
@@ -867,7 +872,7 @@ useEffect(() => {
             aria-label="Search properties"
           >
             <Icons.IoIosSearch size={18} />
-            <span className="hidden sm:inline">{t("Search")}</span>
+            <span className="">{t("Search")}</span>
           </button>
         </div>
       </div>

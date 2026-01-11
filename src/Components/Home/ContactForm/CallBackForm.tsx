@@ -82,34 +82,62 @@ const CallBackForm: React.FC = () => {
   try {
     const target_page = window.location.href;
 
-    const crmPayload = {
-      fields: {
-        TITLE: "Lead From Website Callback Form",
-        UF_CRM_1760777561731: target_page,
-        NAME: values.name,
-        PHONE_TEXT: values.phone,
-        PHONE: [
-          {
-            VALUE: values.phone,
-            VALUE_TYPE: "WORK",
-          },
-        ],
-        EMAIL: [
-          {
-            VALUE: "",
-            VALUE_TYPE: "WORK",
-          },
-        ],
-        SOURCE_DESCRIPTION: "",
-        SOURCE_ID: "WEB",
-        ASSIGNED_BY_ID: 25,
-        UF_CRM_1754652292782: target_page,
-        UF_CRM_1761206533: "",
+     const crmPayload = {
+  fields: {
+    TITLE: "Website Lead",
+
+    NAME: values.name,
+
+    EMAIL: [
+      {
+        VALUE: "",
+        VALUE_TYPE: "WORK",
       },
-      params: {
-        REGISTER_SONET_EVENT: "Y",
+    ],
+
+    PHONE: [
+      {
+        VALUE: values.phone,
+        VALUE_TYPE: "WORK",
       },
-    };
+    ],
+
+    COMMENTS: "",
+
+    UF_CRM_1768051861: "",
+    UF_CRM_1768053169: target_page,
+    UF_CRM_1768053313: "Lead From Call Back Form",
+  },
+};
+
+    // const crmPayload = {
+    //   fields: {
+    //     TITLE: "Lead From Website Callback Form",
+    //     UF_CRM_1760777561731: target_page,
+    //     NAME: values.name,
+    //     PHONE_TEXT: values.phone,
+    //     PHONE: [
+    //       {
+    //         VALUE: values.phone,
+    //         VALUE_TYPE: "WORK",
+    //       },
+    //     ],
+    //     EMAIL: [
+    //       {
+    //         VALUE: "",
+    //         VALUE_TYPE: "WORK",
+    //       },
+    //     ],
+    //     SOURCE_DESCRIPTION: "",
+    //     SOURCE_ID: "WEB",
+    //     ASSIGNED_BY_ID: 25,
+    //     UF_CRM_1754652292782: target_page,
+    //     UF_CRM_1761206533: "",
+    //   },
+    //   params: {
+    //     REGISTER_SONET_EVENT: "Y",
+    //   },
+    // };
     const CRM_URL = import.meta.env.VITE_CRM_URL;
 
     await fetch(CRM_URL, {

@@ -77,10 +77,11 @@ const AboutUsContent: React.FC = () => {
             >
               <h3 className="font-semibold text-primary text-2xl mb-3">{item.title}</h3>
 
-              <div
-                className="down_styling para_styling"
-                dangerouslySetInnerHTML={{ __html: item.description }}
-              />
+              <div className="down_styling para_styling">
+  <p
+    dangerouslySetInnerHTML={{ __html: item.description }}
+  />
+</div>
             </div>
           ))}
         </div>

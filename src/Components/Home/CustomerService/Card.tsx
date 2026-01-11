@@ -32,15 +32,17 @@ const Card: FC<CardProps> = ({ item }) => {
                 alt={item.title || "Service icon"}
               />
             </div>
-            <h3 className="text-[16px] text-primary font-[600] mb-3">
+            <div>
+              <h3 className="text-[16px] text-primary font-semibold mb-3 !text-[#9f8151] font-[16px]">
               {item.title}
             </h3>
-            <p className="text-[12px] text-dark font-[300] leading-relaxed">
+            {/* <div className="transition-all duration-300 ml-[10px] !text-[#9f8151]">
+              <Icons.RxArrowTopRight />
+            </div> */}
+            </div>
+            <p className="down_styling para_styling">
               {item.desc}
             </p>
-            <div className="mt-4 transition-all duration-300">
-              <Icons.RxArrowTopRight />
-            </div>
           </div>
         </div>
       </div>

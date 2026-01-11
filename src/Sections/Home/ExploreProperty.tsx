@@ -92,7 +92,7 @@ const ExploreProperty = () => {
 
   const renderSkeltonCard = useMemo(() => {
     return [...Array(3)].map((_, index: number) => (
-      <CarouselItem className="md:basis-1/2 lg:basis-1/3" key={index}>
+      <CarouselItem className="md:basis-1/3 lg:basis-1/4" key={index}>
         <Skeleton className="w-full h-[320px] md:h-[450px] change_border bg-gray-200" />
       </CarouselItem>
     ));
@@ -163,7 +163,7 @@ const ExploreProperty = () => {
         <CarouselItem className="w-full">
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">
-              {t("No properties available at the moment")}
+              {t("No Featured Properties Available at the Moment")}
             </p>
           </div>
         </CarouselItem>
@@ -275,7 +275,6 @@ const ExploreProperty = () => {
               <div
                 className="hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2 z-20"
                 onClick={(e) => {
-                  // Always stop click from reaching card behind
                   e.stopPropagation();
                 }}
               >
@@ -288,7 +287,6 @@ const ExploreProperty = () => {
               <div
                 className="hidden md:flex absolute -left-4 top-1/2 -translate-y-1/2 z-20"
                 onClick={(e) => {
-                  // Always stop click from reaching card behind
                   e.stopPropagation();
                 }}
               >

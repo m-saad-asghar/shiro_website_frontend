@@ -57,13 +57,13 @@ const DataCustomerServices = () => {
       {
         id: 4,
         img: Images.ExploreGreenGold,
-        title: t("Explore Dubai Projects"),
+        title: t("Explore Dubai Developers"),
         desc: t(
-          "Browse and find your ideal property from our extensive portfolio of Dubai projects."
+          "Browse and find your ideal property from our extensive portfolio of Dubai developers."
         ),
-        link: "/buy/properties-for-sale",
+        link: "/developers",
         onClick: () => {
-          navigate("/buy/properties-for-sale");
+          navigate("/developers");
         },
       },
     ],

@@ -40,9 +40,9 @@ const ShiroServices = () => {
       </Helmet>
 
       {/* ================= HERO SECTION ================= */}
-      <section className="relative w-full h-[91vh]">
+      <section className="relative w-full h-[91vh] developer_listing_styling">
         <img
-          src={ImagesUrl("services_main_image.jpeg")}
+          src={ImagesUrl("services_main_image.jpg")}
           alt="Services Banner"
           className="w-full h-full object-cover"
         />
@@ -52,24 +52,22 @@ const ShiroServices = () => {
         <div
           className="
             custom_container
-            absolute bottom-14 left-1/2 -translate-x-1/2
-            flex flex-col items-center text-center gap-5 text-white
-            md:bottom-28 md:left-0 md:translate-x-0 md:items-start md:text-left
+            develop_heading_styling
           "
         >
           <h1 className="hidden md:block project_text font-bold !text-white drop-shadow-lg tracking-wide leading-tight content_general">
-            {t("UAE Expertise. Global Reach")}
+            {t("Comprehensive Services in the UAE and Beyond")}
           </h1>
 
           <p className="text-sm sm:text-base">
             <span className="text-white text-xl">
               {t(
-                "Premium Real Estate Done Right — Smart and Secure with Shiro Estate"
+                "At Shiro Estate, we help private and corporate clients maximize returns and minimize risks in one of the world’s most dynamic property markets. We don’t just design tailored strategies for buying, selling, renting, or investing — we fully manage every project, from initial analysis and property selection to transaction execution and ongoing asset management."
               )}
             </span>
           </p>
 
-          <button
+          {/* <button
               onClick={() => {
   const section = document.getElementById("list_with_us");
   if (section) {
@@ -79,7 +77,7 @@ const ShiroServices = () => {
             className="w-fit bg-[#094834] hover:bg-[#9f8151] text-white font-semibold py-4 px-6 shadow-lg transition"
           >
             {t("Enquire Now")}
-          </button>
+          </button> */}
         </div>
       </section>
 
@@ -99,6 +97,9 @@ const ShiroServices = () => {
             <h2 className="hidden md:block text-[24px] sm:text-[28px] md:text-[32px] lg:text-[40px] font-bold text-white tracking-wide leading-tight content_general">
               {t("Our Services")}
             </h2>
+            <p className="down_styling para_styling">
+              Ready to turn your goals into tangible assets? Shiro Estate offers a full spectrum of professional solutions for both private and corporate clients, including:
+              </p>
           </div>
 
           {/* Services Cards */}

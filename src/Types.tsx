@@ -9,6 +9,22 @@ export interface DataCustomerServicesType {
   link?: any;
   onClick?: any;
 }
+export interface ContactDataService {
+  id: number;
+  icon: ReactNode;
+  title: string;
+  desc: string;
+  
+  onClick?: () => void;
+}
+export interface AboutDataService {
+  id: number;
+  icon: ReactNode;
+  title: string;
+  desc: string;
+  link?: string;
+  onClick?: () => void;
+}
 export interface DataSocialMediaType {
   id: number;
   icons: ReactNode;

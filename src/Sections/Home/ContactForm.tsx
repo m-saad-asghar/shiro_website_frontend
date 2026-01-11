@@ -108,7 +108,7 @@ const ContactForm = () => {
       className="w-full py-12 md:py-16 lg:py-20 bg-gradient-to-br from-gray-50 to-white !pb-5"
       id="ListYourProperty"
     >
-      <div className="custom_container mx-auto px-4">
+      <div className="custom_container mx-auto px-4 w-full max-w-full overflow-x-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
           {/* LEFT SIDE – Heading + contact details (Provident-style) */}
           <div className="space-y-8">
@@ -128,9 +128,84 @@ const ContactForm = () => {
               </p> */}
             </div>
 
-            <div className="space-y-5 sm:space-y-6">
-              {renderSocialMedia}
-            </div>
+           <div className="space-y-5 sm:space-y-6">
+  {renderSocialMedia}
+
+  {/* ================= OFFICE HOURS ================= */}
+  <div className="w-fit flex items-start gap-4 text-left">
+    {/* Icon */}
+    <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
+     <div className="text-[#9f8151]">
+ <svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="32"
+  height="32"
+  viewBox="0 0 24 24"
+  fill="none"
+>
+  {/* Watch body */}
+  <circle
+    cx="12"
+    cy="12"
+    r="7"
+    stroke="#9f8151"
+    strokeWidth="2"
+  />
+
+  {/* Hour hand */}
+  <path
+    d="M12 12V8"
+    stroke="#9f8151"
+    strokeWidth="2"
+    strokeLinecap="round"
+  />
+
+  {/* Minute hand */}
+  <path
+    d="M12 12L15 14"
+    stroke="#9f8151"
+    strokeWidth="2"
+    strokeLinecap="round"
+  />
+
+  {/* Top strap */}
+  <path
+    d="M9 2h6"
+    stroke="#9f8151"
+    strokeWidth="2"
+    strokeLinecap="round"
+  />
+
+  {/* Bottom strap */}
+  <path
+    d="M9 22h6"
+    stroke="#9f8151"
+    strokeWidth="2"
+    strokeLinecap="round"
+  />
+</svg>
+
+</div>
+
+    </div>
+
+    {/* Text */}
+    <div className="flex flex-col">
+      <span className="font-semibold text-primary text-[16px]">
+        {t("Office Hours")}
+      </span>
+
+      <span className="text-sm sm:text-base md:text-lg font-medium text-[#0b4a35] down_styling leading-relaxed">
+        {t("Monday – Friday: 9:00 AM – 6:00 PM")}
+        <br />
+        {t("Saturday: 11:00 AM – 3:00 PM")}
+        <br />
+        {t("Sunday: Closed")}
+      </span>
+    </div>
+  </div>
+</div>
+
           </div>
 
           {/* RIGHT SIDE – Form card */}

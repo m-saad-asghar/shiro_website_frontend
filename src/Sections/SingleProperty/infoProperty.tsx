@@ -15,7 +15,6 @@ type InfoPropertyProps = {
 };
 
 const InfoProperty: FC<InfoPropertyProps> = ({ item, employee, amenities, commercialAmenities }) => {
-  console.log("InfoProperty item prop debugging:", employee);
   const { t } = useTranslation();
   const location = useLocation();
   const [expanded, setExpanded] = useState(false);
@@ -23,7 +22,15 @@ const InfoProperty: FC<InfoPropertyProps> = ({ item, employee, amenities, commer
   const segment = location.pathname.split("/")[2];
   const match = segment.match(/for-(.*?)-in/);
   const result = match ? match[1].replace(/-/g, " ") : null;
-console.log("InfoProperty item:", item);
+  const mergedAmenities = Array.from(
+  new Set([
+    ...(Array.isArray(amenities) ? amenities : []),
+    ...(Array.isArray(commercialAmenities) ? commercialAmenities : []),
+  ]
+    .map((a) => (typeof a === "string" ? a.trim() : ""))
+    .filter(Boolean))
+);
+
   return (
     <div className="space-y-8 relative change_border">
       {/* Share button in top right corner */}
@@ -388,7 +395,35 @@ console.log("InfoProperty item:", item);
   </div>
 </motion.div>
 
- <motion.div
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5, delay: 0.4 }}
+  style={{ marginTop: 15 }}
+  className="space-y-4"
+>
+  <h3 className="font-semibold text-primary text-xl key_information_heading">
+    {t("Amenities")}
+  </h3>
+
+  <div className="bg-gray-50 rounded-xl p-6">
+    {mergedAmenities.length ? (
+      mergedAmenities.map((amenity: string, index: number) => (
+        <span
+          key={`${amenity}-${index}`}
+          className="px-3 py-1 text-sm bg-gray-100 rounded-full text-gray-700 amentity_badge_styling mr-2 mb-2 inline-block"
+        >
+          {amenity}
+        </span>
+      ))
+    ) : (
+      <p className="text-gray-500 text-sm">{t("No amenities available")}</p>
+    )}
+  </div>
+</motion.div>
+
+
+ {/* <motion.div
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.5, delay: 0.4 }}
@@ -432,7 +467,7 @@ console.log("InfoProperty item:", item);
   </span>
 ))}
   </div>
-</motion.div>
+</motion.div> */}
 
     </div>
   );

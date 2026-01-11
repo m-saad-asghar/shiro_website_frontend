@@ -181,7 +181,7 @@ const CardUpdated: FC<CardType> = ({ item, viewMode = "grid" }) => {
 <div
   className={`relative overflow-hidden ${
     viewMode === "grid"
-      ? "w-full h-[200px] sm:h-[280px] md:h-[310px] lg:h-[350px]" 
+      ? "w-full h-[300px] sm:h-[300px] md:h-[300px] lg:h-[300px]" 
       : "h-full w-[200px]"
   }`}
 >
@@ -191,12 +191,12 @@ const CardUpdated: FC<CardType> = ({ item, viewMode = "grid" }) => {
         
         {item.images.map((imageUrl: any, index: number) => (
           <CarouselItem 
-            className="p-0 m-0 h-[260px] sm:h-[320px] md:h-[380px] lg:h-[420px]" 
+            className="p-0 m-0 h-[300px] sm:h-[300px] md:h-[300px] lg:h-[300px]" 
             key={index}
           >
             <img
               src={ListingImagesUrl(imageUrl)}
-              className="w-full h-[260px] sm:h-[320px] md:h-[380px] lg:h-[420px] object-cover"
+              className="w-full h-[300px] sm:h-[300px] md:h-[300px] lg:h-[300px] object-cover"
               alt={item?.title || "Property image"}
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
@@ -434,7 +434,7 @@ const CardUpdated: FC<CardType> = ({ item, viewMode = "grid" }) => {
         {/* Contact Buttons: prefer agent contacts (renderContact + emailButton), fallback to company_contact */}
         {viewMode === "grid" && (
           <div
-            className={`grid gap-4 pt-2 ${
+            className={`down_direction grid gap-4 pt-2 ${
               viewMode === "grid" ? "grid-cols-3" : "grid-cols-3"
             }`}
             onClick={(e) => e.stopPropagation()}
@@ -448,7 +448,7 @@ const CardUpdated: FC<CardType> = ({ item, viewMode = "grid" }) => {
               <>
                 <button
                   onClick={() => onClick("phone", item?.company_contact.phone)}
-                  className={`flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:bg-[#9f8151] hover:text-white text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2`}
+                  className={`min-w-[100px] md:min-w-[110px] flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:bg-[#9f8151] hover:text-white text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2`}
                   style={{ borderRadius: 8 }}
                   aria-label={`Contact via phone`}
                 >
@@ -457,11 +457,11 @@ const CardUpdated: FC<CardType> = ({ item, viewMode = "grid" }) => {
                 </button>
                 <button
                   onClick={() => onClick("whatsapp", item?.company_contact.whatsapp)}
-                  className={`flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:bg-[#9f8151] hover:text-white text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2`}
+                  className={`min-w-[100px] md:min-w-[110px] flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:bg-[#9f8151] hover:text-white text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2`}
                   style={{ borderRadius: 8 }}
                   aria-label={`Contact via whatsapp`}
                 >
-                  <Icons.FaWhatsapp size={18} />
+                  <Icons.FaWhatsapp size={18}  className="shrink-0"/>
                   {t("WhatsApp")}
                 </button>
                 {/* Company email (uses phone field from API as requested) */}
@@ -473,11 +473,11 @@ const CardUpdated: FC<CardType> = ({ item, viewMode = "grid" }) => {
                       `Hello, I am interested in Property Reference Number ${item?.reference}, with Title ${item?.title}`
                     )
                   }
-                  className={`flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:text-white hover:bg-[#9f8151] text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2`}
+                  className={`min-w-[100px] md:min-w-[110px] flex items-center justify-center gap-2 search_btn_styling h-12 md:h-10 px-6 bg-[#f1ece0] hover:text-white hover:bg-[#9f8151] text-[#0b4a35] font-semibold transition-all duration-[.4s] flex items-center justify-center gap-2`}
                   style={{ borderRadius: 8 }}
                   aria-label={`Contact via email`}
                 >
-                  <Icons.MdOutlineEmail size={18} />
+                  <Icons.MdOutlineEmail size={18} className="shrink-0"/>
                   {t("Email")}
                 </button>
               </>

@@ -82,18 +82,29 @@ const StickySectionTabs = ({
 
   return (
     <div
-  className={`sticky ${offsetTopClass} z-[9999] bg-white navbar_styling_down`}
-  style={{ position: "sticky" }}
->
+      className={`sticky ${offsetTopClass} z-[9999] bg-white navbar_styling_down`}
+      style={{ position: "sticky" }}
+    >
       <div className="custom_container">
-        <div className="flex gap-7 
-       sticky_inner_navbar
-        down_navbar">
+        <div
+          className="
+            flex
+            gap-4 md:gap-7
+            sticky_inner_navbar
+            down_navbar
+
+            flex-nowrap
+            overflow-x-auto md:overflow-visible
+            whitespace-nowrap
+            mx-0 px-0 md:mx-0 md:px-0
+            scrollbar-hide
+          "
+        >
           {tabs.map((t) => (
             <button
               key={t.id}
               onClick={() => scrollTo(t.id)}
-              className={`relative py-4 text-[14px] whitespace-nowrap transition
+              className={`relative py-3 md:py-4 text-[13px] md:text-[14px] whitespace-nowrap transition
                 ${active === t.id ? "text-[#9f8151] font-semibold" : "text-[#094834] hover:text-gray-800"}
               `}
             >
@@ -110,6 +121,7 @@ const StickySectionTabs = ({
     </div>
   );
 };
+
 
 
 const ProjectDetails = () => {
@@ -200,7 +212,7 @@ const ProjectDetails = () => {
       >
         {/* Hero Image */}
         {projects?.project_main_image && (
-          <section className="relative w-full h-[91vh]">
+          <section className="relative w-full h-[91vh] developer_listing_styling">
             <img
               src={ImagesUrl(projects.project_main_image)}
               alt={localizedName}
@@ -212,10 +224,7 @@ const ProjectDetails = () => {
             <div
               className="
                 custom_container
-                absolute bottom-14 left-1/2 -translate-x-1/2 
-                flex flex-col items-center text-center gap-5 text-white
-                sm:bottom-18
-                md:bottom-28 md:left-0 md:translate-x-0 md:items-start md:text-left
+                develop_heading_styling
               "
             >
               <h1 className="hidden md:block w-full lg:w-[100%] font-bold !text-white drop-shadow-lg tracking-wide leading-tight content_general project_text">
@@ -255,7 +264,7 @@ const ProjectDetails = () => {
                {t("About the Project")}
               </h1>
            </div>
-          <div className="grid grid-cols-12 gap-10 items-start">
+          <div className="grid grid-cols-12 items-start">
   {/* LEFT */}
   <div className="col-span-12 md:col-span-8">
     {localizedDescription && (

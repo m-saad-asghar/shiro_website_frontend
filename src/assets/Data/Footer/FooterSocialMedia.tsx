@@ -35,6 +35,11 @@ const FooterSocialMedia = () => {
         icons: <Icons.FaXTwitter size={30} color="#ffff" />,
         link: "https://x.com/shiroestate",
       },
+      {
+        id: 7,
+        icons: <Icons.FaYoutube size={30} color="#ffff" />,
+        link: "https://www.youtube.com/@shiroestate",
+      },
     ],
     []
   );
