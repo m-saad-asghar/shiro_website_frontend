@@ -19,7 +19,7 @@ type CardType = {
   viewMode?: "grid" | "list";
 };
 
-const CardUpdated: FC<CardType> = ({ item, viewMode = "grid" }) => {
+const CardUpdatedListings: FC<CardType> = ({ item, viewMode = "grid" }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
@@ -494,4 +494,4 @@ const CardUpdated: FC<CardType> = ({ item, viewMode = "grid" }) => {
   );
 };
  
-export default CardUpdated;
+export default CardUpdatedListings;

@@ -3,11 +3,11 @@ import Root from "../Root";
 import {
   AboutUs,
   AgentDetails,
-  Area,
   Blog,
   Buy,
   ContactUs,
   Devleoper,
+  Area,
   FAQs,
   ForgotPassword,
   Home,
@@ -34,7 +34,10 @@ import ProjectDetails from "@/Pages/ProjectDetails";
 import Communities from "@/Pages/Communities";
 import ShiroServices from "@/Pages/ShiroServices";
 import ProtectedRoute from "./ProtectedRoute";
+import AreaDetails from "@/Pages/AreaDetails";
+import PropertyManagement from "@/Pages/PropertyManagement";
 import Cookies from "js-cookie";
+import AreaPage from "@/Pages/Area";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -65,6 +68,10 @@ const router = createBrowserRouter([
       {
         path: "/property-services",
         element: <ShiroServices />,
+      },
+       {
+        path: "/property-management",
+        element: <PropertyManagement />,
       },
       {
         path: "/about",
@@ -99,6 +106,14 @@ const router = createBrowserRouter([
         element: <Devleoper />,
       },
       {
+        path: "/areas",
+        element: <AreaPage />,
+      },
+      {
+        path: "/areas/:slug",
+        element: <AreaDetails />,
+      },
+      {
         path: "/developers/:slug",
         element: <DeveloperDetails />,
       },
@@ -110,10 +125,10 @@ const router = createBrowserRouter([
         path: "/communities/:slug",
         element: <Communities />,
       },
-      {
-        path: "/area-guides",
-        element: <Area />,
-      },
+      // {
+      //   path: "/area-guides",
+      //   element: <Area />,
+      // },
       {
         path: "/myproperty",
         element: (

@@ -96,51 +96,100 @@ const Form: React.FC = () => {
     setErrors(validate(values));
   };
 
-  const sendToCrm = async (values: typeof initialValues) => {
-    try {
-      const target_page = window.location.href;
+ const sendToZapier = async (values: FormValues) => {
+  const ZAPIER_URL = import.meta.env.VITE_ZAPIER_HOOK as string;
 
-      const crmPayload = {
-  fields: {
-    TITLE: "Website Lead",
+  console.log("ZAPIER_URL USED:", ZAPIER_URL); // 🔴 IMPORTANT DEBUG
 
-    NAME: values.name,
+  if (!ZAPIER_URL) {
+    throw new Error("Zapier URL missing in env");
+  }
 
-    EMAIL: [
-      {
-        VALUE: values.email,
-        VALUE_TYPE: "WORK",
-      },
-    ],
+  const target_page = window.location.href;
 
-    PHONE: [
-      {
-        VALUE: values.phone,
-        VALUE_TYPE: "WORK",
-      },
-    ],
+  const params = new URLSearchParams();
+  params.append("TITLE", "Website Lead");
+  params.append("NAME", values.name);
+  params.append("EMAIL", values.email);
+  params.append("PHONE", values.phone);
+  params.append("COMMENTS", values.message || "");
+  params.append("LANGUAGE", values.language);
+  params.append("TARGET_PAGE", target_page);
+  params.append("origin", "Lead From Contact Us Form");
 
-    COMMENTS: values.message,
+  const res = await fetch(ZAPIER_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+    },
+    body: params.toString(),
+  });
 
-    UF_CRM_1768051861: values.language,
-    UF_CRM_1768053169: target_page,
-    UF_CRM_1768053313: "Lead From Contact Us Form",
-  },
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Zapier failed: ${res.status} ${text}`);
+  }
 };
 
 
-      const CRM_URL = import.meta.env.VITE_CRM_URL;
+//   const sendToCrm = async (values: typeof initialValues) => {
+//     try {
+//       const target_page = window.location.href;
 
-      await fetch(CRM_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(crmPayload),
-      });
-    } catch (e) {}
-  };
+//         const crmPayload = {
+//   fields: {
+//     TITLE: "Website Lead",
+//     NAME: values.name,
+//     EMAIL: values.email,
+//     PHONE: values.phone,
+//     COMMENTS: values.message,
+//     LANGUAGE: values.language,
+//     TARGET_PAGE: target_page,
+//     origin: "Lead From Contact Us Form",
+//   },
+// };
+
+// //       const crmPayload = {
+// //   fields: {
+// //     TITLE: "Website Lead",
+
+// //     NAME: values.name,
+
+// //     EMAIL: [
+// //       {
+// //         VALUE: values.email,
+// //         VALUE_TYPE: "WORK",
+// //       },
+// //     ],
+
+// //     PHONE: [
+// //       {
+// //         VALUE: values.phone,
+// //         VALUE_TYPE: "WORK",
+// //       },
+// //     ],
+
+// //     COMMENTS: values.message,
+
+// //     UF_CRM_1768051861: values.language,
+// //     UF_CRM_1768053169: target_page,
+// //     UF_CRM_1768053313: "Lead From Contact Us Form",
+// //   },
+// // };
+
+
+//       const VITE_ZAPIER_HOOK = import.meta.env.VITE_ZAPIER_HOOK;
+
+//       await fetch(VITE_ZAPIER_HOOK, {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Accept: "application/json",
+//         },
+//         body: JSON.stringify(crmPayload),
+//       });
+//     } catch (e) {}
+//   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -181,7 +230,8 @@ const Form: React.FC = () => {
       const data = await res.json();
 
       if (res.ok && data?.status === 1) {
-        sendToCrm(values);
+        await sendToZapier(values);
+        // sendToCrm(values);
         toast.success(
           "Your Details have been Submitted Successfully. Our Team will Contact you Shortly."
         );

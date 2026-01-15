@@ -94,8 +94,16 @@ const HeaderItem = () => {
         //   option: renderDeveloper,
         // },
       },
-       {
+      {
         id: 4,
+        li: t("Areas"),
+        link: "/areas",
+        // content: {
+        //   option: renderDeveloper,
+        // },
+      },
+       {
+        id: 5,
         li: t("List With Us"),
         link: "/list-your-property",
         // content: {
@@ -132,7 +140,7 @@ const HeaderItem = () => {
       // },
 
       {
-        id: 7,
+        id: 6,
         li: t("More"),
         link: "/about",
         content: {

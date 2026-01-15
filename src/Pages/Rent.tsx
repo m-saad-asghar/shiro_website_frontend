@@ -276,22 +276,24 @@ const Rent = () => {
         ) : (
           <>
             {/* ✅ Search Section */}
-            <Search
-              from="rent"
-              options={apiResponse}
-              item={filter}
-              filterDeveloper={filterDeveloper}
-              values={values ?? {}}
-              valueSearch={valueSearch ?? []}
-              setValueSearch={setValueSearch}
-              setSearchId={setSearchId}
-              searchId={searchId ?? []}
-              setValues={setValues}
-              onClick={() => {
-                setPage(1);
-                fetchRentProperties(1);
-              }}
-            />
+            <div className="custom_container">
+              <Search
+                from="rent"
+                options={apiResponse}
+                item={filter}
+                filterDeveloper={filterDeveloper}
+                values={values ?? {}}
+                valueSearch={valueSearch ?? []}
+                setValueSearch={setValueSearch}
+                setSearchId={setSearchId}
+                searchId={searchId ?? []}
+                setValues={setValues}
+                onClick={() => {
+                  setPage(1);
+                  fetchRentProperties(1);
+                }}
+              />
+            </div>
 
             {/* No properties */}
             {adaptedData?.properties?.length === 0 ? (

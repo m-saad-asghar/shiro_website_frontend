@@ -29,7 +29,7 @@ type ListingOption = {
 // ✅ CHANGED: slug -> code (slug optional if API still returns it)
 type PropertyTypeItem = { id: number; name: string; code: string; slug?: string };
 
-const Search: FC<SearchProps> = ({
+const AreaSearch: FC<SearchProps> = ({
   item,
   setValues,
   values,
@@ -486,7 +486,7 @@ const Search: FC<SearchProps> = ({
   };
 
   return (
-    <div className="w-full internal_search_bar">
+    <div className="w-full internal_search_bar_area">
       <div className="mx-auto">
         <div className="mx-auto">
           <div className="bg-white change_border shadow-md border border-gray-200 p-2 md:p-3 flex flex-col md:flex-row items-stretch md:items-center gap-2">
@@ -971,4 +971,4 @@ const Search: FC<SearchProps> = ({
   );
 };
 
-export default Search;
+export default AreaSearch;

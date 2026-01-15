@@ -36,7 +36,7 @@ const MeetOurTeam = () => {
         />
       </Helmet>
       <>
-       <div className="w-full h-[91vh] developer_listing_styling">
+       <div className="relative w-full h-[91vh] overflow-hidden developer_listing_styling">
         <img
           src={ImagesUrl("meet_the_team_main_image.jpeg")}
           alt="Services Banner"

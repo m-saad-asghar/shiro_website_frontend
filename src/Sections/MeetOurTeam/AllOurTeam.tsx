@@ -9,6 +9,9 @@ interface TeamMember {
   position: string;
   slug: string;
   profile_picture: string | null;
+  phone: string | null;
+  whatsapp: string | null;
+  email: string | null;
 }
 
 const AllOurTeam: FC = () => {
@@ -134,25 +137,76 @@ const AllOurTeam: FC = () => {
         : PLACEHOLDER;
 
       return (
-        <div key={a.id} className="flex flex-col items-center text-center">
-          <div className="w-[270px] h-[270px] rounded-full overflow-hidden bg-gray-100 shadow-sm">
-            <img
-              src={imgSrc}
-              alt={a.name}
-              className="w-full h-full cursor-pointer object-cover transition-transform ease-in-out hover:scale-105"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).src = PLACEHOLDER;
-              }}
-              loading="lazy"
-            />
-          </div>
+       <div key={a.id} className="flex flex-col items-center text-center">
+  <div className="w-[270px] h-[270px] rounded-full overflow-hidden bg-gray-100 shadow-sm">
+    <img
+      src={imgSrc}
+      alt={a.name}
+      className="w-full h-full cursor-pointer object-cover transition-transform ease-in-out hover:scale-105"
+      onError={(e) => {
+        (e.currentTarget as HTMLImageElement).src = PLACEHOLDER;
+      }}
+      loading="lazy"
+    />
+  </div>
 
-          <h3 className="mt-6 font-semibold text-primary text-2xl">{a.name}</h3>
+  <h3 className="mt-6 font-semibold text-primary text-2xl">{a.name}</h3>
 
-          <p className="mt-1 font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
-            {a.position}
-          </p>
-        </div>
+  <p className="mt-1 font-semibold text-sm mb-1 text-[#9f8151]">
+    {a.position}
+  </p>
+
+  {/* CONTACT ICONS */}
+  <div className="w-full flex justify-center">
+    {/* EMAIL */}
+    <a
+      href={`mailto:${a.email}?subject=${encodeURIComponent(
+        "Website Inquiry | Shiro Estate"
+      )}&body=${encodeURIComponent(
+        `Hi ${a.name},\n\nI’m reaching out via the Shiro Estate website. I’m interested in one of the properties managed by Shiro Estate and would like more details.\n\nPlease share availability, pricing, and next steps.\n\nThank you,`
+      )}`}
+      aria-label={`Email ${a.name}`}
+      title="Email"
+      className="w-10 h-10 flex items-center justify-center hover:opacity-80 transition"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="50"
+        height="50"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#9f8151"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <polyline points="3 7 12 13 21 7" />
+      </svg>
+    </a>
+
+    {/* WHATSAPP */}
+    <a
+      href={`https://wa.me/${String(a.whatsapp || "")
+        .replace(/\D/g, "")}?text=${encodeURIComponent(
+        `Hi ${a.name},\n\nI’m reaching out through the Shiro Estate website. I’m interested in one of the properties represented by Shiro Estate and would like more information.\n\nCould you please share availability, pricing, and the next steps?\n\nThank you.`
+      )}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`WhatsApp ${a.name}`}
+      title="WhatsApp"
+      className="w-11 h-11 flex items-center justify-center hover:opacity-80 transition"
+    >
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+        alt="WhatsApp"
+        className="w-15 h-15"
+        loading="lazy"
+      />
+    </a>
+  </div>
+</div>
+
       );
     });
   }, [agents, PLACEHOLDER]);

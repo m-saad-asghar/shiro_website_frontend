@@ -212,7 +212,7 @@ const ProjectDetails = () => {
       >
         {/* Hero Image */}
         {projects?.project_main_image && (
-          <section className="relative w-full h-[91vh] developer_listing_styling">
+          <section className="relative w-full h-[91vh] overflow-hidden developer_listing_styling">
             <img
               src={ImagesUrl(projects.project_main_image)}
               alt={localizedName}

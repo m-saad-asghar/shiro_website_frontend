@@ -49,7 +49,7 @@ const AboutUs = () => {
        "{t("EXCELLENCE BEYOND COMPARE")}"
       </h1> */}
 
-       <section className="relative w-full h-[91vh] developer_listing_styling">
+       <section className="relative w-full h-[91vh] overflow-hidden developer_listing_styling">
             <img
               src={ImagesUrl("about_us_banner.jpeg")}
               alt="List Your Property Main Banner"
@@ -65,7 +65,8 @@ const AboutUs = () => {
               "
             >
               <h1 className="hidden md:block w-full lg:w-[100%] project_text font-bold !text-white drop-shadow-lg tracking-wide leading-tight content_general">
-                {t("Expertise That Shapes the Market: Discover Shiro Estate")}
+                {t("Expertise That Shapes the Market:")} <br />
+  {t("Discover Shiro Estate")}
               </h1>
 
               <p className="text-sm sm:text-base">

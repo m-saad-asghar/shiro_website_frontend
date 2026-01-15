@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 type AboutItem = {
+   heading: string;
   title: string;
   description: string;
 };
@@ -75,6 +76,7 @@ const AboutUsContent: React.FC = () => {
               key={item.title}
               className="change_border border border-primary/20 bg-white p-6 shadow-sm"
             >
+              <h3 className="font-semibold text-primary text-2xl mb-3 !text-[#9f8151]">{item.heading}</h3>
               <h3 className="font-semibold text-primary text-2xl mb-3">{item.title}</h3>
 
               <div className="down_styling para_styling">

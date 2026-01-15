@@ -21,7 +21,7 @@ const ListYourProperty = () => {
 
       {/* Hero Section */}
 
-     <section className="relative w-full h-[91vh] developer_listing_styling">
+     <section className="relative w-full h-[91vh] overflow-hidden developer_listing_styling">
             <img
               src={ImagesUrl("list_with_us_main_image.avif")}
               alt="List Your Property Main Banner"

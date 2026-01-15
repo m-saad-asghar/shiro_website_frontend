@@ -11,7 +11,7 @@ export { default as ForgotPassword } from "./ForgotPassword";
 export { default as SingleProperty } from "./SingleProperty ";
 export { default as SingleProject } from "./SingleProject";
 export { default as Devleoper } from "./Devleoper";
-export { default as Area } from "./Area";
+export { default as Area } from "./Area_old";
 export { default as MyProperty } from "./MyProperty";
 export { default as SingleArea } from "./SingleArea";
 export { default as MeetOurTeam } from "./MeetOurTeam";

@@ -27,6 +27,11 @@ const ShiroServices = () => {
       image: "list_with_us.webp",
       link: "/list-your-property",
     },
+    {
+      title: "Property Management",
+      image: "property_management.webp",
+      link: "/property-management",
+    },
   ];
 
   return (
@@ -40,7 +45,7 @@ const ShiroServices = () => {
       </Helmet>
 
       {/* ================= HERO SECTION ================= */}
-      <section className="relative w-full h-[91vh] developer_listing_styling">
+      <section className="relative w-full h-[91vh] overflow-hidden developer_listing_styling">
         <img
           src={ImagesUrl("services_main_image.jpg")}
           alt="Services Banner"
@@ -103,32 +108,40 @@ const ShiroServices = () => {
           </div>
 
           {/* Services Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {services.map((service, index) => (
-              <div
-                key={`${service.title}-${index}`}
-                onClick={() => navigate(service.link)}
-                className="group bg-white change_border border border-primary/20 overflow-hidden h-full flex flex-col transition-transform duration-300 cursor-pointer"
-              >
-                {/* Image */}
-                <div className="overflow-hidden relative">
-                  <img
-                    src={ServiceImagesUrl(service.image)}
-                    alt={service.title}
-                    className="transition-transform duration-500 group-hover:scale-110 w-full h-[260px] sm:h-[320px] md:h-[380px] lg:h-[420px] object-cover"
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </div>
+         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+  {services.map((service, index) => (
+    <div
+      key={`${service.title}-${index}`}
+      onClick={() => navigate(service.link)}
+      className="group bg-white change_border border border-primary/20 overflow-hidden h-full flex flex-col transition-transform duration-300 cursor-pointer"
+    >
+      {/* Image */}
+      <div className="overflow-hidden relative">
+        <img
+          src={ServiceImagesUrl(service.image)}
+          alt={service.title}
+          className="
+            transition-transform duration-500 group-hover:scale-110
+            w-full object-cover
+            h-[220px]
+            sm:h-[260px]
+            md:h-[300px]
+            xl:h-[260px]
+          "
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </div>
 
-                {/* Title */}
-                <div className="p-4 md:p-5">
-                  <h3 className="font-semibold text-primary text-xl">
-                    {t(service.title)}
-                  </h3>
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* Title */}
+      <div className="p-4 md:p-5">
+        <h3 className="font-semibold text-primary text-xl">
+          {t(service.title)}
+        </h3>
+      </div>
+    </div>
+  ))}
+</div>
+
         </div>
       </section>
       <div id="list_with_us" className="services_form_styling">

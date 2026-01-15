@@ -24,7 +24,7 @@ const Devleoper = () => {
           content="Explore properties from Dubai's leading developers. Browse exclusive projects and developments from trusted real estate developers partnered with Shiro."
         />
       </Helmet>
-       <div className="w-full h-[91vh] developer_listing_styling">
+       <div className="relative w-full h-[91vh] overflow-hidden developer_listing_styling">
         <img
           src={ImagesUrl("our_developers_main_image.jpg")}
           alt="Services Banner"

@@ -274,7 +274,8 @@ const Projects = () => {
         ) : (
           <>
             {/* ✅ Search Section */}
-            <Search
+            <div className="custom_container">
+              <Search
               from="projects"
               options={apiResponse}
               item={filter}
@@ -290,6 +291,7 @@ const Projects = () => {
                 fetchOffplanProperties(1);
               }}
             />
+            </div>
 
             {/* No properties */}
             {adaptedData?.properties?.length === 0 ? (

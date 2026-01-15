@@ -26,7 +26,7 @@ const ContactUs = () => {
         />
       </Helmet>
       <>
-      <div className="w-full h-[91vh] developer_listing_styling">
+      <div className="relative w-full h-[91vh] overflow-hidden developer_listing_styling">
         <img
           src={ImagesUrl("contact_us_main_page.jpg")}
           alt="Services Banner"

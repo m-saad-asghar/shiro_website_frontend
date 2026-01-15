@@ -276,7 +276,8 @@ const Buy = () => {
         ) : (
           <>
             {/* ✅ Search Section */}
-            <Search
+           <div className="custom_container">
+             <Search
               from="buy"
               options={apiResponse}
               item={filter}
@@ -293,6 +294,7 @@ const Buy = () => {
                 fetchSaleProperties(1);
               }}
             />
+           </div>
 
             {/* No properties */}
             {adaptedData?.properties?.length === 0 ? (

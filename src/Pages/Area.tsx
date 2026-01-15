@@ -1,85 +1,142 @@
 import useQueryGet from "@/hooks/useQueryGet";
 import { Helmet } from "react-helmet";
-import { AllArea, Banner } from "@/Sections/Area";
-import { Loader } from "@/Components";
-import StaticServices from "@/Services/StaticServices";
-import { useState } from "react";
+import AllAreas from "@/Sections/Developer/AllAreas";
+import { ContactForm } from "@/Sections/Home";
+import AreasServices from "@/Services/AreasServices";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
+import areaImagesUrl from "@/helpers/areaImagesURL";
+import Pagination from "@/Components/Pagination";
 
-const Area = () => {
-  const [values, setValues] = useState<string>("");
-  const { data, status } = useQueryGet(["AllArea", values], () =>
-    StaticServices.Area(values)
+const PER_PAGE = 16;
+
+const AreaPage = () => {
+  const { t } = useTranslation();
+
+  const [value, setValue] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+
+  // reset page when search changes
+  useEffect(() => {
+    setPage(1);
+  }, [value]);
+
+  // ✅ useQueryGet returns response.data.data
+  const { data, status } = useQueryGet(["areas", value, page], () =>
+    AreasServices.areas({
+      search: value,
+      page,
+      per_page: PER_PAGE,
+    })
   );
+
+  // ✅ correct structure
+  const areas = data?.areas ?? [];
+  const pagination = data?.pagination;
+
+  const currentPage = pagination?.current_page ?? page;
+
+  const handlePageChange = (p: number) => {
+    setPage(p);
+    document
+      .getElementById("areas_list")
+      ?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <>
       <Helmet>
-        <title>
-          Dubai Area Guides | Neighborhoods & Communities Information
-        </title>
+        <title>Dubai Property Areas | Shiro Real Estate Partners</title>
         <meta
           name="description"
-          content="Explore Dubai's top neighborhoods and communities. Find detailed area guides, property listings, amenities, and lifestyle information from Shiro Real Estate."
+          content="Explore Dubai’s prime areas. Browse top communities and locations for investment and living."
         />
       </Helmet>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          className="pt-28 md:pt-32 lg:pt-36"
-        >
-          <Banner setValues={setValues} />
 
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-16 md:mt-20 lg:mt-24"
+      {/* Hero Section */}
+      <div className="relative w-full h-[91vh] overflow-hidden developer_listing_styling">
+        <img
+          src={areaImagesUrl("areas_main_image.avif")}
+          alt="Areas Banner"
+          className="w-full h-full object-cover"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-transparent" />
+
+        <div className="custom_container develop_heading_styling">
+          <h1 className="hidden md:block project_text font-bold !text-white drop-shadow-lg tracking-wide leading-tight content_general">
+            {t("Trusted Partners")}
+          </h1>
+
+          <p className="text-sm sm:text-base">
+            <span className="text-white text-xl">
+              {t("Collaborating with the UAE’s Leading Areas")}
+            </span>
+          </p>
+
+          <button
+            onClick={() =>
+              document
+                .getElementById("list_with_us")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+            className="w-fit bg-[#094834] hover:bg-[#9f8151] text-white font-semibold py-4 px-6 shadow-lg transition"
           >
-            {status == "pending" || status == "error" ? (
-              <Loader message="Loading areas..." size="lg" />
-            ) : data?.region.length == 0 ? (
-              <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                <div className="text-center">
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                    className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6"
-                  >
-                    <svg
-                      className="w-12 h-12 text-primary"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                  </motion.div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-                    No data found
-                  </h2>
-                  <p className="text-gray-600 text-lg">
-                    Try adjusting your search criteria or browse our available
-                    areas.
-                  </p>
+            {t("Enquire Now")}
+          </button>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="min-h-screen">
+        <motion.div
+          id="areas_list"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="py-10 lg:py-20 pb-10 lg:pb-10"
+        >
+          {/* Empty State */}
+          
+            <>
+              {/* Areas Grid */}
+              <AllAreas
+  data={areas}
+  status={status as any}
+  searchValue={value}
+  onSearchChange={(v) => setValue(v)}
+  onClearSearch={() => setValue("")}
+/>
+
+
+              {/* ✅ Shared Pagination Component */}
+              {status === "success" && pagination && (
+                <div className="custom_container">
+                  <Pagination
+                  className="w-full py-[20px]"
+                  lastPages={pagination?.last_page}
+                  page={currentPage}
+                  setPage={handlePageChange}
+                />
                 </div>
-              </div>
-            ) : (
-              <AllArea data={data?.region} status={status} />
-            )}
-          </motion.div>
+              )}
+            </>
+         
+        </motion.div>
+
+        {/* Contact Form */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="bg-white mb-16"
+          id="list_with_us"
+        >
+          <ContactForm />
         </motion.div>
       </div>
     </>
   );
 };
 
-export default Area;
+export default AreaPage;

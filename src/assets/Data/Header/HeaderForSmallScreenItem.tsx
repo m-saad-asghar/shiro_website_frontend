@@ -36,28 +36,33 @@ const HeaderForSmallScreenItem = () => {
         li: t("Developers"),
         link: `/developers`,
       },
-       {
+      {
         id: 4,
+        li: t("Areas"),
+        link: `/areas`,
+      },
+       {
+        id: 5,
         li: t("List With Us"),
         link: "/list-your-property",
       },
        {
-        id: 5,
+        id: 6,
         li: t("About Shiro"),
         link: `/about`,
       },
        {
-        id: 6,
+        id: 7,
         li: t("Services"),
         link: "/property-services",
       },
        {
-        id: 7,
+        id: 8,
         li: t("Meet The Team"),
         link: "/team",
       },
       {
-        id: 8,
+        id: 9,
         li: t("Contact Us"),
         link: "/contact",
       },

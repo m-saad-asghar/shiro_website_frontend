@@ -248,6 +248,10 @@ textarea::placeholder {
   margin-top: 20px;
 }
 
+.internal_search_bar_area {
+  margin-top: 20px;
+}
+
 .hover_external_btn {
     font-family: "Neue";
     height: 30px;
@@ -1039,6 +1043,10 @@ video {
 
   .internal_search_bar {
   margin-top: 85px;
+}
+
+ .internal_search_bar_area {
+  margin-top: 0px;
 }
 
   .remove_extra_margin {

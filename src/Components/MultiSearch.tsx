@@ -420,106 +420,120 @@ useEffect(() => {
             </div>
 
             {/* Dropdown under search */}
-            {isSearchFocused && (
-              <div className="w-full max-w-md max-h-80 rounded-xl bg-white border border-gray-200 shadow-xl absolute left-0 right-0 top-full mt-2 z-[9999] overflow-y-auto">
-                {(() => {
-                  const selectedIds = (selectedOptions || []).map((x: any) => x.uniqueId);
+          
+{isSearchFocused && (
+  <div
+    className="w-full max-w-md max-h-80 rounded-xl bg-white border border-gray-200 shadow-xl absolute left-0 right-0 top-full mt-2 z-[9999] overflow-y-auto"
+    // ✅ prevents input blur when clicking inside dropdown
+    onMouseDown={(e) => e.preventDefault()}
+  >
+    {(() => {
+      const selectedIds = (selectedOptions || []).map((x: any) => x.uniqueId);
 
-                  const availableOptions = (listingOptions || []).filter(
-                    (x: any) => !selectedIds.includes(`${x.type}_${x.id}`)
-                  );
+      const availableOptions = (listingOptions || []).filter(
+        (x: any) => !selectedIds.includes(`${x.type}_${x.id}`)
+      );
 
-                  const hasSelected = (selectedOptions || []).length > 0;
-                  const hasOptions = availableOptions.length > 0;
+      const hasSelected = (selectedOptions || []).length > 0;
+      const hasOptions = availableOptions.length > 0;
 
-                  if (!hasSelected && !hasOptions) {
-                    return (
-                      <p className="text-sm font-medium text-gray-500 flex-center py-4">
-                        {isTypingLoading ? t("Loading...") : t("No Data Found")}
-                      </p>
-                    );
-                  }
+      if (!hasSelected && !hasOptions) {
+        return (
+          <p className="text-sm font-medium text-gray-500 flex-center py-4">
+            {isTypingLoading ? t("Loading...") : t("No Data Found")}
+          </p>
+        );
+      }
 
-                  return (
-                    <>
-                      {/* Selected on top */}
-                      {hasSelected && (
-                        <div className="px-4 py-3 flex flex-wrap gap-2">
-                          {selectedOptions.map((item: any, index: number) => (
-                            <div
-                              key={item.uniqueId || item.id || index}
-                              className={`selected_badge flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${
-                                item.type === "community" ||
-                                item.type === "sub_community"
-                                  ? "bg-blue-100 text-900"
-                                  : "bg-primary/10 text-primary"
-                              }`}
-                            >
-                              {item.type === "community" ||
-                              item.type === "sub_community" ? (
-                                <Icons.IoLocationOutline size={12} className="flex-shrink-0" />
-                              ) : (
-                                <Icons.IoBusiness size={12} className="flex-shrink-0" />
-                              )}
+      return (
+        <>
+          {/* Selected on top */}
+          {hasSelected && (
+            <div className="px-4 py-3 flex flex-wrap gap-2">
+              {selectedOptions.map((item: any, index: number) => (
+                <div
+                  key={item.uniqueId || item.id || index}
+                  className={`selected_badge flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${
+                    item.type === "community" || item.type === "sub_community"
+                      ? "bg-blue-100 text-900"
+                      : "bg-primary/10 text-primary"
+                  }`}
+                >
+                  {item.type === "community" || item.type === "sub_community" ? (
+                    <Icons.IoLocationOutline size={12} className="flex-shrink-0" />
+                  ) : (
+                    <Icons.IoBusiness size={12} className="flex-shrink-0" />
+                  )}
 
-                              <span className="truncate max-w-[160px]">{item.name}</span>
+                  <span className="truncate max-w-[160px]">{item.name}</span>
 
-                              <button
-                                onClick={() => handleRemoveOption(item.uniqueId)}
-                                className={`ml-1 rounded-full p-0.5 transition-colors duration-200 ${
-                                  item.type === "community" ||
-                                  item.type === "sub_community"
-                                    ? "hover:bg-blue-200"
-                                    : "hover:bg-primary/20"
-                                }`}
-                                aria-label={`Remove ${item.name}`}
-                              >
-                                <Icons.FaTimes size={14} />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                  <button
+                    type="button"
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleRemoveOption(item.uniqueId);
+                    }}
+                    className={`ml-1 rounded-full p-0.5 transition-colors duration-200 ${
+                      item.type === "community" || item.type === "sub_community"
+                        ? "hover:bg-blue-200"
+                        : "hover:bg-primary/20"
+                    }`}
+                    aria-label={`Remove ${item.name}`}
+                  >
+                    <Icons.FaTimes size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
 
-                      {hasSelected && hasOptions && <div className="border-t border-gray-200" />}
+          {hasSelected && hasOptions && <div className="border-t border-gray-200" />}
 
-                      {/* Options from Laravel */}
-                      {hasOptions && (
-                        <div className="property-results">
-                          {availableOptions.map((item: any) => (
-                            <div
-                              key={`${item.type}_${item.id}`}
-                              className="w-full py-3 px-4 hover:bg-green-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors duration-200 flex items-center gap-3"
-                              onClick={() => handleAddOption(item)}
-                            >
-                              <div className="flex-shrink-0">
-                                {item.type === "community" || item.type === "sub_community" ? (
-                                  <Icons.IoLocationOutline size={18} className="text-[#9f8151]" />
-                                ) : (
-                                  <Icons.IoBusiness size={18} className="text-green-600" />
-                                )}
-                              </div>
-                              <div className="flex-1">
-                                <p className="text-sm font-medium text-gray-900 capitalize">
-                                  {item.name}
-                                </p>
-                                <p className="text-xs text-gray-500">
-                                  {item.type === "community"
-                                    ? t("Community")
-                                    : item.type === "sub_community"
-                                    ? t("Sub Community")
-                                    : t("Property")}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </>
-                  );
-                })()}
-              </div>
-            )}
+          {/* Options from Laravel */}
+          {hasOptions && (
+            <div className="property-results">
+              {availableOptions.map((item: any) => (
+                <div
+                  key={`${item.type}_${item.id}`}
+                  className="w-full py-3 px-4 hover:bg-green-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors duration-200 flex items-center gap-3"
+                  // ✅ IMPORTANT FIX: use onMouseDown instead of onClick
+                  onMouseDown={(e) => {
+                    e.preventDefault(); // prevents blur
+                    e.stopPropagation();
+                    handleAddOption(item);
+                  }}
+                >
+                  <div className="flex-shrink-0">
+                    {item.type === "community" || item.type === "sub_community" ? (
+                      <Icons.IoLocationOutline size={18} className="text-[#9f8151]" />
+                    ) : (
+                      <Icons.IoBusiness size={18} className="text-green-600" />
+                    )}
+                  </div>
+
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-900 capitalize">
+                      {item.name}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {item.type === "community"
+                        ? t("Community")
+                        : item.type === "sub_community"
+                        ? t("Sub Community")
+                        : t("Property")}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      );
+    })()}
+  </div>
+)}
+
           </div>
 
           {/* Divider - Hidden on mobile */}
