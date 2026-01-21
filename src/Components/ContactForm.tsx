@@ -12,6 +12,7 @@ import { Form } from "../Components/Home";
 interface ContactFormProps {
   title?: string;
   message?: string;
+  display_name?: string;
 }
 
 interface OnSubmitProps {
@@ -22,6 +23,7 @@ interface OnSubmitProps {
 const ContactForm: React.FC<ContactFormProps> = ({
   title = "Contact Us",
   message = "Hello,\nI would like to get in touch with you.",
+  display_name="",
 }) => {
   const { t } = useTranslation();
   const { mutateAsync } = UseQueryPost(
@@ -72,7 +74,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
       {/* Form */}
       <div className="space-y-6">
-        <Form/>
+        <Form display_name={display_name ?? ""} />
         {/* <FormikContainer
           conClassName="w-full space-y-6"
           onSubmit={onSubmit}

@@ -4,6 +4,7 @@ import ImagesUrl from "@/helpers/ImagesURL";
 import ServiceImagesUrl from "@/helpers/serviceImagesURL";
 import Icons from "@/Constants/Icons";
 import { useTranslation } from "react-i18next";
+import EnquireNowReactModal from "@/Components/Home/ContactForm/EnquireNowReactModal";
 
 const PropertyManagementWhyUs: React.FC = () => {
   const { t } = useTranslation();
@@ -54,7 +55,24 @@ const PropertyManagementWhyUs: React.FC = () => {
       )}
     </div>
 
+     <EnquireNowReactModal
+  title={t("CONTACT US")}
+  origin={t("Click | Contact Us Button | Property Management Page")}
+  showSuccessToast={true}
+  showErrorToast={true}
+  closeOnSuccess={true}
+  trigger={(open) => (
     <button
+      type="button"
+      onClick={open}
+      className="mt-10 w-fit bg-[#094834] hover:bg-[#9f8151] text-white font-semibold py-4 px-6 border-radius shadow-lg hover:shadow-xl cursor-pointer transition"
+    >
+      {t("Contact Us")}
+    </button>
+  )}
+/>
+
+    {/* <button
       onClick={() => {
         const section = document.getElementById("list_with_us");
         if (section) {
@@ -65,7 +83,7 @@ const PropertyManagementWhyUs: React.FC = () => {
       className="mt-10 w-fit bg-[#094834] hover:bg-[#9f8151] text-white font-semibold py-4 px-6 border-radius shadow-lg hover:shadow-xl cursor-pointer transition"
     >
       Get a Free Income Assessment
-    </button>
+    </button> */}
   </div>
 
 </div>

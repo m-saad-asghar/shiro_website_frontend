@@ -248,7 +248,6 @@ useEffect(() => {
   };
 
  const onSubmit = () => {
-  console.log("Selected options:", selectedOptions);
 
   if (values?.type_name && values?.type_id) {
     const params = new URLSearchParams();

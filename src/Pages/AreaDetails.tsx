@@ -77,7 +77,6 @@ const AreaDetails = () => {
         });
 
         const json: AreaDetailsResponse = await res.json();
-        console.log("fetch_area_details response:", json);
 
         if (!res.ok || !json?.success || !json?.data) {
           setAreaDetails(null);

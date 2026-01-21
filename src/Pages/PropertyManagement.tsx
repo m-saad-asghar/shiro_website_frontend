@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import PropertyManagementCarousel from "@/Components/PropertyManagementCarousel";
 import PropertyManagementWhyUs from "./PropertyManagementWhyUs";
 import ProjectFaq from "./ProjectFaq";
+import EnquireNowReactModal from "@/Components/Home/ContactForm/EnquireNowReactModal";
 
 const PropertyManagement = () => {
   const { t } = useTranslation();
@@ -100,7 +101,24 @@ const PropertyManagement = () => {
             </span>
           </p>
 
-          <button
+          <EnquireNowReactModal
+  title={t("ENQUIRE NOW")}
+  origin={t("Click | Enquire Now Button | Developer Page")}
+  showSuccessToast={true}
+  showErrorToast={true}
+  closeOnSuccess={true}
+  trigger={(open) => (
+    <button
+      type="button"
+      onClick={open}
+      className="w-fit bg-[#094834] hover:bg-[#9f8151] change_border text-white font-semibold py-4 px-6 shadow-lg transition"
+    >
+      {t("Enquire Now")}
+    </button>
+  )}
+/>
+
+          {/* <button
               onClick={() => {
   const section = document.getElementById("list_with_us");
   if (section) {
@@ -110,7 +128,7 @@ const PropertyManagement = () => {
             className="w-fit bg-[#094834] hover:bg-[#9f8151] text-white font-semibold py-4 px-6 shadow-lg transition"
           >
             {t("Enquire Now")}
-          </button>
+          </button> */}
 
           {/* <button
               onClick={() => {
@@ -231,7 +249,7 @@ const PropertyManagement = () => {
       </div>
 
       <div id="list_with_us" className="services_form_styling">
-        <ContactForm />
+        <ContactForm display_name="contact-us-form-via-property-management-page-of-website"/>
       </div>
     </>
   );

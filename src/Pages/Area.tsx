@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import areaImagesUrl from "@/helpers/areaImagesURL";
 import Pagination from "@/Components/Pagination";
+import EnquireNowReactModal from "@/Components/Home/ContactForm/EnquireNowReactModal";
 
 const PER_PAGE = 16;
 
@@ -74,7 +75,24 @@ const AreaPage = () => {
             </span>
           </p>
 
-          <button
+          <EnquireNowReactModal
+  title={t("ENQUIRE NOW")}
+  origin={t("Click | Enquire Now Button | Area Page")}
+  showSuccessToast={true}
+  showErrorToast={true}
+  closeOnSuccess={true}
+  trigger={(open) => (
+    <button
+      type="button"
+      onClick={open}
+      className="w-fit bg-[#094834] hover:bg-[#9f8151] change_border text-white font-semibold py-4 px-6 shadow-lg transition"
+    >
+      {t("Enquire Now")}
+    </button>
+  )}
+/>
+
+          {/* <button
             onClick={() =>
               document
                 .getElementById("list_with_us")
@@ -83,7 +101,7 @@ const AreaPage = () => {
             className="w-fit bg-[#094834] hover:bg-[#9f8151] text-white font-semibold py-4 px-6 shadow-lg transition"
           >
             {t("Enquire Now")}
-          </button>
+          </button> */}
         </div>
       </div>
 
@@ -132,7 +150,7 @@ const AreaPage = () => {
           className="bg-white mb-16"
           id="list_with_us"
         >
-          <ContactForm />
+          <ContactForm display_name="contact-us-form-via-areas-page-of-website"/>
         </motion.div>
       </div>
     </>

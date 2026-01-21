@@ -25,6 +25,14 @@ type ApiResponse = {
       phone: string;
       whatsapp: string | null;
     } | null;
+    agents: {
+      name: string;
+      slug: string;
+      position: string;
+      profile_picture: string | null;
+      brn: string;
+      description: string;
+    } | null;
     images: string[];
     private_amenities: string[];
     commercial_amenities: string[];
@@ -44,6 +52,7 @@ const [amenities, setAmenities] = useState<string[]>([]);
 const [commercialAmenities, setCommercialAmenities] = useState<string[]>([]);
 const [images, setImages] = useState<string[]>([]);
  const [employees, setEmployees] = useState<Record<string, any>[]>([]);
+ const [agents, setAgents] = useState<Record<string, any>[]>([]);
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
@@ -81,6 +90,7 @@ const [images, setImages] = useState<string[]>([]);
         setListings(json.data.listing || []);
         setAmenities(json.data.private_amenities || []);
         setEmployees(json.data.employee ? [json.data.employee] : []);
+        setAgents(json.data.agents ? [json.data.agents] : []);
         setImages(json.data.images || []);
         setCommercialAmenities(json.data.commercial_amenities || []);
 
@@ -214,7 +224,7 @@ const [images, setImages] = useState<string[]>([]);
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
               >
-                <BoxForm item={property} employee={employees[0]} />
+                <BoxForm item={property} employee={employees[0]} agents={agents[0]} />
               </motion.div>
             </div>
           </div>

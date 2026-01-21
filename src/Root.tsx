@@ -10,13 +10,14 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import ScrollToTop from "./Components/ScrollToTop";
 import PasswordProtection from "./Components/PasswordProtection";
 import { usePasswordProtection } from "./hooks/usePasswordProtection";
+import FormEnricher from "./Components/FormEnricher";
 
 const Root = () => {
   const location = useLocation();
   const { isAccessGranted, grantAccess } = usePasswordProtection();
 
   const queryClient = new QueryClient({
-    // ... your existing queryClient options
+    // your existing options (unchanged)
   });
 
   const isAuthRoute =
@@ -35,6 +36,9 @@ const Root = () => {
 
   return (
     <>
+      {/* ✅ Runs on every route change – enriches all forms */}
+      <FormEnricher />
+
       <QueryClientProvider client={queryClient}>
         <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
           <ValueProvider>
@@ -47,13 +51,16 @@ const Root = () => {
                     ) : (
                       <>
                         <Header />
+
                         {/* push body below header */}
-                       <main className="pt-[0px] md:pt-[80px] lg:pt-[87.2px] sm:pt-[0px]">
-      <Outlet />
-    </main>
+                        <main className="pt-[0px] md:pt-[80px] lg:pt-[87.2px] sm:pt-[0px]">
+                          <Outlet />
+                        </main>
+
                         <Footer />
                       </>
                     )}
+
                     <Toaster />
                     <ScrollToTop />
                   </div>
@@ -63,10 +70,10 @@ const Root = () => {
           </ValueProvider>
         </GoogleOAuthProvider>
       </QueryClientProvider>
+
       <ScrollRestoration />
     </>
   );
 };
-
 
 export default Root;

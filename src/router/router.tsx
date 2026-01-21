@@ -38,6 +38,7 @@ import AreaDetails from "@/Pages/AreaDetails";
 import PropertyManagement from "@/Pages/PropertyManagement";
 import Cookies from "js-cookie";
 import AreaPage from "@/Pages/Area";
+import TeamDetails from "@/Sections/MeetOurTeam/TeamDetails";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -145,6 +146,10 @@ const router = createBrowserRouter([
       {
         path: "/team",
         element: <MeetOurTeam />,
+      },
+       {
+        path: "/team/:slug",
+        element: <TeamDetails />,
       },
       {
         path: "/contact",

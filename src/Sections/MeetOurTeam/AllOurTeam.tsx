@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { LoaderPage } from "@/Components";
 import employeeImagesUrl from "@/helpers/employeeImagesURL";
+import { Link } from "react-router-dom";
 
 interface TeamMember {
   id: number | string;
@@ -12,6 +13,7 @@ interface TeamMember {
   phone: string | null;
   whatsapp: string | null;
   email: string | null;
+  description: string | null;
 }
 
 const AllOurTeam: FC = () => {
@@ -90,126 +92,152 @@ const AllOurTeam: FC = () => {
   }, [API_URL, t]);
 
   // ✅ FIRST SECTION CARDS (UNCHANGED)
-  const cards = useMemo(() => {
-    const buildImg = (file: string | null) => {
-      if (file && (file.startsWith("http://") || file.startsWith("https://")))
-        return file;
-      if (!file) return PLACEHOLDER;
+ const cards = useMemo(() => {
+  return team.map((m) => {
+    const imgSrc = m.profile_picture
+      ? employeeImagesUrl(m.profile_picture)
+      : PLACEHOLDER;
 
-      const path = `${EMPLOYEE_IMG_BASE}/${file}`.replace(/([^:]\/)\/+/g, "$1");
-      return path;
-    };
+    const hasDescription =
+      typeof m.description === "string" && m.description.trim() !== "";
 
-    return team.map((m) => {
-      const imgSrc = m.profile_picture
-        ? employeeImagesUrl(m.profile_picture)
-        : PLACEHOLDER;
+    const ImageWrapper = ({ children }: { children: React.ReactNode }) =>
+      hasDescription ? (
+        <Link to={`/team/${m.slug}`} aria-label={`View ${m.name} profile`}>
+          {children}
+        </Link>
+      ) : (
+        <>{children}</>
+      );
 
-      return (
-        <div key={m.id} className="flex flex-col items-center text-center">
-          <div className="w-[270px] h-[270px] rounded-full overflow-hidden bg-gray-100 shadow-sm">
+    return (
+      <div key={m.id} className="flex flex-col items-center text-center">
+        <ImageWrapper>
+          <div className="w-[270px] h-[270px] rounded-full overflow-hidden bg-gray-100 shadow-sm cursor-pointer">
             <img
               src={imgSrc}
               alt={m.name}
-              className="w-full h-full cursor-pointer object-cover transition-transform ease-in-out hover:scale-105"
+              className="w-full h-full object-cover transition-transform ease-in-out hover:scale-105"
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src = PLACEHOLDER;
               }}
               loading="lazy"
             />
           </div>
+        </ImageWrapper>
 
-          <h3 className="mt-6 font-semibold text-primary text-2xl">{m.name}</h3>
+        <h3 className="mt-6 font-semibold text-primary text-2xl">
+          {m.name}
+        </h3>
 
-          <p className="mt-1 font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
-            {m.position}
-          </p>
-        </div>
-      );
-    });
-  }, [team, PLACEHOLDER, EMPLOYEE_IMG_BASE]);
+        <p className="mt-1 font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
+          {m.position}
+        </p>
+      </div>
+    );
+  });
+}, [team, PLACEHOLDER]);
 
   // ✅ SECOND SECTION CARDS (NEW: agents with images)
-  const agentCards = useMemo(() => {
-    return agents.map((a) => {
-      const imgSrc = a.profile_picture
-        ? employeeImagesUrl(a.profile_picture)
-        : PLACEHOLDER;
+ const agentCards = useMemo(() => {
+  return agents.map((a) => {
+    const imgSrc = a.profile_picture
+      ? employeeImagesUrl(a.profile_picture)
+      : PLACEHOLDER;
 
-      return (
-       <div key={a.id} className="flex flex-col items-center text-center">
-  <div className="w-[270px] h-[270px] rounded-full overflow-hidden bg-gray-100 shadow-sm">
-    <img
-      src={imgSrc}
-      alt={a.name}
-      className="w-full h-full cursor-pointer object-cover transition-transform ease-in-out hover:scale-105"
-      onError={(e) => {
-        (e.currentTarget as HTMLImageElement).src = PLACEHOLDER;
-      }}
-      loading="lazy"
-    />
-  </div>
+    const hasDescription =
+      typeof a.description === "string" && a.description.trim() !== "";
 
-  <h3 className="mt-6 font-semibold text-primary text-2xl">{a.name}</h3>
-
-  <p className="mt-1 font-semibold text-sm mb-1 text-[#9f8151]">
-    {a.position}
-  </p>
-
-  {/* CONTACT ICONS */}
-  <div className="w-full flex justify-center">
-    {/* EMAIL */}
-    <a
-      href={`mailto:${a.email}?subject=${encodeURIComponent(
-        "Website Inquiry | Shiro Estate"
-      )}&body=${encodeURIComponent(
-        `Hi ${a.name},\n\nI’m reaching out via the Shiro Estate website. I’m interested in one of the properties managed by Shiro Estate and would like more details.\n\nPlease share availability, pricing, and next steps.\n\nThank you,`
-      )}`}
-      aria-label={`Email ${a.name}`}
-      title="Email"
-      className="w-10 h-10 flex items-center justify-center hover:opacity-80 transition"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="50"
-        height="50"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#9f8151"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <rect x="3" y="5" width="18" height="14" rx="2" />
-        <polyline points="3 7 12 13 21 7" />
-      </svg>
-    </a>
-
-    {/* WHATSAPP */}
-    <a
-      href={`https://wa.me/${String(a.whatsapp || "")
-        .replace(/\D/g, "")}?text=${encodeURIComponent(
-        `Hi ${a.name},\n\nI’m reaching out through the Shiro Estate website. I’m interested in one of the properties represented by Shiro Estate and would like more information.\n\nCould you please share availability, pricing, and the next steps?\n\nThank you.`
-      )}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`WhatsApp ${a.name}`}
-      title="WhatsApp"
-      className="w-11 h-11 flex items-center justify-center hover:opacity-80 transition"
-    >
-      <img
-        src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
-        alt="WhatsApp"
-        className="w-15 h-15"
-        loading="lazy"
-      />
-    </a>
-  </div>
-</div>
-
+    const ImageWrapper = ({ children }: { children: React.ReactNode }) =>
+      hasDescription ? (
+        <Link to={`/team/${a.slug}`} aria-label={`View ${a.name} profile`}>
+          {children}
+        </Link>
+      ) : (
+        <>{children}</>
       );
-    });
-  }, [agents, PLACEHOLDER]);
+
+    return (
+      <div key={a.id} className="flex flex-col items-center text-center">
+        <ImageWrapper>
+          <div className="w-[270px] h-[270px] rounded-full overflow-hidden bg-gray-100 shadow-sm cursor-pointer">
+            <img
+              src={imgSrc}
+              alt={a.name}
+              className="w-full h-full object-cover transition-transform ease-in-out hover:scale-105"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = PLACEHOLDER;
+              }}
+              loading="lazy"
+            />
+          </div>
+        </ImageWrapper>
+
+        <h3 className="mt-6 font-semibold text-primary text-2xl">
+          {a.name}
+        </h3>
+
+        <p className="mt-1 font-semibold text-sm mb-1 text-[#9f8151]">
+          {a.position}
+        </p>
+
+        {/* CONTACT ICONS */}
+        <div className="w-full flex justify-center">
+          {/* EMAIL */}
+          {a.email && (
+            <a
+              href={`mailto:${a.email}?subject=${encodeURIComponent(
+                "Website Inquiry | Shiro Estate"
+              )}&body=${encodeURIComponent(
+                `Hi ${a.name},\n\nI’m reaching out via the Shiro Estate website. I’m interested in one of the properties managed by Shiro Estate and would like more details.\n\nPlease share availability, pricing, and next steps.\n\nThank you,`
+              )}`}
+              aria-label={`Email ${a.name}`}
+              title="Email"
+              className="w-10 h-10 flex items-center justify-center hover:opacity-80 transition"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="50"
+                height="50"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#9f8151"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="3" y="5" width="18" height="14" rx="2" />
+                <polyline points="3 7 12 13 21 7" />
+              </svg>
+            </a>
+          )}
+
+          {/* WHATSAPP */}
+          {a.whatsapp && (
+            <a
+              href={`https://wa.me/${String(a.whatsapp)
+                .replace(/\D/g, "")}?text=${encodeURIComponent(
+                `Hi ${a.name},\n\nI’m reaching out through the Shiro Estate website. I’m interested in one of the properties represented by Shiro Estate and would like more information.\n\nCould you please share availability, pricing, and the next steps?\n\nThank you.`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`WhatsApp ${a.name}`}
+              title="WhatsApp"
+              className="w-11 h-11 flex items-center justify-center hover:opacity-80 transition"
+            >
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+                alt="WhatsApp"
+                className="w-15 h-15"
+                loading="lazy"
+              />
+            </a>
+          )}
+        </div>
+      </div>
+    );
+  });
+}, [agents, PLACEHOLDER]);
 
   if (loading) {
     return (

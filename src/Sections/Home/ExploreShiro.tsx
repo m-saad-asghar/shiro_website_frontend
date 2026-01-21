@@ -157,8 +157,6 @@ const ExploreShiro = () => {
         property.active == 1 && property.is_featured == 1
     );
 
-      console.log("properties", properties);
-
     if (properties.length === 0) {
       return (
         <CarouselItem className="w-full">

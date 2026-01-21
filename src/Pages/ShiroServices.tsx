@@ -5,6 +5,7 @@ import ImagesUrl from "@/helpers/ImagesURL";
 import { useNavigate } from "react-router-dom";
 import ServicesContent from "./ServicesContent";
 import { ContactForm } from "@/Sections/Home";
+import EnquireNowReactModal from "@/Components/Home/ContactForm/EnquireNowReactModal";
 
 const ShiroServices = () => {
   const { t } = useTranslation();
@@ -71,6 +72,23 @@ const ShiroServices = () => {
               )}
             </span>
           </p>
+
+          <EnquireNowReactModal
+  title={t("ENQUIRE NOW")}
+  origin={t("Click | Enquire Now Button | Services Page")}
+  showSuccessToast={true}
+  showErrorToast={true}
+  closeOnSuccess={true}
+  trigger={(open) => (
+    <button
+      type="button"
+      onClick={open}
+      className="w-fit bg-[#094834] hover:bg-[#9f8151] change_border text-white font-semibold py-4 px-6 shadow-lg transition"
+    >
+      {t("Enquire Now")}
+    </button>
+  )}
+/>
 
           {/* <button
               onClick={() => {
@@ -145,7 +163,7 @@ const ShiroServices = () => {
         </div>
       </section>
       <div id="list_with_us" className="services_form_styling">
-        <ContactForm />
+        <ContactForm display_name="contact-us-form-via-services-page-of-website"/>
       </div>
     </>
   );

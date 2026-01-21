@@ -118,7 +118,7 @@ const SingleBlog = () => {
       </Helmet>
       <div className="w-full h-full pt-[120px] md:pt-[140px] lg:pt-[127.2px]">
         <OurBlog item={data?.blog} />
-        <ContactForm />
+        <ContactForm display_name="contact-us-form-via-blog-details-page-of-website"/>
         <StayInTheLoop />
       </div>
     </>

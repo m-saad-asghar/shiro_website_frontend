@@ -15,6 +15,7 @@ import { Form } from "../../Components/Home";
 type BoxFormProps = {
   item: any;
   employee?: any;
+  agents?: any;
 };
 
 interface OnSubmitProps {
@@ -29,8 +30,27 @@ const initialValues = {
   message: "",
 };
 
-const BoxForm: FC<BoxFormProps> = ({ item , employee}) => {
+const BoxForm: FC<BoxFormProps> = ({ item , employee, agents}) => {
   const { t } = useTranslation();
+
+  const imageSrc = employeeImagesUrl(
+  agents?.profile_picture?.trim()
+    ? agents.profile_picture
+    : employee?.profile_picture?.trim()
+    ? employee.profile_picture
+    : "default_employee.png"
+);
+
+const imageAlt =
+  agents?.name?.trim()
+    ? agents.name
+    : employee?.name?.trim()
+    ? employee.name
+    : "Agent";
+
+const shouldLinkAgent =
+  agents?.slug?.trim() && agents?.description?.trim();
+
 
   const onClick = (name: string, number: string) => {
     if (!number) return;
@@ -106,32 +126,49 @@ const BoxForm: FC<BoxFormProps> = ({ item , employee}) => {
     >
       {/* Agent Info */}
       <div className="flex items-center gap-4 mb-6 p-4 bg-gray-50 change_border">
-       <div className="w-28 h-28 change_border overflow-hidden">
-  <img
-    src={employeeImagesUrl(
-      employee?.profile_picture?.trim()
-        ? employee.profile_picture
-        : "default_employee.png"
-    )}
-    className="w-full h-full object-cover"
-    alt={employee?.name || "Agent"}
-  />
+     <div className="w-28 h-28 change_border overflow-hidden">
+  {shouldLinkAgent ? (
+    <a href={`/team/${agents.slug}`} className="block w-full h-full">
+      <img
+        src={imageSrc}
+        className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition"
+        alt={imageAlt}
+      />
+    </a>
+  ) : (
+    <img
+      src={imageSrc}
+      className="w-full h-full object-cover"
+      alt={imageAlt}
+    />
+  )}
 </div>
 
 
+
         <div className="flex-1">
-          <p className="text-primary text_stying text-sm">
-            <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
-              {t("Name")}:
-            </span>{" "}
-            {employee?.name}
-          </p>
-          <p className="text-primary text_stying text-sm">
-            <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
-              {t("ORN")}:
-            </span>{" "}
-            {employee?.orn && employee.orn != 0 ? employee.orn : "-"}
-          </p>
+         <p className="text-primary text_stying text-sm">
+  <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
+    {t("Name")}:
+  </span>{" "}
+  {agents?.name?.trim()
+    ? agents.name
+    : employee?.name?.trim()
+    ? employee.name
+    : "Agent"}
+</p>
+
+         <p className="text-primary text_stying text-sm">
+  <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
+    {t("ORN")}:
+  </span>{" "}
+  {agents?.orn && agents.orn !== "0" && agents.orn !== 0
+    ? agents.orn
+    : employee?.orn && employee.orn !== "0" && employee.orn !== 0
+    ? employee.orn
+    : "-"}
+</p>
+
           {/* <p className="text-primary text_stying text-sm">
             <span className="font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
               {t("Email")}:

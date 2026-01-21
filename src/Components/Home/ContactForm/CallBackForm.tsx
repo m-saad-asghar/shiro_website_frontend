@@ -78,6 +78,36 @@ const CallBackForm: React.FC = () => {
     setErrors(validate(values));
   };
 
+//   const sendToZapier = async (values: FormValues) => {
+//   const ZAPIER_URL = import.meta.env.VITE_ZAPIER_HOOK as string;
+
+//   if (!ZAPIER_URL) {
+//     throw new Error("Zapier URL missing in env");
+//   }
+
+//   const target_page = window.location.href;
+// const normalizedPhone = normalizePhoneNumber(values.phone);
+//   const params = new URLSearchParams();
+//   params.append("TITLE", "Website Lead");
+//   params.append("NAME", values.name);
+//   params.append("PHONE", normalizedPhone);
+//   params.append("TARGET_PAGE", target_page);
+//   params.append("ORIGIN", "Lead From Call Back Form");
+
+//   const res = await fetch(ZAPIER_URL, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+//     },
+//     body: params.toString(),
+//   });
+
+//   if (!res.ok) {
+//     const text = await res.text().catch(() => "");
+//     throw new Error(`Zapier failed: ${res.status} ${text}`);
+//   }
+// };
+
   const sendToCrm = async (values: typeof initialValues) => {
   try {
     const target_page = window.location.href;
@@ -152,6 +182,13 @@ const CallBackForm: React.FC = () => {
   }
 };
 
+const normalizePhoneNumber = (phone: string) => {
+  if (!phone) return phone;
+  // return phone.replace(/^(\d{1,4})0/, "$1");
+  const cleaned = phone.replace(/^(\d{1,4})0/, "$1");
+   return cleaned.startsWith("+") ? cleaned : `+${cleaned}`;
+};
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -166,9 +203,14 @@ const CallBackForm: React.FC = () => {
 
     if (Object.keys(nextErrors).length > 0) return;
 
+     const normalizedPhone = normalizePhoneNumber(values.phone);
+
     const payload = {
       ...values,
+      phone: normalizedPhone,
       target_page: window.location.href,
+      title: "Website Lead",
+      origin: "Lead From Call Back Form"
     };
 
     setLoading(true);
@@ -188,7 +230,8 @@ const CallBackForm: React.FC = () => {
       const data = await res.json();
 
       if (res.ok && data?.status === 1) {
-         sendToCrm(values);
+        //  await sendToZapier(values);
+        //  sendToCrm(values);
         toast.success(
           "Your Details have been Submitted Successfully. Our Team will Contact you Shortly."
         );

@@ -1,7 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { isPossiblePhoneNumber } from "libphonenumber-js";
+import {
+  isPossiblePhoneNumber,
+  parsePhoneNumberFromString,
+} from "libphonenumber-js";
 import toast from "react-hot-toast";
 
 type FormValues = {
@@ -23,7 +26,22 @@ const initialValues: FormValues = {
   message: "",
 };
 
-const Form: React.FC = () => {
+type PhoneMeta = {
+  iso2: string; // "ae", "us"
+  dialCode: string; // "+971"
+  countryName: string; // "United Arab Emirates"
+};
+
+/**
+ * ✅ UPDATED: accept optional prop from parent
+ * If parent doesn't send => default "" (safe)
+ */
+type FormProps = {
+  project_name?: string;
+  display_name?: string;
+};
+
+const Form: React.FC<FormProps> = ({ project_name = "", display_name= "" }) => {
   const [values, setValues] = useState<FormValues>(initialValues);
 
   // ✅ FIXED: must be inside component + start false
@@ -38,6 +56,13 @@ const Form: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
+
+  // ✅ NEW: keep phone country meta from react-phone-input-2
+  const [phoneMeta, setPhoneMeta] = useState<PhoneMeta>({
+    iso2: "",
+    dialCode: "",
+    countryName: "",
+  });
 
   const containerClass = "w-full space-y-6";
 
@@ -96,100 +121,126 @@ const Form: React.FC = () => {
     setErrors(validate(values));
   };
 
- const sendToZapier = async (values: FormValues) => {
-  const ZAPIER_URL = import.meta.env.VITE_ZAPIER_HOOK as string;
+  // ✅ robust UTM + click id collection
+  const getTrackingParams = () => {
+    const sp = new URLSearchParams(window.location.search);
+    const keys = [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_content",
+      "utm_term",
+      "utm_id",
+      "gclid",
+      "gbraid",
+      "wbraid",
+      "gad_campaignid",
+    ] as const;
 
-  console.log("ZAPIER_URL USED:", ZAPIER_URL); // 🔴 IMPORTANT DEBUG
+    const out: Record<string, string> = {};
+    keys.forEach((k) => {
+      const v = sp.get(k);
+      if (v) out[k] = v;
+    });
 
-  if (!ZAPIER_URL) {
-    throw new Error("Zapier URL missing in env");
-  }
+    return out;
+  };
 
-  const target_page = window.location.href;
+  // ✅ convert phone to proper E.164 (best effort)
+  const toE164 = (rawPhoneDigits: string, iso2?: string) => {
+    if (!rawPhoneDigits) return "";
+    const withPlus = rawPhoneDigits.startsWith("+")
+      ? rawPhoneDigits
+      : `+${rawPhoneDigits}`;
 
-  const params = new URLSearchParams();
-  params.append("TITLE", "Website Lead");
-  params.append("NAME", values.name);
-  params.append("EMAIL", values.email);
-  params.append("PHONE", values.phone);
-  params.append("COMMENTS", values.message || "");
-  params.append("LANGUAGE", values.language);
-  params.append("TARGET_PAGE", target_page);
-  params.append("origin", "Lead From Contact Us Form");
+    const parsed = parsePhoneNumberFromString(
+      withPlus,
+      (iso2 || "").toUpperCase() as any
+    );
 
-  const res = await fetch(ZAPIER_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-    },
-    body: params.toString(),
-  });
+    if (parsed?.isValid()) return parsed.number;
+    return withPlus;
+  };
 
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`Zapier failed: ${res.status} ${text}`);
-  }
-};
+  const sendToZapier = async (values: FormValues, extra?: Record<string, any>) => {
+    const ZAPIER_URL = import.meta.env.VITE_ZAPIER_HOOK as string;
 
+    if (!ZAPIER_URL) {
+      throw new Error("Zapier URL missing in env");
+    }
 
-//   const sendToCrm = async (values: typeof initialValues) => {
-//     try {
-//       const target_page = window.location.href;
+    const target_page = window.location.href;
 
-//         const crmPayload = {
-//   fields: {
-//     TITLE: "Website Lead",
-//     NAME: values.name,
-//     EMAIL: values.email,
-//     PHONE: values.phone,
-//     COMMENTS: values.message,
-//     LANGUAGE: values.language,
-//     TARGET_PAGE: target_page,
-//     origin: "Lead From Contact Us Form",
-//   },
-// };
+    const params = new URLSearchParams();
+    params.append("TITLE", "Website Lead");
+    params.append("NAME", values.name);
+    params.append("EMAIL", values.email);
+    params.append("PHONE", extra?.phone_e164 || normalizePhoneNumber(values.phone));
+    params.append("COMMENTS", values.message || "");
+    params.append("LANGUAGE", values.language);
+    params.append("TARGET_PAGE", target_page);
+    params.append("ORIGIN", "Lead From Contact Us Form");
 
-// //       const crmPayload = {
-// //   fields: {
-// //     TITLE: "Website Lead",
+    // ✅ include project_name for Zapier too
+    params.append("PROJECT_NAME", project_name || "");
+    params.append("DISPLAY_NAME", display_name || "");
 
-// //     NAME: values.name,
+    if (extra) {
+      Object.entries(extra).forEach(([k, v]) => {
+        if (v === undefined || v === null) return;
+        params.append(k, String(v));
+      });
+    }
 
-// //     EMAIL: [
-// //       {
-// //         VALUE: values.email,
-// //         VALUE_TYPE: "WORK",
-// //       },
-// //     ],
+    const res = await fetch(ZAPIER_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+      },
+      body: params.toString(),
+    });
 
-// //     PHONE: [
-// //       {
-// //         VALUE: values.phone,
-// //         VALUE_TYPE: "WORK",
-// //       },
-// //     ],
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(`Zapier failed: ${res.status} ${text}`);
+    }
+  };
 
-// //     COMMENTS: values.message,
+  //   const sendToCrm = async (values: typeof initialValues) => {
+  //     try {
+  //       const target_page = window.location.href;
+  //
+  //         const crmPayload = {
+  //   fields: {
+  //     TITLE: "Website Lead",
+  //     NAME: values.name,
+  //     EMAIL: values.email,
+  //     PHONE: values.phone,
+  //     COMMENTS: values.message,
+  //     LANGUAGE: values.language,
+  //     TARGET_PAGE: target_page,
+  //     origin: "Lead From Contact Us Form",
+  //   },
+  // };
+  //
+  //       const VITE_ZAPIER_HOOK = import.meta.env.VITE_ZAPIER_HOOK;
+  //
+  //       await fetch(VITE_ZAPIER_HOOK, {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Accept: "application/json",
+  //         },
+  //         body: JSON.stringify(crmPayload),
+  //       });
+  //     } catch (e) {}
+  //   };
 
-// //     UF_CRM_1768051861: values.language,
-// //     UF_CRM_1768053169: target_page,
-// //     UF_CRM_1768053313: "Lead From Contact Us Form",
-// //   },
-// // };
-
-
-//       const VITE_ZAPIER_HOOK = import.meta.env.VITE_ZAPIER_HOOK;
-
-//       await fetch(VITE_ZAPIER_HOOK, {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//           Accept: "application/json",
-//         },
-//         body: JSON.stringify(crmPayload),
-//       });
-//     } catch (e) {}
-//   };
+  const normalizePhoneNumber = (phone: string) => {
+    if (!phone) return phone;
+    const cleaned = phone.replace(/^(\d{1,4})0/, "$1");
+    return cleaned.startsWith("+") ? cleaned : `+${cleaned}`;
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -208,9 +259,42 @@ const Form: React.FC = () => {
 
     if (Object.keys(nextErrors).length > 0) return;
 
+    const tracking = getTrackingParams();
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+    const platform = navigator.platform || "";
+    const client_language = navigator.language || "";
+
+    // ✅ phone meta
+    const phone_e164 = toE164(values.phone, phoneMeta.iso2);
+    const phone_country_iso2 = phoneMeta.iso2 || "";
+    const phone_dial_code = phoneMeta.dialCode || "";
+    const phone_country_name = phoneMeta.countryName || "";
+
     const payload = {
       ...values,
+
+      // ✅ include project name always (string)
+      project_name: project_name || "",
+      display_name: display_name || "",
+
+      // ✅ send E.164 separately (best practice)
+      phone: normalizePhoneNumber(values.phone),
+      phone_e164,
+      phone_country_iso2,
+      phone_dial_code,
+      phone_country_name,
+
+      timezone,
+      platform,
+      client_language,
+
+      ...tracking,
+
+      landing_page_url: window.location.href,
+      project_details_url: window.location.href,
       target_page: window.location.href,
+      title_to_api: "Website Lead",
+      origin: "Lead From Contact Us Form",
     };
 
     setLoading(true);
@@ -230,7 +314,9 @@ const Form: React.FC = () => {
       const data = await res.json();
 
       if (res.ok && data?.status === 1) {
-        await sendToZapier(values);
+        // ✅ OPTIONAL: if you want to ALSO send directly to Zapier from frontend
+        // await sendToZapier(values, payload);
+
         // sendToCrm(values);
         toast.success(
           "Your Details have been Submitted Successfully. Our Team will Contact you Shortly."
@@ -244,6 +330,8 @@ const Form: React.FC = () => {
           language: false,
           message: false,
         });
+
+        setPhoneMeta({ iso2: "", dialCode: "", countryName: "" });
       } else {
         toast.error("Something went wrong. Please try again.");
       }
@@ -254,7 +342,6 @@ const Form: React.FC = () => {
     }
   };
 
-  // ✅ FIX: custom language dropdown for mobile (native select popover bug)
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef<HTMLDivElement | null>(null);
 
@@ -329,7 +416,7 @@ const Form: React.FC = () => {
               enableSearch={true}
               searchPlaceholder="Search Country"
               value={values.phone}
-              onChange={(val: string) => {
+              onChange={(val: string, data: any) => {
                 setValues((prev) => {
                   const next = { ...prev, phone: val };
 
@@ -337,8 +424,7 @@ const Form: React.FC = () => {
                     setErrors((prevErrors) => {
                       const nextErrors = { ...prevErrors };
 
-                      if (!val?.trim())
-                        nextErrors.phone = "Phone number is required";
+                      if (!val?.trim()) nextErrors.phone = "Phone number is required";
                       else if (!isPossiblePhoneNumber("+" + val))
                         nextErrors.phone = "Enter a valid phone number";
                       else delete nextErrors.phone;
@@ -349,6 +435,12 @@ const Form: React.FC = () => {
 
                   return next;
                 });
+
+                setPhoneMeta({
+                  iso2: data?.countryCode || "",
+                  dialCode: data?.dialCode ? `+${data.dialCode}` : "",
+                  countryName: data?.name || "",
+                });
               }}
               onBlur={() => {
                 setTouched((prev) => ({ ...prev, phone: true }));
@@ -356,8 +448,7 @@ const Form: React.FC = () => {
                 setErrors((prevErrors) => {
                   const nextErrors = { ...prevErrors };
 
-                  if (!values.phone?.trim())
-                    nextErrors.phone = "Phone number is required";
+                  if (!values.phone?.trim()) nextErrors.phone = "Phone number is required";
                   else if (!isPossiblePhoneNumber("+" + values.phone))
                     nextErrors.phone = "Enter a valid phone number";
                   else delete nextErrors.phone;
@@ -403,13 +494,12 @@ const Form: React.FC = () => {
           ) : null}
         </div>
 
-        {/* Preferred Language (✅ custom dropdown, fixes mobile popover issue) */}
+        {/* Preferred Language */}
         <div className="space-y-2 mb-[15px]" ref={langRef}>
           <label className={labelClass} htmlFor="language">
             Preferred Language
           </label>
 
-          {/* keeps same form field name */}
           <input
             type="hidden"
             id="language"
@@ -429,9 +519,7 @@ const Form: React.FC = () => {
             aria-haspopup="listbox"
             aria-expanded={langOpen}
           >
-            <span
-              className={`${values.language ? "text-[#5E5C59]" : "text-gray-400"}`}
-            >
+            <span className={`${values.language ? "text-[#5E5C59]" : "text-gray-400"}`}>
               {values.language ? values.language : "Select Preferred Language"}
             </span>
             <span className="text-gray-500">▾</span>
@@ -479,15 +567,15 @@ const Form: React.FC = () => {
           <label className={labelClass} htmlFor="message">
             Message
           </label>
-         <textarea
-  id="message"
-  name="message"
-  placeholder="Tell Us About your Requirements and We'll Get Back to you Shortly..."
-  value={values.message}
-  onChange={onChange}
-  onBlur={onBlur}
-  className={`${inputBaseClass} min-h-[160px] resize-y mobile-message-textarea`}
-/>
+          <textarea
+            id="message"
+            name="message"
+            placeholder="Tell Us About your Requirements and We'll Get Back to you Shortly..."
+            value={values.message}
+            onChange={onChange}
+            onBlur={onBlur}
+            className={`${inputBaseClass} min-h-[160px] resize-y mobile-message-textarea`}
+          />
         </div>
 
         {/* Button */}

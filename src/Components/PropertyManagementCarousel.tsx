@@ -26,7 +26,7 @@ const slides: Slide[] = [
   {
     title: "Property Valuation",
     desc: "A Shiro Estate expert conducts a comprehensive assessment and calculates potential rental yield.",
-    img: "property_valuation.webp",
+    img: "property_valuation.jpg",
   },
   {
     title: "Tenant Management",
@@ -36,12 +36,12 @@ const slides: Slide[] = [
   {
     title: "Legal Support",
     desc: "Preparation of lease agreements, assistance with EJARI registration, protection of landlord and tenant rights, and support with lease renewal or termination.",
-    img: "legal_support.jpeg",
+    img: "legal_support.jpg",
   },
   {
     title: "Financial Control & Reporting",
     desc: "Monitoring of rental payments, transparent reports, and a clear income structure. You always know how much your property is earning.",
-    img: "financial_control.png",
+    img: "reporting.jpg",
   },
   {
     title: "Technical Maintenance",

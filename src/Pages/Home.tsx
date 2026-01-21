@@ -58,7 +58,7 @@ const Home = () => {
         </Suspense> */}
 
         <Suspense fallback={<LoadingSkeleton />}>
-          <ContactForm />
+          <ContactForm display_name="contact-us-form-via-home-page-of-website"/>
         </Suspense>
 
         <Suspense fallback={<LoadingSkeleton />}>

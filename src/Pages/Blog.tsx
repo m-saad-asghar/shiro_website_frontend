@@ -27,7 +27,7 @@ const Blog = () => {
         />
 
         {/* Contact Form Section */}
-        <ContactForm />
+        <ContactForm display_name="contact-us-form-via-blogs-page-of-website"/>
 
         {/* Newsletter Section */}
         <StayInTheLoop />

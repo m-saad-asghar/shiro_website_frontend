@@ -245,7 +245,7 @@ const Communities = () => {
           )}
         </section>
 
-        <ContactForm />
+        <ContactForm display_name="contact-us-form-via-communities-page-of-website"/>
       </div>
     </>
   );

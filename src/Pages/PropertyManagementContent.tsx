@@ -2,8 +2,11 @@
 import React from "react";
 import ImagesUrl from "@/helpers/ImagesURL";
 import ServiceImagesUrl from "@/helpers/serviceImagesURL";
+import EnquireNowReactModal from "@/Components/Home/ContactForm/EnquireNowReactModal";
+import { useTranslation } from "react-i18next";
 
 const PropertyManagementContent: React.FC = () => {
+   const { t } = useTranslation();
   return (
     <section className="w-full bg-white">
       <div className="mx-auto py-12 lg:py-20">
@@ -24,7 +27,24 @@ const PropertyManagementContent: React.FC = () => {
             Start with a rental market analysis and find out how much your property can earn today.
             </p>
 
-            <button
+            <EnquireNowReactModal
+  title={t("GET A FREE INCOME ASSESSMENT")}
+  origin={t("Click | Get a Free Income Assessment Button | Property Management Page")}
+  showSuccessToast={true}
+  showErrorToast={true}
+  closeOnSuccess={true}
+  trigger={(open) => (
+    <button
+      type="button"
+      onClick={open}
+      className="mt-10 w-fit bg-[#094834] hover:bg-[#9f8151] text-white font-semibold py-4 px-6 border-radius shadow-lg hover:shadow-xl cursor-pointer transition"
+    >
+      {t("Get a Free Income Assessment")}
+    </button>
+  )}
+/>
+
+            {/* <button
               onClick={() => {
   const section = document.getElementById("list_with_us");
   if (section) {
@@ -35,7 +55,7 @@ const PropertyManagementContent: React.FC = () => {
               className="mt-10 w-fit bg-[#094834] hover:bg-[#9f8151] text-white font-semibold py-4 px-6 border-radius shadow-lg hover:shadow-xl cursor-pointer transition"
             >
               Get a Free Income Assessment
-            </button>
+            </button> */}
           </div>
 
           {/* RIGHT: IMAGE */}

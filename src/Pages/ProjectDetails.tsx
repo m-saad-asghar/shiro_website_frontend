@@ -13,6 +13,7 @@ import ProjectFloorPlan from "./ProjectFloorPlan";
 import UniqueSellingPointsSection from "./UniqueSellingPointsSection";
 import ProjectLocationSection from "./ProjectLocation";
 import ProjectImagesUrl from "@/helpers/projectImagesURL";
+import EnquireNowReactModal from "@/Components/Home/ContactForm/EnquireNowReactModal";
 // Simple service using fetch
 const SingleProjectServices = {
   async fetchProjectBySlug(slug: string) {
@@ -238,7 +239,40 @@ const ProjectDetails = () => {
                 </span>
               </p>
 
-              <button
+              <EnquireNowReactModal
+  title={`${t("DOWNLOAD BROCHURE")}`}
+  origin={`${t("Click | Download Brochure Button | Project Details Page | Project: ")} ${localizedName}`}
+  showSuccessToast={false}   // ✅ no success message
+  showErrorToast={true}      // ✅ show error if something fails
+  closeOnSuccess={true}
+  onSuccess={async () => {
+    // ✅ Start brochure download AFTER successful form submit
+    const url = `${import.meta.env.VITE_API_URL}/download-brochure?project_id=${projects.id}`;
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.setAttribute("download", "");
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }}
+  trigger={(open) => (
+    <button
+      type="button"
+      onClick={open}
+      className="
+        w-fit bg-[#094834] hover:bg-[#9f8151]
+        text-white font-semibold py-4 px-6 change_border
+        shadow-lg hover:shadow-xl cursor-pointer transition
+      "
+    >
+      {t("Download Brochure")}
+    </button>
+  )}
+/>
+
+
+              {/* <button
                 onClick={() => {
                   window.location.href = `${import.meta.env.VITE_API_URL}/download-brochure?project_id=${projects.id}`;
                 }}
@@ -247,7 +281,7 @@ const ProjectDetails = () => {
                 "
               >
                 {t("Download Brochure")}
-              </button>
+              </button> */}
             </div>
           </section>
         )}
@@ -426,7 +460,7 @@ const ProjectDetails = () => {
           <div className="grid grid-cols-12 items-start">
   <div className="col-span-12 md:col-span-12">
  {projects?.payment_plans?.length > 0 && (
-<ProjectPaymentPlan payment_plans={projects?.payment_plans || []} project_payment_plan_description={projects?.project_payment_plan_description || ""} 
+<ProjectPaymentPlan titleName={localizedName} payment_plans={projects?.payment_plans || []} project_payment_plan_description={projects?.project_payment_plan_description || ""} 
 onButtonClick={() => {
     const el = document.getElementById("contactForm");
     if (el) {
@@ -543,7 +577,7 @@ onButtonClick={() => {
         </section>
 
         <div className="half_padding_bottom" id="contactForm">
-          <ContactForm />
+         <ContactForm project_name={localizedName} display_name="contact-us-form-from-project-details-page-of-website"/>
         </div>
       </div>
     </>

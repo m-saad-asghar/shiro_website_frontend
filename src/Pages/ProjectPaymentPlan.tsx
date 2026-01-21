@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import EnquireNowReactModal from "@/Components/Home/ContactForm/EnquireNowReactModal";
+import { useTranslation } from "react-i18next";
 
 type PaymentPlanItem = {
   title: string; // e.g. "10%"
@@ -11,6 +13,7 @@ type PaymentPlanItem = {
 type ProjectPaymentPlanProps = {
   heading?: string;
   buttonText?: string;
+  titleName?: string;
   onButtonClick?: () => void;
   payment_plans?: PaymentPlanItem[];
 
@@ -18,13 +21,17 @@ type ProjectPaymentPlanProps = {
   project_payment_plan_description?: string;
 };
 
+
+
 export default function ProjectPaymentPlan({
   heading = "Payment Plan",
   buttonText = "GET FULL INVESTMENT DETAILS",
+  titleName = "",
   onButtonClick,
   payment_plans = [],
   project_payment_plan_description = "",
 }: ProjectPaymentPlanProps) {
+   const { t } = useTranslation();
   if (!payment_plans?.length) return null;
 
   return (
@@ -47,9 +54,26 @@ export default function ProjectPaymentPlan({
               />
             )}
 
-            <button type="button" className="bg-[#094834] hover:bg-[#9f8151] text-white font-semibold py-4 px-6 rounded-md shadow-lg transition" onClick={onButtonClick}>
+            <EnquireNowReactModal
+  title={`${t("GET FULL INVESTMENT DETAILS")}`}
+  origin={`${t("Click | Get Full Investment Details Button | Project Details Page | Project: ")} ${titleName}`}
+  showSuccessToast={true}
+  showErrorToast={true}
+  closeOnSuccess={true}
+  trigger={(open) => (
+    <button
+      type="button"
+      onClick={open}
+      className="bg-[#094834] hover:bg-[#9f8151] text-white font-semibold py-4 px-6 rounded-md shadow-lg change_border transition"
+    >
+       {buttonText}
+    </button>
+  )}
+/>
+
+            {/* <button type="button" className="bg-[#094834] hover:bg-[#9f8151] text-white font-semibold py-4 px-6 rounded-md shadow-lg transition" onClick={onButtonClick}>
               {buttonText}
-            </button>
+            </button> */}
           </div>
 
           {/* RIGHT */}

@@ -5,6 +5,7 @@ import Icons from "@/Constants/Icons";
 import { Helmet } from "react-helmet";
 import { OurClients } from "@/Sections/Home";
 import ImagesUrl from "@/helpers/ImagesURL";
+import EnquireNowReactModal from "@/Components/Home/ContactForm/EnquireNowReactModal";
 
 const ListYourProperty = () => {
   const { t } = useTranslation();
@@ -47,7 +48,24 @@ const ListYourProperty = () => {
                 </span>
               </p>
 
-              <button
+               <EnquireNowReactModal
+  title={t("LIST YOUR PROPERTY")}
+  origin={t("Click | List Your Property Button | List Your Property Page")}
+  showSuccessToast={true}
+  showErrorToast={true}
+  closeOnSuccess={true}
+  trigger={(open) => (
+    <button
+      type="button"
+      onClick={open}
+      className="w-fit bg-[#094834] hover:bg-[#9f8151] change_border text-white font-semibold py-4 px-6 shadow-lg transition"
+    >
+      {t("List Your Property")}
+    </button>
+  )}
+/>
+
+              {/* <button
         onClick={() => {
   const section = document.getElementById("list_with_us");
   if (section) {
@@ -61,7 +79,7 @@ const ListYourProperty = () => {
                 "
               >
                 {t("List Your Property")}
-              </button>
+              </button> */}
             </div>
           </section>
 
@@ -408,6 +426,7 @@ const ListYourProperty = () => {
                 message={t(
                   "Hello, I have a property that I would like to list with you."
                 )}
+                display_name="contact-us-form-via-list-with-us-page-of-website"
               />
             </motion.div>
           </div>

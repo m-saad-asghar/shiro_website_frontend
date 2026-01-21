@@ -7,6 +7,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import ImagesUrl from "@/helpers/ImagesURL";
+import EnquireNowReactModal from "@/Components/Home/ContactForm/EnquireNowReactModal";
 
 const Devleoper = () => {
   const [value, setValue] = useState<string>("");
@@ -49,7 +50,24 @@ const Devleoper = () => {
             </span>
           </p>
 
-          <button
+       <EnquireNowReactModal
+  title={t("ENQUIRE NOW")}
+  origin={t("Click | Enquire Now Button | Developer Page")}
+  showSuccessToast={true}
+  showErrorToast={true}
+  closeOnSuccess={true}
+  trigger={(open) => (
+    <button
+      type="button"
+      onClick={open}
+      className="w-fit bg-[#094834] hover:bg-[#9f8151] change_border text-white font-semibold py-4 px-6 shadow-lg transition"
+    >
+      {t("Enquire Now")}
+    </button>
+  )}
+/>
+
+          {/* <button
               onClick={() => {
   const section = document.getElementById("list_with_us");
   if (section) {
@@ -59,7 +77,7 @@ const Devleoper = () => {
             className="w-fit bg-[#094834] hover:bg-[#9f8151] text-white font-semibold py-4 px-6 shadow-lg transition"
           >
             {t("Enquire Now")}
-          </button>
+          </button> */}
         </div>
        </div>
       <div className="min-h-screen">
@@ -136,7 +154,7 @@ const Devleoper = () => {
           className="bg-white mb-16"
           id="list_with_us"
         >
-          <ContactForm />
+          <ContactForm display_name="contact-us-form-via-developers-page-of-website"/>
         </motion.div>
 
         {/* Stay In The Loop Section */}

@@ -2,45 +2,48 @@ import { useTranslation } from "react-i18next";
 import { DataSocialMedia } from "../../assets/Data/Home";
 import { Form } from "../../Components/Home";
 
-const ContactForm = () => {
-  const { t } = useTranslation();
 
- const formatUAEPhone = (number: string | null | undefined): string => {
-  if (!number) return "";
-
-  // Remove spaces, dashes, brackets, etc.
-  let cleaned: string = number.replace(/[^0-9+]/g, "");
-
-  // Ensure it starts with +971
-  if (!cleaned.startsWith("+971")) {
-    cleaned = "+971" + cleaned.replace(/^0/, "");
-  }
-
-  // Get the part after +971
-  const rest = cleaned.replace("+971", "");
-
-  // Mobile: +971 58 888 8461  (9 digits after 971)
-  if (rest.length === 9) {
-    const p1 = rest.slice(0, 2); // 58
-    const p2 = rest.slice(2, 5); // 888
-    const p3 = rest.slice(5);    // 8461
-    return `+971 ${p1} ${p2} ${p3}`;
-  }
-
-  // Landline: +971 4 577 6496 (8 digits after 971)
-  if (rest.length === 8) {
-    const p1 = rest.slice(0, 1); // 4
-    const p2 = rest.slice(1, 4); // 577
-    const p3 = rest.slice(4);    // 6496
-    return `+971 ${p1} ${p2} ${p3}`;
-  }
-
-  // Fallback (unknown pattern)
-  return cleaned;
+type ContactFormProps = {
+  project_name?: string;
+  display_name?: string;
 };
 
+const ContactForm: React.FC<ContactFormProps> = ({ project_name, display_name }) => {
+  const { t } = useTranslation();
 
+  const formatUAEPhone = (number: string | null | undefined): string => {
+    if (!number) return "";
 
+    // Remove spaces, dashes, brackets, etc.
+    let cleaned: string = number.replace(/[^0-9+]/g, "");
+
+    // Ensure it starts with +971
+    if (!cleaned.startsWith("+971")) {
+      cleaned = "+971" + cleaned.replace(/^0/, "");
+    }
+
+    // Get the part after +971
+    const rest = cleaned.replace("+971", "");
+
+    // Mobile: +971 58 888 8461 (9 digits after 971)
+    if (rest.length === 9) {
+      const p1 = rest.slice(0, 2); // 58
+      const p2 = rest.slice(2, 5); // 888
+      const p3 = rest.slice(5); // 8461
+      return `+971 ${p1} ${p2} ${p3}`;
+    }
+
+    // Landline: +971 4 577 6496 (8 digits after 971)
+    if (rest.length === 8) {
+      const p1 = rest.slice(0, 1); // 4
+      const p2 = rest.slice(1, 4); // 577
+      const p3 = rest.slice(4); // 6496
+      return `+971 ${p1} ${p2} ${p3}`;
+    }
+
+    // Fallback (unknown pattern)
+    return cleaned;
+  };
 
   const onClick = (title: string, number?: string) => {
     if (title === "WhatsApp") {
@@ -66,39 +69,36 @@ const ContactForm = () => {
     >
       {/* Icon circle */}
       <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
-        <div className="text-[#9f8151] text-xl [&>*]:text-[#9f8151]  [&>*]:stroke-[#9f8151]">
+        <div className="text-[#9f8151] text-xl [&>*]:text-[#9f8151] [&>*]:stroke-[#9f8151]">
           {item.icons}
         </div>
       </div>
 
       {/* Text block */}
       <div className="flex flex-col">
-       <span className="font-semibold text-primary text-[16px]">
-  {item.title}
-</span>
+        <span className="font-semibold text-primary text-[16px]">
+          {item.title}
+        </span>
 
         <span className="text-sm sm:text-base md:text-lg font-medium group-hover:text-[#9f8151] text-[#0b4a35] transition-colors duration-200 down_styling">
-  {(() => {
-    const rawTitle = item.title || "";
-    const title = rawTitle.toLowerCase().trim();
+          {(() => {
+            const rawTitle = item.title || "";
+            const title = rawTitle.toLowerCase().trim();
 
-    const isPhone =
-      title === "phone" ||
-      title === "secondary phone" ||
-      title === "primary phone" ||
-      title.includes("phone") ||
-      title.includes("call");
+            const isPhone =
+              title === "phone" ||
+              title === "secondary phone" ||
+              title === "primary phone" ||
+              title.includes("phone") ||
+              title.includes("call");
 
-    const isWhatsapp =
-      title === "whatsapp" ||
-      title.includes("whatsapp");
+            const isWhatsapp = title === "whatsapp" || title.includes("whatsapp");
 
-    return isPhone || isWhatsapp
-      ? formatUAEPhone(String(item.desc || ""))
-      : item.desc;
-  })()}
-</span>
-
+            return isPhone || isWhatsapp
+              ? formatUAEPhone(String(item.desc || ""))
+              : item.desc;
+          })()}
+        </span>
       </div>
     </button>
   ));
@@ -110,17 +110,19 @@ const ContactForm = () => {
     >
       <div className="custom_container mx-auto px-4 w-full max-w-full overflow-x-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-          {/* LEFT SIDE – Heading + contact details (Provident-style) */}
+          {/* LEFT SIDE – Heading + contact details */}
           <div className="space-y-8">
             <div className="space-y-4 contact_us_wrapper">
-               <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
-           {t("Speak with our Real Estate specialists today")}
-          </h1>
-          <p className="down_styling para_styling">
+              <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+                {t("Speak with our Real Estate specialists today")}
+              </h1>
+
+              <p className="down_styling para_styling">
                 {t(
                   "Get in touch for tailored guidance from our expert team. We're committed to assisting you through each phase of your journey."
                 )}
-</p>
+              </p>
+
               {/* <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
                 {t(
                   "Get in touch for tailored guidance from our expert team. We're committed to assisting you through each phase of your journey."
@@ -128,104 +130,99 @@ const ContactForm = () => {
               </p> */}
             </div>
 
-           <div className="space-y-5 sm:space-y-6">
-  {renderSocialMedia}
+            <div className="space-y-5 sm:space-y-6">
+              {renderSocialMedia}
 
-  {/* ================= OFFICE HOURS ================= */}
-  <div className="w-fit flex items-start gap-4 text-left">
-    {/* Icon */}
-    <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
-     <div className="text-[#9f8151]">
- <svg
-  xmlns="http://www.w3.org/2000/svg"
-  width="32"
-  height="32"
-  viewBox="0 0 24 24"
-  fill="none"
->
-  {/* Watch body */}
-  <circle
-    cx="12"
-    cy="12"
-    r="7"
-    stroke="#9f8151"
-    strokeWidth="2"
-  />
+              {/* ================= OFFICE HOURS ================= */}
+              <div className="w-fit flex items-start gap-4 text-left">
+                {/* Icon */}
+                <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
+                  <div className="text-[#9f8151]">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="32"
+                      height="32"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      {/* Watch body */}
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="7"
+                        stroke="#9f8151"
+                        strokeWidth="2"
+                      />
+                      {/* Hour hand */}
+                      <path
+                        d="M12 12V8"
+                        stroke="#9f8151"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                      {/* Minute hand */}
+                      <path
+                        d="M12 12L15 14"
+                        stroke="#9f8151"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                      {/* Top strap */}
+                      <path
+                        d="M9 2h6"
+                        stroke="#9f8151"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                      {/* Bottom strap */}
+                      <path
+                        d="M9 22h6"
+                        stroke="#9f8151"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
 
-  {/* Hour hand */}
-  <path
-    d="M12 12V8"
-    stroke="#9f8151"
-    strokeWidth="2"
-    strokeLinecap="round"
-  />
+                {/* Text */}
+                <div className="flex flex-col">
+                  <span className="font-semibold text-primary text-[16px]">
+                    {t("Office Hours")}
+                  </span>
 
-  {/* Minute hand */}
-  <path
-    d="M12 12L15 14"
-    stroke="#9f8151"
-    strokeWidth="2"
-    strokeLinecap="round"
-  />
-
-  {/* Top strap */}
-  <path
-    d="M9 2h6"
-    stroke="#9f8151"
-    strokeWidth="2"
-    strokeLinecap="round"
-  />
-
-  {/* Bottom strap */}
-  <path
-    d="M9 22h6"
-    stroke="#9f8151"
-    strokeWidth="2"
-    strokeLinecap="round"
-  />
-</svg>
-
-</div>
-
-    </div>
-
-    {/* Text */}
-    <div className="flex flex-col">
-      <span className="font-semibold text-primary text-[16px]">
-        {t("Office Hours")}
-      </span>
-
-      <span className="text-sm sm:text-base md:text-lg font-medium text-[#0b4a35] down_styling leading-relaxed">
-        {t("Monday – Friday: 9:00 AM – 6:00 PM")}
-        <br />
-        {t("Saturday: 11:00 AM – 3:00 PM")}
-        <br />
-        {t("Sunday: Closed")}
-      </span>
-    </div>
-  </div>
-</div>
-
+                  <span className="text-sm sm:text-base md:text-lg font-medium text-[#0b4a35] down_styling leading-relaxed">
+                    {t("Monday – Friday: 9:00 AM – 6:00 PM")}
+                    <br />
+                    {t("Saturday: 11:00 AM – 3:00 PM")}
+                    <br />
+                    {t("Sunday: Closed")}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* RIGHT SIDE – Form card */}
           <div className="bg-white change_border border border-gray-100 shadow-lg p-6 sm:p-8 lg:p-10">
             <div className="mb-4 sm:mb-6">
-               <h1 className="font-semibold text-primary text-2xl">
-           {t("GET IN TOUCH")}
-          </h1>
-              {/* <h3 className="text-xl sm:text-2xl font-bold text-[#094834] mb-2">
-                {t("Get In Touch")}
-              </h3> */}
-                <p className="rounded-lg text-sm transition-all duration-200 mb-1 mt-1 text-[#9f8151] text_stying">
+              <h1 className="font-semibold text-primary text-2xl">
+                {t("GET IN TOUCH")}
+              </h1>
+
+              <p className="rounded-lg text-sm transition-all duration-200 mb-1 mt-1 text-[#9f8151] text_stying">
                 {t("Fill out the form below and we'll get back to you shortly")}
-</p>
+              </p>
+
               {/* <p className="text-sm sm:text-base text-gray-600">
                 {t("Fill out the form below and we'll get back to you shortly")}
               </p> */}
             </div>
 
-            <Form />
+            <Form 
+            project_name={project_name ?? ""} 
+            display_name={display_name ?? ""}
+            />
           </div>
         </div>
       </div>
