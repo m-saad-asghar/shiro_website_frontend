@@ -1,7 +1,10 @@
 import React, { useMemo, useState } from "react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { isPossiblePhoneNumber } from "libphonenumber-js";
+import {
+  isPossiblePhoneNumber,
+  parsePhoneNumberFromString,
+} from "libphonenumber-js";
 import toast from "react-hot-toast";
 
 type FormValues = {
@@ -17,10 +20,19 @@ const initialValues: FormValues = {
   phone: "",
 };
 
-const CallBackForm: React.FC = () => {
+type PhoneMeta = {
+  iso2: string; // "ae", "us"
+  dialCode: string; // "+971"
+  countryName: string; // "United Arab Emirates"
+};
+
+type CallBackFormProps = {
+  display_name?: string;
+};
+
+const CallBackForm: React.FC<CallBackFormProps> = ({ display_name = "" }) => {
   const [values, setValues] = useState<FormValues>(initialValues);
 
-  // ✅ FIXED: must be inside component + start false
   const [loading, setLoading] = useState<boolean>(false);
 
   const [touched, setTouched] = useState<FormTouched>({
@@ -29,6 +41,13 @@ const CallBackForm: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
+
+  // ✅ NEW: keep phone country meta (NO UI/CSS change)
+  const [phoneMeta, setPhoneMeta] = useState<PhoneMeta>({
+    iso2: "",
+    dialCode: "",
+    countryName: "",
+  });
 
   const containerClass = "w-full space-y-6";
 
@@ -78,116 +97,53 @@ const CallBackForm: React.FC = () => {
     setErrors(validate(values));
   };
 
-//   const sendToZapier = async (values: FormValues) => {
-//   const ZAPIER_URL = import.meta.env.VITE_ZAPIER_HOOK as string;
+  // ✅ SAME as reference
+  const getTrackingParams = () => {
+    const sp = new URLSearchParams(window.location.search);
+    const keys = [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_content",
+      "utm_term",
+      "utm_id",
+      "gclid",
+      "gbraid",
+      "wbraid",
+      "gad_campaignid",
+    ] as const;
 
-//   if (!ZAPIER_URL) {
-//     throw new Error("Zapier URL missing in env");
-//   }
-
-//   const target_page = window.location.href;
-// const normalizedPhone = normalizePhoneNumber(values.phone);
-//   const params = new URLSearchParams();
-//   params.append("TITLE", "Website Lead");
-//   params.append("NAME", values.name);
-//   params.append("PHONE", normalizedPhone);
-//   params.append("TARGET_PAGE", target_page);
-//   params.append("ORIGIN", "Lead From Call Back Form");
-
-//   const res = await fetch(ZAPIER_URL, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-//     },
-//     body: params.toString(),
-//   });
-
-//   if (!res.ok) {
-//     const text = await res.text().catch(() => "");
-//     throw new Error(`Zapier failed: ${res.status} ${text}`);
-//   }
-// };
-
-  const sendToCrm = async (values: typeof initialValues) => {
-  try {
-    const target_page = window.location.href;
-
-     const crmPayload = {
-  fields: {
-    TITLE: "Website Lead",
-
-    NAME: values.name,
-
-    EMAIL: [
-      {
-        VALUE: "",
-        VALUE_TYPE: "WORK",
-      },
-    ],
-
-    PHONE: [
-      {
-        VALUE: values.phone,
-        VALUE_TYPE: "WORK",
-      },
-    ],
-
-    COMMENTS: "",
-
-    UF_CRM_1768051861: "",
-    UF_CRM_1768053169: target_page,
-    UF_CRM_1768053313: "Lead From Call Back Form",
-  },
-};
-
-    // const crmPayload = {
-    //   fields: {
-    //     TITLE: "Lead From Website Callback Form",
-    //     UF_CRM_1760777561731: target_page,
-    //     NAME: values.name,
-    //     PHONE_TEXT: values.phone,
-    //     PHONE: [
-    //       {
-    //         VALUE: values.phone,
-    //         VALUE_TYPE: "WORK",
-    //       },
-    //     ],
-    //     EMAIL: [
-    //       {
-    //         VALUE: "",
-    //         VALUE_TYPE: "WORK",
-    //       },
-    //     ],
-    //     SOURCE_DESCRIPTION: "",
-    //     SOURCE_ID: "WEB",
-    //     ASSIGNED_BY_ID: 25,
-    //     UF_CRM_1754652292782: target_page,
-    //     UF_CRM_1761206533: "",
-    //   },
-    //   params: {
-    //     REGISTER_SONET_EVENT: "Y",
-    //   },
-    // };
-    const CRM_URL = import.meta.env.VITE_CRM_URL;
-
-    await fetch(CRM_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(crmPayload),
+    const out: Record<string, string> = {};
+    keys.forEach((k) => {
+      const v = sp.get(k);
+      if (v) out[k] = v;
     });
-  } catch (e) {
-  }
-};
 
-const normalizePhoneNumber = (phone: string) => {
-  if (!phone) return phone;
-  // return phone.replace(/^(\d{1,4})0/, "$1");
-  const cleaned = phone.replace(/^(\d{1,4})0/, "$1");
-   return cleaned.startsWith("+") ? cleaned : `+${cleaned}`;
-};
+    return out;
+  };
+
+  // ✅ SAME as reference
+  const normalizePhoneNumber = (phone: string) => {
+    if (!phone) return phone;
+    const cleaned = phone.replace(/^(\d{1,4})0/, "$1");
+    return cleaned.startsWith("+") ? cleaned : `+${cleaned}`;
+  };
+
+  // ✅ SAME as reference
+  const toE164 = (rawPhoneDigits: string, iso2?: string) => {
+    if (!rawPhoneDigits) return "";
+    const withPlus = rawPhoneDigits.startsWith("+")
+      ? rawPhoneDigits
+      : `+${rawPhoneDigits}`;
+
+    const parsed = parsePhoneNumberFromString(
+      withPlus,
+      (iso2 || "").toUpperCase() as any
+    );
+
+    if (parsed?.isValid()) return parsed.number;
+    return withPlus;
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -203,14 +159,47 @@ const normalizePhoneNumber = (phone: string) => {
 
     if (Object.keys(nextErrors).length > 0) return;
 
-     const normalizedPhone = normalizePhoneNumber(values.phone);
+    // ✅ tracking/meta exactly like reference form
+    const tracking = getTrackingParams();
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+    const platform = navigator.platform || "";
+    const client_language = navigator.language || "";
+
+    // ✅ phone meta + e164 like reference
+    const phone_e164 = toE164(values.phone, phoneMeta.iso2);
+    const phone_country_iso2 = phoneMeta.iso2 || "";
+    const phone_dial_code = phoneMeta.dialCode || "";
+    const phone_country_name = phoneMeta.countryName || "";
 
     const payload = {
       ...values,
-      phone: normalizedPhone,
+
+      // ✅ keep same normalization behavior
+      phone: normalizePhoneNumber(values.phone),
+
+      // ✅ include display_name (keep)
+      display_name: display_name || "",
+
+      // ✅ include all phone extras (same keys as reference)
+      phone_e164,
+      phone_country_iso2,
+      phone_dial_code,
+      phone_country_name,
+
+      // ✅ include meta
+      timezone,
+      platform,
+      client_language,
+
+      // ✅ include tracking
+      ...tracking,
+
+      // ✅ include URLs + labels (same keys as reference)
+      landing_page_url: window.location.href,
+      project_details_url: window.location.href,
       target_page: window.location.href,
-      title: "Website Lead",
-      origin: "Lead From Call Back Form"
+      title_to_api: "Website Lead",
+      origin: "Lead From Call Back Form",
     };
 
     setLoading(true);
@@ -230,8 +219,6 @@ const normalizePhoneNumber = (phone: string) => {
       const data = await res.json();
 
       if (res.ok && data?.status === 1) {
-        //  await sendToZapier(values);
-        //  sendToCrm(values);
         toast.success(
           "Your Details have been Submitted Successfully. Our Team will Contact you Shortly."
         );
@@ -241,6 +228,9 @@ const normalizePhoneNumber = (phone: string) => {
           name: false,
           phone: false,
         });
+
+        // ✅ reset phone meta (NO UI change)
+        setPhoneMeta({ iso2: "", dialCode: "", countryName: "" });
       } else {
         toast.error("Something went wrong. Please try again.");
       }
@@ -289,7 +279,7 @@ const normalizePhoneNumber = (phone: string) => {
               enableSearch={true}
               searchPlaceholder="Search Country"
               value={values.phone}
-              onChange={(val: string) => {
+              onChange={(val: string, data: any) => {
                 setValues((prev) => {
                   const next = { ...prev, phone: val };
 
@@ -308,6 +298,13 @@ const normalizePhoneNumber = (phone: string) => {
                   }
 
                   return next;
+                });
+
+                // ✅ capture phone meta (NO UI/CSS change)
+                setPhoneMeta({
+                  iso2: data?.countryCode || "",
+                  dialCode: data?.dialCode ? `+${data.dialCode}` : "",
+                  countryName: data?.name || "",
                 });
               }}
               onBlur={() => {

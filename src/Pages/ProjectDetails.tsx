@@ -241,6 +241,8 @@ const ProjectDetails = () => {
 
               <EnquireNowReactModal
   title={`${t("DOWNLOAD BROCHURE")}`}
+  display_name="download-brochure-click-from-project-details-page"
+  project_name={localizedName}
   origin={`${t("Click | Download Brochure Button | Project Details Page | Project: ")} ${localizedName}`}
   showSuccessToast={false}   // ✅ no success message
   showErrorToast={true}      // ✅ show error if something fails

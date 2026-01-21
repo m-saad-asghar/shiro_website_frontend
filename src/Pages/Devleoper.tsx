@@ -52,6 +52,8 @@ const Devleoper = () => {
 
        <EnquireNowReactModal
   title={t("ENQUIRE NOW")}
+  display_name="enquire-now-button-click-from-developers-page"
+  project_name=""
   origin={t("Click | Enquire Now Button | Developer Page")}
   showSuccessToast={true}
   showErrorToast={true}

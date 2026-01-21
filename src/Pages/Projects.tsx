@@ -330,6 +330,7 @@ const Projects = () => {
                   viewMode={"list"}
                   page={page}
                   setPage={setPage}
+                  display_name="callback-form-via-offplan-page-of-website"
                 />
               </div>
             )}

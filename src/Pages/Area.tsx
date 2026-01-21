@@ -77,6 +77,8 @@ const AreaPage = () => {
 
           <EnquireNowReactModal
   title={t("ENQUIRE NOW")}
+  display_name="enquire-now-button-click-from-areas-page"
+  project_name=""
   origin={t("Click | Enquire Now Button | Area Page")}
   showSuccessToast={true}
   showErrorToast={true}

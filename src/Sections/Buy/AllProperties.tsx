@@ -11,6 +11,7 @@ type AllPropertiesProps = {
   viewMode?: "grid" | "list";
   page?: number;
   setPage?: (page: number) => void;
+  display_name?: string;
 };
 
 const AllProperties: FC<AllPropertiesProps> = ({
@@ -20,6 +21,7 @@ const AllProperties: FC<AllPropertiesProps> = ({
   viewMode = "list",
   page = 1,
   setPage,
+  display_name,
 }) => {
   // for pagination - use local state if setPage not provided
   const [localPage, setLocalPage] = useState<number>(1);
@@ -72,7 +74,7 @@ const AllProperties: FC<AllPropertiesProps> = ({
           </div>
         </div>
         <div>
-          <FormBox />
+          <FormBox display_name={display_name ?? ""} />
         </div>
       </div>
     </div>

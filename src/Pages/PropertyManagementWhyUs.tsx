@@ -57,6 +57,8 @@ const PropertyManagementWhyUs: React.FC = () => {
 
      <EnquireNowReactModal
   title={t("CONTACT US")}
+  display_name="contact-us-button-click-from-property-management-page"
+  project_name=""
   origin={t("Click | Contact Us Button | Property Management Page")}
   showSuccessToast={true}
   showErrorToast={true}

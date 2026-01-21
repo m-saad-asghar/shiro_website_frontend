@@ -11,9 +11,14 @@ import CallBackForm from "@/Components/Home/ContactForm/CallBackForm";
 const initialValues = {
   name: "",
   phone: "",
+  display_name: ""
 };
 
-const FormBox = () => {
+type FormBoxProps = {
+  display_name?: string;
+};
+
+const FormBox: React.FC<FormBoxProps> = ({ display_name = "" }) => {
   const { t } = useTranslation();
 
   const { mutateAsync } = UseQueryPost(
@@ -53,7 +58,7 @@ const FormBox = () => {
         </p>
       </div>
 
-      <CallBackForm />
+      <CallBackForm display_name={display_name}  />
 
       {/* Form */}
       {/* <FormikContainer

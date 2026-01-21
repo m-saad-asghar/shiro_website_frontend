@@ -56,6 +56,8 @@ export default function ProjectPaymentPlan({
 
             <EnquireNowReactModal
   title={`${t("GET FULL INVESTMENT DETAILS")}`}
+  display_name="get-full-investement-button-click-from-project-details-page"
+  project_name={titleName}
   origin={`${t("Click | Get Full Investment Details Button | Project Details Page | Project: ")} ${titleName}`}
   showSuccessToast={true}
   showErrorToast={true}

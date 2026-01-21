@@ -75,6 +75,8 @@ const ShiroServices = () => {
 
           <EnquireNowReactModal
   title={t("ENQUIRE NOW")}
+  display_name="enquire-now-button-click-from-services-page"
+  project_name=""
   origin={t("Click | Enquire Now Button | Services Page")}
   showSuccessToast={true}
   showErrorToast={true}

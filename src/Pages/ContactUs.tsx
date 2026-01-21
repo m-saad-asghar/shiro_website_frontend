@@ -54,6 +54,8 @@ const ContactUs = () => {
 
           <EnquireNowReactModal
   title={t("ENQUIRE NOW")}
+  display_name="enquire-now-button-click-from-contact-us-page"
+  project_name=""
   origin={t("Click | Enquire Now Button | Contact Page")}
   showSuccessToast={true}
   showErrorToast={true}

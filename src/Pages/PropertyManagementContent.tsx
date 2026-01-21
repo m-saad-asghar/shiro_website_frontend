@@ -29,6 +29,8 @@ const PropertyManagementContent: React.FC = () => {
 
             <EnquireNowReactModal
   title={t("GET A FREE INCOME ASSESSMENT")}
+  display_name="get-free-income-assessment-button-click-from-property-management-page"
+  project_name=""
   origin={t("Click | Get a Free Income Assessment Button | Property Management Page")}
   showSuccessToast={true}
   showErrorToast={true}

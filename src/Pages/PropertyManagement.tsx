@@ -103,6 +103,8 @@ const PropertyManagement = () => {
 
           <EnquireNowReactModal
   title={t("ENQUIRE NOW")}
+    display_name="enquire-now-button-click-from-property-management-page"
+  project_name=""
   origin={t("Click | Enquire Now Button | Developer Page")}
   showSuccessToast={true}
   showErrorToast={true}

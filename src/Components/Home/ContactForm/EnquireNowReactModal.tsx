@@ -2,7 +2,10 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import ReactModal from "react-modal";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { isPossiblePhoneNumber } from "libphonenumber-js";
+import {
+  isPossiblePhoneNumber,
+  parsePhoneNumberFromString,
+} from "libphonenumber-js";
 import toast from "react-hot-toast";
 
 type FormValues = {
@@ -24,9 +27,19 @@ const initialValues: FormValues = {
   message: "",
 };
 
+type PhoneMeta = {
+  iso2: string;
+  dialCode: string;
+  countryName: string;
+};
+
 type EnquireNowReactModalProps = {
   title?: string;
   origin?: string;
+
+  // ✅ NEW (optional)
+  display_name?: string;
+  project_name?: string;
 
   trigger: (open: () => void) => React.ReactNode;
   maxWidthPx?: number;
@@ -44,6 +57,11 @@ type EnquireNowReactModalProps = {
 const EnquireNowReactModal: React.FC<EnquireNowReactModalProps> = ({
   title = "Enquire Now",
   origin = "Lead From Contact Us Form",
+
+  // ✅ NEW (default to "")
+  display_name = "",
+  project_name = "",
+
   trigger,
   maxWidthPx = 750,
 
@@ -78,36 +96,60 @@ const EnquireNowReactModal: React.FC<EnquireNowReactModalProps> = ({
 
   const [errors, setErrors] = useState<FormErrors>({});
 
-  const sendToZapier = async (vals: FormValues) => {
-  const ZAPIER_URL = import.meta.env.VITE_ZAPIER_HOOK as string;
-  if (!ZAPIER_URL) throw new Error("Zapier URL missing");
-
-  const target_page = window.location.href;
-
-  const params = new URLSearchParams();
-  params.append("TITLE", "Website Lead");
-  params.append("NAME", vals.name);
-  params.append("EMAIL", vals.email);
-  params.append("PHONE", vals.phone);
-  params.append("COMMENTS", vals.message || "");
-  params.append("LANGUAGE", vals.language);
-  params.append("TARGET_PAGE", target_page);
-  params.append("ORIGIN", origin || "");
-
-  const res = await fetch(ZAPIER_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-    },
-    body: params.toString(),
+  // ✅ NEW: phone meta like reference code (NO UI/CSS change)
+  const [phoneMeta, setPhoneMeta] = useState<PhoneMeta>({
+    iso2: "",
+    dialCode: "",
+    countryName: "",
   });
 
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`Zapier failed: ${res.status} ${text}`);
-  }
-};
+  // ✅ robust UTM + click id collection (same as reference)
+  const getTrackingParams = () => {
+    const sp = new URLSearchParams(window.location.search);
+    const keys = [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_content",
+      "utm_term",
+      "utm_id",
+      "gclid",
+      "gbraid",
+      "wbraid",
+      "gad_campaignid",
+    ] as const;
 
+    const out: Record<string, string> = {};
+    keys.forEach((k) => {
+      const v = sp.get(k);
+      if (v) out[k] = v;
+    });
+
+    return out;
+  };
+
+  // ✅ normalize phone (same as reference)
+  const normalizePhoneNumber = (phone: string) => {
+    if (!phone) return phone;
+    const cleaned = phone.replace(/^(\d{1,4})0/, "$1");
+    return cleaned.startsWith("+") ? cleaned : `+${cleaned}`;
+  };
+
+  // ✅ E.164 (same as reference)
+  const toE164 = (rawPhoneDigits: string, iso2?: string) => {
+    if (!rawPhoneDigits) return "";
+    const withPlus = rawPhoneDigits.startsWith("+")
+      ? rawPhoneDigits
+      : `+${rawPhoneDigits}`;
+
+    const parsed = parsePhoneNumberFromString(
+      withPlus,
+      (iso2 || "").toUpperCase() as any
+    );
+
+    if (parsed?.isValid()) return parsed.number;
+    return withPlus;
+  };
 
   const validate = (vals: FormValues): FormErrors => {
     const e: FormErrors = {};
@@ -172,8 +214,49 @@ const EnquireNowReactModal: React.FC<EnquireNowReactModalProps> = ({
     const nextErrors = validate(values);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
-const title_to_api = "Website Lead"
-    const payload = { ...values, target_page: window.location.href, origin, title_to_api };
+
+    // ✅ meta/tracking (same as reference Form.tsx)
+    const tracking = getTrackingParams();
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+    const platform = navigator.platform || "";
+    const client_language = navigator.language || "";
+
+    const phone_e164 = toE164(values.phone, phoneMeta.iso2);
+    const phone_country_iso2 = phoneMeta.iso2 || "";
+    const phone_dial_code = phoneMeta.dialCode || "";
+    const phone_country_name = phoneMeta.countryName || "";
+
+    const title_to_api = "Website Lead";
+
+    const payload = {
+      ...values,
+
+      // ✅ new optional props (send if given else "")
+      display_name: display_name || "",
+      project_name: project_name || "",
+
+      // ✅ phone normalization + extras
+      phone: normalizePhoneNumber(values.phone),
+      phone_e164,
+      phone_country_iso2,
+      phone_dial_code,
+      phone_country_name,
+
+      // ✅ client meta
+      timezone,
+      platform,
+      client_language,
+
+      // ✅ tracking
+      ...tracking,
+
+      // ✅ urls + labels
+      landing_page_url: window.location.href,
+      project_details_url: window.location.href,
+      target_page: window.location.href,
+      origin,
+      title_to_api,
+    };
 
     setLoading(true);
 
@@ -181,6 +264,7 @@ const title_to_api = "Website Lead"
       const BASE_URL = import.meta.env.VITE_API_URL as string;
       if (!BASE_URL) throw new Error("VITE_API_URL missing in env");
 
+      // ✅ ONLY backend call (Zapier removed from frontend)
       const res = await fetch(`${BASE_URL}/form_submission`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
@@ -190,14 +274,9 @@ const title_to_api = "Website Lead"
       const data = await res.json().catch(() => null);
 
       if (res.ok && data?.status === 1) {
-                    if (sendToZapier) {
-    await sendToZapier(values);
-  }
-
         if (showSuccessToast) toast.success(successMessage);
         if (onSuccess) await onSuccess({ values, close });
 
-        // reset form
         setValues(initialValues);
         setErrors({});
         setTouched({
@@ -207,6 +286,9 @@ const title_to_api = "Website Lead"
           language: false,
           message: false,
         });
+
+        // ✅ reset phone meta (no UI change)
+        setPhoneMeta({ iso2: "", dialCode: "", countryName: "" });
 
         if (closeOnSuccess) close();
       } else {
@@ -339,7 +421,7 @@ const title_to_api = "Website Lead"
                     enableSearch={true}
                     searchPlaceholder="Search Country"
                     value={values.phone}
-                    onChange={(val: string) => {
+                    onChange={(val: string, data: any) => {
                       setValues((prev) => {
                         const next = { ...prev, phone: val };
 
@@ -357,6 +439,13 @@ const title_to_api = "Website Lead"
                         }
 
                         return next;
+                      });
+
+                      // ✅ capture phone meta (no UI/CSS change)
+                      setPhoneMeta({
+                        iso2: data?.countryCode || "",
+                        dialCode: data?.dialCode ? `+${data.dialCode}` : "",
+                        countryName: data?.name || "",
                       });
                     }}
                     onBlur={() => {

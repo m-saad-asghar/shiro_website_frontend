@@ -332,6 +332,7 @@ const Rent = () => {
                   viewMode={"list"}
                   page={page}
                   setPage={setPage}
+                  display_name="callback-form-via-rent-page-of-website"
                 />
               </div>
             )}

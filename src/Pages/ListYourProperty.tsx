@@ -50,6 +50,8 @@ const ListYourProperty = () => {
 
                <EnquireNowReactModal
   title={t("LIST YOUR PROPERTY")}
+  display_name="enquire-now-button-click-from-list-with-us-page"
+  project_name=""
   origin={t("Click | List Your Property Button | List Your Property Page")}
   showSuccessToast={true}
   showErrorToast={true}
