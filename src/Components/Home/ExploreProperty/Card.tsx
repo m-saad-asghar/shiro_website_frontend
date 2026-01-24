@@ -405,7 +405,7 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
                 style={{ marginBottom: "0px" }}
               >
                 <div className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
-                  {item?.property_type?.name || t("Apartment")}
+                 {item?.property_type ? item.property_type : t("Apartment")}
                 </div>
 
                 <div className="flex items-center gap-2 text-sm text-gray-700">
@@ -414,15 +414,33 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
                     className="w-4 h-4"
                     alt="Beds"
                   />
-                  <span className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
-                    {item?.bedrooms == "Studio"
-                      ? t("Studio")
-                      : `${item?.bedrooms} ${
-                          Number(item?.bedrooms) == 1
-                            ? t("Bedroom")
-                            : t("Bedrooms")
-                        }`}
-                  </span>
+                <span className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
+  {item?.property_type === "Residential Land" ? (
+    "-"
+  ) : (() => {
+      const bedrooms = item?.bedrooms;
+
+      if (
+        bedrooms === 0 ||
+        bedrooms === "0" ||
+        bedrooms === "Studio" ||
+        bedrooms === "studio"
+      ) {
+        return t("Studio");
+      }
+
+      const numBedrooms = Number(bedrooms);
+
+      if (!Number.isFinite(numBedrooms)) {
+        return "-";
+      }
+
+      return `${numBedrooms} ${
+        numBedrooms === 1 ? t("Bedroom") : t("Bedrooms")
+      }`;
+    })()}
+</span>
+
                 </div>
 
                 <div className="flex items-center gap-2 text-sm text-gray-700">
@@ -432,10 +450,22 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
                     alt="Bath"
                   />
                   <span className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
-                    {Number(item?.bathrooms) === 1
-                      ? `1 ${t("Bathroom")}`
-                      : `${item?.bathrooms} ${t("Bathrooms")}`}
-                  </span>
+  {item?.property_type === "Residential Land" ? (
+    "-"
+  ) : (() => {
+      const bathrooms = item?.bathrooms;
+      const numBathrooms = Number(bathrooms);
+
+      if (!Number.isFinite(numBathrooms) || numBathrooms <= 0) {
+        return "-";
+      }
+
+      return numBathrooms === 1
+        ? `1 ${t("Bathroom")}`
+        : `${numBathrooms} ${t("Bathrooms")}`;
+    })()}
+</span>
+
                 </div>
 
                 <div className="flex items-center gap-2 text-sm text-gray-700">

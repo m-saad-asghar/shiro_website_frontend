@@ -6,9 +6,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/Components/ui/accordion";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 import Icons from "@/Constants/Icons";
 import Images from "@/Constants/Images";
@@ -26,22 +26,33 @@ const Footer = () => {
   const { data: contact } = useQueryGet(["contact"], StaticServices.contact);
   const rawPhone = String(contact?.contact_info?.phone ?? "");
   const spacedPhone = rawPhone.replace(
-  /^(\+\d{3})(\d)(\d{3})(\d{4})$/,
-  "$1 $2 $3 $4"
-);
+    /^(\+\d{3})(\d)(\d{3})(\d{4})$/,
+    "$1 $2 $3 $4"
+  );
 
+  // ✅ helper: internal vs external navigation (Career opens correct)
+  const goToLink = (link?: string, external?: boolean, target?: string) => {
+    if (!link) return;
 
+    const isHttp = /^https?:\/\//i.test(link);
+    const shouldOpenExternal = external || isHttp;
+
+    if (shouldOpenExternal) {
+      window.open(link, target || "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    navigate(link);
+  };
 
   // ✅ Get footer items once
   const footerItems = FooterItem();
 
   // ✅ Collect ONLY "Popular Searches" options from all footer sections
-  // (assumes all columns are meant to be under one heading like your screenshot)
   const popularSearchOptions = footerItems.flatMap((section) => section.option);
 
   const renderItem = (
     <div className={isMobile ? "" : "space-y-4"}>
-      {/* ✅ Single heading (NOT repeated) */}
       {isMobile ? (
         <Accordion
           type="single"
@@ -54,7 +65,7 @@ const Footer = () => {
             </AccordionTrigger>
 
             <AccordionContent className="mt-2 space-y-2">
-              {popularSearchOptions.map((li) => (
+              {popularSearchOptions.map((li: any) => (
                 <motion.li
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -62,16 +73,19 @@ const Footer = () => {
                   className="footer_text_styling footer_text_styling_hover text-sm text-gray-300 list-none font-normal hover:text-[#d3c294] duration-300 cursor-pointer transition-all py-1"
                   key={li.id}
                   onClick={() => {
-                    if ((li as any)?.property_type_id) {
-                      navigate(li?.link, {
+                    // ✅ property type navigation (internal)
+                    if (li?.property_type_id) {
+                      navigate(li.link, {
                         state: {
-                          property_type_id: (li as any).property_type_id,
+                          property_type_id: li.property_type_id,
                           property_name: li.item,
                         },
                       });
-                    } else {
-                      navigate(li?.link);
+                      return;
                     }
+
+                    // ✅ external/open-new-tab support (Career)
+                    goToLink(li.link, li.external, li.target);
                   }}
                 >
                   {li.item}
@@ -86,23 +100,25 @@ const Footer = () => {
             Popular Searches
           </h3>
 
-          {/* ✅ 4 columns like screenshot */}
           <ul className="grid grid-flow-col grid-rows-5 lg:grid-rows-5 gap-y-2 gap-x-10">
-            {popularSearchOptions.map((li) => (
+            {popularSearchOptions.map((li: any) => (
               <li
                 className="footer_text_styling footer_text_styling_hover text-sm text-gray-300 font-normal capitalize hover:text-[#d3c294] duration-300 cursor-pointer transition-all"
                 key={li.id}
                 onClick={() => {
-                  if ((li as any)?.property_type_id) {
-                    navigate(li?.link, {
+                  // ✅ property type navigation (internal)
+                  if (li?.property_type_id) {
+                    navigate(li.link, {
                       state: {
-                        property_type_id: (li as any).property_type_id,
+                        property_type_id: li.property_type_id,
                         property_name: li.item,
                       },
                     });
-                  } else {
-                    navigate(li?.link);
+                    return;
                   }
+
+                  // ✅ external/open-new-tab support (Career)
+                  goToLink(li.link, li.external, li.target);
                 }}
               >
                 {li.item}
@@ -120,7 +136,7 @@ const Footer = () => {
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
       className="w-10 h-10 flex items-center justify-center cursor-pointer transition-all duration-300 group"
-      onClick={() => window.open(item.link, "_blank")}
+      onClick={() => window.open(item.link, "_blank", "noopener,noreferrer")}
     >
       <div className="text-white group-hover:text-white transition-colors duration-300">
         {item.icons}
@@ -142,18 +158,14 @@ const Footer = () => {
 
   return (
     <footer className="bg-[#094834] relative overflow-hidden">
-      {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0 bg-gradient-to-br from-[#d3c294] to-transparent"></div>
       </div>
 
       <div className="relative">
-        {/* Main Footer Content */}
         <div className="custom_container mx-auto px-4 py-12 lg:py-16 remove_extra_margin">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 md:gap-8 lg:gap-12">
-            {/* Logo & Description Section */}
             <div className="lg:col-span-4 space-y-6">
-              {/* Logo */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -168,7 +180,6 @@ const Footer = () => {
                 />
               </motion.div>
 
-              {/* Contact Info */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -203,6 +214,7 @@ const Footer = () => {
                     </span>
                   </motion.div>
                 </div>
+
                 <motion.div
                   whileHover={{ x: 5 }}
                   className="footer_text_styling footer_text_styling_hover flex items-start gap-3 hover:text-[#d3c294] cursor-pointer transition-colors duration-300"
@@ -219,7 +231,6 @@ const Footer = () => {
                 </motion.div>
               </motion.div>
 
-              {/* Social Media */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -228,23 +239,21 @@ const Footer = () => {
                 <h4 className="text-white font-semibold mb-4 text-md uppercase tracking-wider footer_text_styling">
                   {t("Follow Us")}
                 </h4>
-                <div className="flex items-center gap-3 centerize_mobile">{renderSocialMedia}</div>
+                <div className="flex items-center gap-3 centerize_mobile">
+                  {renderSocialMedia}
+                </div>
               </motion.div>
             </div>
 
-            {/* Links Sections */}
             <div className="lg:col-span-8">
-              {/* ✅ Now we only show ONE block instead of 4 blocks */}
               <div className="grid grid-cols-1 gap-6 lg:gap-8">{renderItem}</div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Section */}
         <div className="border-t border-white/10">
           <div className="custom_container mx-auto px-4 py-6 lg:py-8">
             <div className="flex flex-col lg:flex-row justify-between items-center gap-4 lg:gap-6">
-              {/* Copyright */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -256,9 +265,6 @@ const Footer = () => {
                   {t("All Rights Reserved")}.
                 </p>
               </motion.div>
-
-              {/* Legal Links */}
-              {/* <motion.div ...>...</motion.div> */}
             </div>
           </div>
         </div>

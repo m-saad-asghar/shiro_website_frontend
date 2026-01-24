@@ -78,9 +78,9 @@ const FooterItem = () => {
          
         { id: 1, item: t("Townhouse for Rent"), link: "/rent/properties-for-rent?property_type=townhouse" },
         { id: 2, item: t("Villa for Rent"), link: "/rent/properties-for-rent?property_type=villa" },
-        { id: 3, item: t("Developers"), link: "/developers" },
-        { id: 4, item: t("List With Us"), link: "/list-your-property" },
-        { id: 5, item: t("Meet The Team"), link: "/team" },
+        { id: 3, item: t("Projects"), link: "/projects" },
+        { id: 4, item: t("Developers"), link: "/developers" },
+        { id: 5, item: t("List With Us"), link: "/list-your-property" },
         // { id: 1, item: t("Properties to Rent"), link: "/rent/properties-for-rent" },
         // ...(propertyTypes?.map((pt: any, index: number) => ({
         //   id: index + 2,
@@ -97,9 +97,17 @@ const FooterItem = () => {
       id: 4,
       title: t("Popular Searches"),
       option: [
-        { id: 1, item: t("Services"), link: "/property-services" },
-        { id: 2, item: t("About Us"), link: "/about" },
-        { id: 3, item: t("Contact Us"), link: "/contact" },
+        { id: 1, item: t("Meet The Team"), link: "/team" },
+        { id: 2, item: t("Services"), link: "/property-services" },
+        { id: 3, item: t("About Us"), link: "/about" },
+        { id: 4, item: t("Contact Us"), link: "/contact" },
+        { 
+  id: 4, 
+  item: t("Career"), 
+  link: "https://shiro.estate/career",
+  external: true,
+  target: "_blank",
+},
       ],
     }),
     [t]

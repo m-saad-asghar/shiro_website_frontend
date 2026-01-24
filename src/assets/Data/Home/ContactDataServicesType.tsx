@@ -1,6 +1,7 @@
 // useContactDataServices.ts
 import { useMemo } from "react";
 import type { ContactDataService } from "../../../Types";
+import Images from "@/Constants/Images";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -23,7 +24,7 @@ const useContactDataServices = (): ContactDataService[] => {
     () => [
       {
         id: 1,
-        icon: <MdOutlineLocationOn className={ICON_CLASS}  />,
+         img: Images.Convenient,
         title: t("Convenient Locations"),
         desc: t(
           "Our offices are situated in key areas of the city for your ease of access."
@@ -33,7 +34,7 @@ const useContactDataServices = (): ContactDataService[] => {
       },
       {
         id: 2,
-        icon: <MdOutlineSchedule className={ICON_CLASS} />,
+         img: Images.Time,
         title: t("At a Time That Suits You"),
         desc: t(
           "We work around your schedule to discuss your goals without rushing."
@@ -43,7 +44,7 @@ const useContactDataServices = (): ContactDataService[] => {
       },
       {
         id: 3,
-        icon: <MdOutlineSupportAgent className={ICON_CLASS} />,
+        img: Images.Experience,
         title: t("Experts at Your Service"),
         desc: t(
           "Receive comprehensive support from professionals with deep market expertise at every stage of your investment journey."
@@ -53,7 +54,7 @@ const useContactDataServices = (): ContactDataService[] => {
       },
       {
         id: 4,
-        icon: <MdOutlineBusiness className={ICON_CLASS} />,
+        img: Images.Office,
         title: t("Office in Dubai"),
         desc: t(
           "Meet the Shiro Estate team in person and explore the best strategies to achieve your real estate objectives."

@@ -2,6 +2,7 @@
 import { useMemo } from "react";
 import type { AboutDataService } from "../../../Types";
 import { useTranslation } from "react-i18next";
+import Images from "@/Constants/Images";
 
 // ✅ Icons (values-focused)
 import {
@@ -21,7 +22,7 @@ const useAboutDataServices = (): AboutDataService[] => {
     () => [
       {
         id: 1,
-        icon: <MdOutlineVerified className={ICON_CLASS} />,
+        img: Images.Integrity,
         title: t("Integrity"),
         desc: t(
           "We uphold the highest ethical standards and complete transparency at every stage of each transaction."
@@ -29,7 +30,7 @@ const useAboutDataServices = (): AboutDataService[] => {
       },
       {
         id: 2,
-        icon: <MdOutlineTrendingUp className={ICON_CLASS} />,
+         img: Images.Result,
         title: t("Results"),
         desc: t(
           "We are driven by excellence and outcomes that consistently exceed client expectations."
@@ -37,7 +38,7 @@ const useAboutDataServices = (): AboutDataService[] => {
       },
       {
         id: 3,
-        icon: <MdOutlineLightbulb className={ICON_CLASS} />,
+         img: Images.Innovation,
         title: t("Innovation"),
         desc: t(
           "We leverage advanced analytics and forward-thinking strategies in a highly competitive market."
@@ -45,7 +46,7 @@ const useAboutDataServices = (): AboutDataService[] => {
       },
       {
         id: 4,
-        icon: <MdOutlineHandshake className={ICON_CLASS} />,
+        img: Images.Trust,
         title: t("Trust"),
         desc: t(
           "We build long-term relationships founded on responsibility, reliability, and mutual respect."

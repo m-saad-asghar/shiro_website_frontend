@@ -61,6 +61,19 @@ import SpecialistGreenGold from "../assets/Images/CustomImages/specialist_green_
 import VisionGreenGold from "../assets/Images/CustomImages/vision_green_gold.svg";
 import EmaarDeveloperImage from "../assets/Images/Developer/emaar_developer_image.webp";
 import LogoGold from "../assets/Images/logo_gold.png"
+import Consultation from "../assets/Images/Icons/consultation_icon.png"
+import Legal from "../assets/Images/Icons/legal_icon.png"
+import Professional from "../assets/Images/Icons/professional_icon.png"
+import Property from "../assets/Images/Icons/property_icon.png"
+import Viewing from "../assets/Images/Icons/viewing_icon.png"
+import Innovation from "../assets/Images/Icons/innovation_icon.png"
+import Integrity from "../assets/Images/Icons/Integrity_icon.png"
+import Result from "../assets/Images/Icons/result_icon.png"
+import Trust from "../assets/Images/Icons/trust_icon.png"
+import Convenient from "../assets/Images/Icons/convenient_icon.png"
+import Experience from "../assets/Images/Icons/experience_icon.png"
+import Office from "../assets/Images/Icons/office_icon.png"
+import Time from "../assets/Images/Icons/time_icon.png"
 export default {
   ExploreGreen,
   EmaarDeveloperImage,
@@ -125,4 +138,17 @@ export default {
   logoLight,
   LogoGold,
   unknownPerson,
+  Consultation,
+  Legal,
+  Professional,
+  Property,
+  Viewing,
+  Innovation,
+  Integrity,
+  Result,
+  Trust,
+  Convenient,
+  Time,
+  Experience,
+  Office
 };

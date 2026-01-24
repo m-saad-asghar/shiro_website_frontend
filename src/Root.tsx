@@ -14,7 +14,7 @@ import FormEnricher from "./Components/FormEnricher";
 
 const Root = () => {
   const location = useLocation();
-  const { isAccessGranted, grantAccess } = usePasswordProtection();
+  // const { isAccessGranted, grantAccess } = usePasswordProtection();
 
   const queryClient = new QueryClient({
     // your existing options (unchanged)
@@ -26,13 +26,13 @@ const Root = () => {
     location.pathname === "/forgotpassword" ||
     location.pathname === "/myproperty";
 
-  if (!isAccessGranted) {
-    return (
-      <QueryClientProvider client={queryClient}>
-        <PasswordProtection onSuccess={grantAccess} />
-      </QueryClientProvider>
-    );
-  }
+  // if (!isAccessGranted) {
+  //   return (
+  //     <QueryClientProvider client={queryClient}>
+  //       <PasswordProtection onSuccess={grantAccess} />
+  //     </QueryClientProvider>
+  //   );
+  // }
 
   return (
     <>

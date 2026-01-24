@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next";
 import { DataSocialMedia } from "../../assets/Data/Home";
 import { Form } from "../../Components/Home";
 
-
 type ContactFormProps = {
   project_name?: string;
   display_name?: string;
@@ -11,38 +10,41 @@ type ContactFormProps = {
 const ContactForm: React.FC<ContactFormProps> = ({ project_name, display_name }) => {
   const { t } = useTranslation();
 
+  const LANDLINE_DISPLAY = "6005 SHIRO (74476)";
+  const LANDLINE_TEL = "600574476"; // ✅ tel-safe digits
+
   const formatUAEPhone = (number: string | null | undefined): string => {
     if (!number) return "";
 
-    // Remove spaces, dashes, brackets, etc.
     let cleaned: string = number.replace(/[^0-9+]/g, "");
 
-    // Ensure it starts with +971
     if (!cleaned.startsWith("+971")) {
       cleaned = "+971" + cleaned.replace(/^0/, "");
     }
 
-    // Get the part after +971
     const rest = cleaned.replace("+971", "");
 
-    // Mobile: +971 58 888 8461 (9 digits after 971)
     if (rest.length === 9) {
-      const p1 = rest.slice(0, 2); // 58
-      const p2 = rest.slice(2, 5); // 888
-      const p3 = rest.slice(5); // 8461
+      const p1 = rest.slice(0, 2);
+      const p2 = rest.slice(2, 5);
+      const p3 = rest.slice(5);
       return `+971 ${p1} ${p2} ${p3}`;
     }
 
-    // Landline: +971 4 577 6496 (8 digits after 971)
     if (rest.length === 8) {
-      const p1 = rest.slice(0, 1); // 4
-      const p2 = rest.slice(1, 4); // 577
-      const p3 = rest.slice(4); // 6496
+      const p1 = rest.slice(0, 1);
+      const p2 = rest.slice(1, 4);
+      const p3 = rest.slice(4);
       return `+971 ${p1} ${p2} ${p3}`;
     }
 
-    // Fallback (unknown pattern)
     return cleaned;
+  };
+
+  // ✅ helper to create tel-safe digits from +971... or any string
+  const toTelDigits = (number: string | null | undefined): string => {
+    if (!number) return "";
+    return String(number).replace(/[^0-9]/g, "");
   };
 
   const onClick = (title: string, number?: string) => {
@@ -50,9 +52,9 @@ const ContactForm: React.FC<ContactFormProps> = ({ project_name, display_name })
       const msg = encodeURIComponent(
         "Hello, I’m interested in your Real Estate Expertise. How can Shiro Estate assist me with my Next Purchase?"
       );
-      window.open(`https://wa.me/${number}?text=${msg}`, "_blank");
-    } else if (title === "Phone" || title === "secondary Phone") {
-      window.open(`tel:${number}`);
+      window.open(`https://wa.me/${toTelDigits(number)}?text=${msg}`, "_blank");
+    } else if (title === "Phone" || title === "Secondary Phone") {
+      window.open(`tel:${toTelDigits(number)}`);
     } else if (title === "Email") {
       window.open(`mailto:${number}`);
     } else if (title === "Location") {
@@ -60,48 +62,77 @@ const ContactForm: React.FC<ContactFormProps> = ({ project_name, display_name })
     }
   };
 
-  const renderSocialMedia = DataSocialMedia().map((item) => (
-    <button
-      key={item.id}
-      type="button"
-      onClick={() => onClick(item?.title, item.desc)}
-      className="w-fit flex items-center gap-4 text-left group"
-    >
-      {/* Icon circle */}
-      <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
-        <div className="text-[#9f8151] text-xl [&>*]:text-[#9f8151] [&>*]:stroke-[#9f8151]">
-          {item.icons}
+  const renderSocialMedia = DataSocialMedia().map((item) => {
+    const rawTitle = item.title || "";
+    const title = rawTitle.toLowerCase().trim();
+
+    const isPhone =
+      title === "phone" ||
+      title === "secondary phone" ||
+      title === "primary phone" ||
+      title.includes("phone") ||
+      title.includes("call");
+
+    const isWhatsapp = title === "whatsapp" || title.includes("whatsapp");
+
+    const isEmail = title === "email" || title.includes("email");
+    const isLocation = title === "location" || title.includes("location");
+
+    const formattedMain = isPhone || isWhatsapp ? formatUAEPhone(String(item.desc || "")) : String(item.desc || "");
+    const mainTel = toTelDigits(String(item.desc || ""));
+
+    return (
+      <div key={item.id} className="w-fit flex items-start gap-4 text-left">
+        {/* Icon circle */}
+        <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
+          <div className="text-[#9f8151] text-xl [&>*]:text-[#9f8151] [&>*]:stroke-[#9f8151]">
+            {item.icons}
+          </div>
+        </div>
+
+        {/* Text block */}
+        <div className="flex flex-col">
+          <span className="font-semibold text-primary text-[16px]">{item.title}</span>
+
+          {/* ✅ Hover color on ALL values */}
+          {/* ✅ Separate clicks for BOTH numbers */}
+          <div className="text-sm sm:text-base md:text-lg font-medium text-[#0b4a35] down_styling leading-relaxed">
+            {isPhone ? (
+              <div className="flex flex-wrap items-center gap-2">
+                {/* Main phone */}
+                <button
+                  type="button"
+                  onClick={() => window.open(`tel:${mainTel}`)}
+                  className="group-hover:text-[#9f8151] hover:text-[#9f8151] transition-colors duration-200"
+                >
+                  {formattedMain}
+                </button>
+
+                <span className="text-[#0b4a35]">|</span>
+
+                {/* Landline */}
+                <button
+                  type="button"
+                  onClick={() => window.open(`tel:${LANDLINE_TEL}`)}
+                  className="group-hover:text-[#9f8151] hover:text-[#9f8151] transition-colors duration-200"
+                >
+                  {LANDLINE_DISPLAY}
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => onClick(item?.title, String(item.desc || ""))}
+                className="hover:text-[#9f8151] transition-colors duration-200"
+              >
+                {isWhatsapp ? formattedMain : isEmail || isLocation ? String(item.desc || "") : String(item.desc || "")}
+              </button>
+            )}
+          </div>
         </div>
       </div>
-
-      {/* Text block */}
-      <div className="flex flex-col">
-        <span className="font-semibold text-primary text-[16px]">
-          {item.title}
-        </span>
-
-        <span className="text-sm sm:text-base md:text-lg font-medium group-hover:text-[#9f8151] text-[#0b4a35] transition-colors duration-200 down_styling">
-          {(() => {
-            const rawTitle = item.title || "";
-            const title = rawTitle.toLowerCase().trim();
-
-            const isPhone =
-              title === "phone" ||
-              title === "secondary phone" ||
-              title === "primary phone" ||
-              title.includes("phone") ||
-              title.includes("call");
-
-            const isWhatsapp = title === "whatsapp" || title.includes("whatsapp");
-
-            return isPhone || isWhatsapp
-              ? formatUAEPhone(String(item.desc || ""))
-              : item.desc;
-          })()}
-        </span>
-      </div>
-    </button>
-  ));
+    );
+  });
 
   return (
     <section
@@ -122,12 +153,6 @@ const ContactForm: React.FC<ContactFormProps> = ({ project_name, display_name })
                   "Get in touch for tailored guidance from our expert team. We're committed to assisting you through each phase of your journey."
                 )}
               </p>
-
-              {/* <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-                {t(
-                  "Get in touch for tailored guidance from our expert team. We're committed to assisting you through each phase of your journey."
-                )}
-              </p> */}
             </div>
 
             <div className="space-y-5 sm:space-y-6">
@@ -138,58 +163,19 @@ const ContactForm: React.FC<ContactFormProps> = ({ project_name, display_name })
                 {/* Icon */}
                 <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center">
                   <div className="text-[#9f8151]">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="32"
-                      height="32"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
-                      {/* Watch body */}
-                      <circle
-                        cx="12"
-                        cy="12"
-                        r="7"
-                        stroke="#9f8151"
-                        strokeWidth="2"
-                      />
-                      {/* Hour hand */}
-                      <path
-                        d="M12 12V8"
-                        stroke="#9f8151"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                      {/* Minute hand */}
-                      <path
-                        d="M12 12L15 14"
-                        stroke="#9f8151"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                      {/* Top strap */}
-                      <path
-                        d="M9 2h6"
-                        stroke="#9f8151"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                      {/* Bottom strap */}
-                      <path
-                        d="M9 22h6"
-                        stroke="#9f8151"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="7" stroke="#9f8151" strokeWidth="2" />
+                      <path d="M12 12V8" stroke="#9f8151" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M12 12L15 14" stroke="#9f8151" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M9 2h6" stroke="#9f8151" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M9 22h6" stroke="#9f8151" strokeWidth="2" strokeLinecap="round" />
                     </svg>
                   </div>
                 </div>
 
                 {/* Text */}
                 <div className="flex flex-col">
-                  <span className="font-semibold text-primary text-[16px]">
-                    {t("Office Hours")}
-                  </span>
+                  <span className="font-semibold text-primary text-[16px]">{t("Office Hours")}</span>
 
                   <span className="text-sm sm:text-base md:text-lg font-medium text-[#0b4a35] down_styling leading-relaxed">
                     {t("Monday – Friday: 9:00 AM – 6:00 PM")}
@@ -206,23 +192,14 @@ const ContactForm: React.FC<ContactFormProps> = ({ project_name, display_name })
           {/* RIGHT SIDE – Form card */}
           <div className="bg-white change_border border border-gray-100 shadow-lg p-6 sm:p-8 lg:p-10">
             <div className="mb-4 sm:mb-6">
-              <h1 className="font-semibold text-primary text-2xl">
-                {t("GET IN TOUCH")}
-              </h1>
+              <h1 className="font-semibold text-primary text-2xl">{t("GET IN TOUCH")}</h1>
 
               <p className="rounded-lg text-sm transition-all duration-200 mb-1 mt-1 text-[#9f8151] text_stying">
                 {t("Fill out the form below and we'll get back to you shortly")}
               </p>
-
-              {/* <p className="text-sm sm:text-base text-gray-600">
-                {t("Fill out the form below and we'll get back to you shortly")}
-              </p> */}
             </div>
 
-            <Form 
-            project_name={project_name ?? ""} 
-            display_name={display_name ?? ""}
-            />
+            <Form project_name={project_name ?? ""} display_name={display_name ?? ""} />
           </div>
         </div>
       </div>

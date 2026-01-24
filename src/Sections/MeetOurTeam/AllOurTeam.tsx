@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { LoaderPage } from "@/Components";
 import employeeImagesUrl from "@/helpers/employeeImagesURL";
+import empImagesUrl from "@/helpers/empImagesURL";
 import { Link } from "react-router-dom";
 
 interface TeamMember {
@@ -31,7 +32,7 @@ const AllOurTeam: FC = () => {
 
   const API_URL = `${import.meta.env.VITE_API_URL}/fetch_employees`;
   const EMPLOYEE_IMG_BASE = `${import.meta.env.VITE_IMAGE_URL || ""}`; // optional
-  const PLACEHOLDER = employeeImagesUrl("default_employee.png");
+  const PLACEHOLDER = empImagesUrl("default_employee.png");
 
   useEffect(() => {
     let mounted = true;
@@ -95,7 +96,7 @@ const AllOurTeam: FC = () => {
  const cards = useMemo(() => {
   return team.map((m) => {
     const imgSrc = m.profile_picture
-      ? employeeImagesUrl(m.profile_picture)
+      ? empImagesUrl(m.profile_picture)
       : PLACEHOLDER;
 
     const hasDescription =
@@ -113,10 +114,11 @@ const AllOurTeam: FC = () => {
     return (
       <div key={m.id} className="flex flex-col items-center text-center">
         <ImageWrapper>
-          <div className="w-[270px] h-[270px] rounded-full overflow-hidden bg-gray-100 shadow-sm cursor-pointer">
+          <div className="w-[300px] h-[300px] rounded-full overflow-hidden bg-gray-100 shadow-sm cursor-pointer">
             <img
               src={imgSrc}
               alt={m.name}
+              style={{height: 330, width: 330}}
               className="w-full h-full object-cover transition-transform ease-in-out hover:scale-105"
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src = PLACEHOLDER;
@@ -142,7 +144,7 @@ const AllOurTeam: FC = () => {
  const agentCards = useMemo(() => {
   return agents.map((a) => {
     const imgSrc = a.profile_picture
-      ? employeeImagesUrl(a.profile_picture)
+      ? empImagesUrl(a.profile_picture)
       : PLACEHOLDER;
 
     const hasDescription =
@@ -160,10 +162,11 @@ const AllOurTeam: FC = () => {
     return (
       <div key={a.id} className="flex flex-col items-center text-center">
         <ImageWrapper>
-          <div className="w-[270px] h-[270px] rounded-full overflow-hidden bg-gray-100 shadow-sm cursor-pointer">
+          <div className="w-[300px] h-[300px] rounded-full overflow-hidden bg-gray-100 shadow-sm cursor-pointer">
             <img
               src={imgSrc}
               alt={a.name}
+               style={{height: 330, width: 330}}
               className="w-full h-full object-cover transition-transform ease-in-out hover:scale-105"
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src = PLACEHOLDER;

@@ -16,19 +16,19 @@ const Map = () => {
         >
           <div className="w-full h-[400px] md:h-[500px] lg:h-[600px] change_border overflow-hidden border border-gray-200">
             <iframe
-              className="w-full h-full"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3610.0929029806157!2d55.2751323!3d25.2000893!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f4300340bbb71%3A0x6665bc040d9a7501!2zU2hpcm8gRXN0YXRlIC0g2LTZitix2Ygg2KfZhNi52YLYp9ix2YrYqQ!5e0!3m2!1sar!2s!4v1752996590360!5m2!1sar!2s"
-              width="full"
-              height="full"
-              loading="lazy"
-              title="Shiro Real Estate Location"
-            />
+  className="w-full h-full border-0"
+  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3610.0929029806157!2d55.2751323!3d25.2000893!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f4300340bbb71%3A0x6665bc040d9a7501!2zU2hpcm8gRXN0YXRlIC0g2LTZitix2Ygg2KfZhNi52YLYp9ix2YrYqQ!5e1!3m2!1sar!2s!4v1752996590360"
+  loading="lazy"
+  referrerPolicy="no-referrer-when-downgrade"
+  title="Shiro Real Estate Location"
+/>
+
           </div>
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="absolute top-6 left-6 bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-gray-200 max-w-sm"
+            className="absolute top-2 left-2 bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-gray-200 max-w-sm"
           >
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">

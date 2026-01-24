@@ -39,6 +39,7 @@ import PropertyManagement from "@/Pages/PropertyManagement";
 import Cookies from "js-cookie";
 import AreaPage from "@/Pages/Area";
 import TeamDetails from "@/Sections/MeetOurTeam/TeamDetails";
+import OffplanProjects from "@/Pages/OffplanProjects";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -117,6 +118,10 @@ const router = createBrowserRouter([
       {
         path: "/developers/:slug",
         element: <DeveloperDetails />,
+      },
+      {
+        path: "/projects",
+        element: <OffplanProjects />,
       },
        {
         path: "/projects/:slug",

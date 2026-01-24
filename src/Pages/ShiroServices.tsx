@@ -11,26 +11,37 @@ const ShiroServices = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  // SERVICES DATA WITH LINKS
+  /**
+   * ✅ You will have TWO images per card:
+   * - bgImage: background photo
+   * - overlayImage: gold icon+text transparent image (png/webp)
+   *
+   * Put overlay images inside your same "services" images folder
+   * e.g. properties_for_sale_overlay.png
+   */
   const services = [
     {
       title: "Property For Sale",
-      image: "properties_for_sale.jpg",
+      bgImage: "properties_for_sale.jpg",
+      overlayImage: "properties_for_sale_overlay.png",
       link: "/buy/properties-for-sale",
     },
-     {
+    {
       title: "Property For Rent",
-      image: "properties_for_rent.jpg",
+      bgImage: "properties_for_rent.jpg",
+      overlayImage: "properties_for_rent_overlay.png",
       link: "/rent/properties-for-rent",
     },
-     {
+    {
       title: "List With Us",
-      image: "list_with_us.webp",
+      bgImage: "list_with_us.jpg",
+      overlayImage: "list_with_us_overlay.png",
       link: "/list-your-property",
     },
     {
       title: "Property Management",
-      image: "property_management.webp",
+      bgImage: "property_management.jpg",
+      overlayImage: "property_management_overlay.png",
       link: "/property-management",
     },
   ];
@@ -55,12 +66,7 @@ const ShiroServices = () => {
 
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-transparent" />
 
-        <div
-          className="
-            custom_container
-            develop_heading_styling
-          "
-        >
+        <div className="custom_container develop_heading_styling">
           <h1 className="hidden md:block project_text font-bold !text-white drop-shadow-lg tracking-wide leading-tight content_general">
             {t("Comprehensive Services in the UAE and Beyond")}
           </h1>
@@ -74,35 +80,23 @@ const ShiroServices = () => {
           </p>
 
           <EnquireNowReactModal
-  title={t("ENQUIRE NOW")}
-  display_name="enquire-now-button-click-from-services-page"
-  project_name=""
-  origin={t("Click | Enquire Now Button | Services Page")}
-  showSuccessToast={true}
-  showErrorToast={true}
-  closeOnSuccess={true}
-  trigger={(open) => (
-    <button
-      type="button"
-      onClick={open}
-      className="w-fit bg-[#094834] hover:bg-[#9f8151] change_border text-white font-semibold py-4 px-6 shadow-lg transition"
-    >
-      {t("Enquire Now")}
-    </button>
-  )}
-/>
-
-          {/* <button
-              onClick={() => {
-  const section = document.getElementById("list_with_us");
-  if (section) {
-    section.scrollIntoView({ behavior: "smooth" });
-  }
-}}
-            className="w-fit bg-[#094834] hover:bg-[#9f8151] text-white font-semibold py-4 px-6 shadow-lg transition"
-          >
-            {t("Enquire Now")}
-          </button> */}
+            title={t("ENQUIRE NOW")}
+            display_name="enquire-now-button-click-from-services-page"
+            project_name=""
+            origin={t("Click | Enquire Now Button | Services Page")}
+            showSuccessToast={true}
+            showErrorToast={true}
+            closeOnSuccess={true}
+            trigger={(open) => (
+              <button
+                type="button"
+                onClick={open}
+                className="w-fit bg-[#094834] hover:bg-[#9f8151] change_border text-white font-semibold py-4 px-6 shadow-lg transition"
+              >
+                {t("Enquire Now")}
+              </button>
+            )}
+          />
         </div>
       </section>
 
@@ -112,10 +106,7 @@ const ShiroServices = () => {
       </div>
 
       {/* ================= SERVICES GRID (BELOW INTRO) ================= */}
-      <section
-        className="w-full"
-        style={{ marginBottom: 0, paddingBottom: 0 }}
-      >
+      <section className="w-full" style={{ marginBottom: 0, paddingBottom: 0 }}>
         <div className="custom_container mx-auto">
           {/* Header */}
           <div className="mb-8">
@@ -123,49 +114,53 @@ const ShiroServices = () => {
               {t("Our Services")}
             </h2>
             <p className="down_styling para_styling">
-              Ready to turn your goals into tangible assets? Shiro Estate offers a full spectrum of professional solutions for both private and corporate clients, including:
-              </p>
+              {t(
+                "Ready to turn your goals into tangible assets? Shiro Estate offers a full spectrum of professional solutions for both private and corporate clients, including:"
+              )}
+            </p>
           </div>
 
-          {/* Services Cards */}
-         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
-  {services.map((service, index) => (
-    <div
-      key={`${service.title}-${index}`}
-      onClick={() => navigate(service.link)}
-      className="group bg-white change_border border border-primary/20 overflow-hidden h-full flex flex-col transition-transform duration-300 cursor-pointer"
-    >
-      {/* Image */}
-      <div className="overflow-hidden relative">
-        <img
-          src={ServiceImagesUrl(service.image)}
-          alt={service.title}
-          className="
-            transition-transform duration-500 group-hover:scale-110
-            w-full object-cover
-            h-[220px]
-            sm:h-[260px]
-            md:h-[300px]
-            xl:h-[260px]
-          "
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      </div>
+          {/* ✅ Services Cards (BG + Mask + Overlay Image) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+            {services.map((service, index) => (
+              <div
+                key={`${service.title}-${index}`}
+                onClick={() => navigate(service.link)}
+                className="group relative overflow-hidden change_border border border-primary/20 rounded-2xl cursor-pointer"
+                style={{ height: 320 }}
+              >
+                {/* Background image */}
+                <img
+                  src={ServiceImagesUrl(service.bgImage)}
+                  alt={service.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
 
-      {/* Title */}
-      <div className="p-4 md:p-5">
-        <h3 className="font-semibold text-primary text-xl">
-          {t(service.title)}
-        </h3>
-      </div>
-    </div>
-  ))}
-</div>
+                {/* Black mask */}
+                <div className="absolute inset-0 bg-black/45" />
 
+                {/* Overlay gold icon+text image */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <img
+                    src={ServiceImagesUrl(service.overlayImage)}
+                    alt={`${service.title} overlay`}
+                    className="max-w-[100%] max-h-[100%] object-contain"
+                    draggable={false}
+                  />
+                </div>
+
+                {/* Optional hover glow */}
+                <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
+
       <div id="list_with_us" className="services_form_styling">
-        <ContactForm display_name="contact-us-form-via-services-page-of-website"/>
+        <ContactForm display_name="contact-us-form-via-services-page-of-website" />
       </div>
     </>
   );

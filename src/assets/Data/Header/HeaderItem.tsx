@@ -61,6 +61,14 @@ const HeaderItem = () => {
         li: t("Rent"),
         link: "/rent/properties-for-rent",
       },
+       {
+        id: 3,
+        li: t("Projects"),
+        link: "/projects",
+        // content: {
+        //   option: renderDeveloper,
+        // },
+      },
 
       // PROJECTS – keeps dropdown
       // {
@@ -87,7 +95,7 @@ const HeaderItem = () => {
       // },
 
       {
-        id: 3,
+        id: 4,
         li: t("Developers"),
         link: "/developers",
         // content: {
@@ -95,7 +103,7 @@ const HeaderItem = () => {
         // },
       },
       {
-        id: 4,
+        id: 5,
         li: t("Areas"),
         link: "/areas",
         // content: {
@@ -103,7 +111,7 @@ const HeaderItem = () => {
         // },
       },
        {
-        id: 5,
+        id: 6,
         li: t("List With Us"),
         link: "/list-your-property",
         // content: {
@@ -140,7 +148,7 @@ const HeaderItem = () => {
       // },
 
       {
-        id: 6,
+        id: 7,
         li: t("More"),
         link: "/about",
         content: {
@@ -188,6 +196,13 @@ const HeaderItem = () => {
               item: t("Contact Us"),
               link: "/contact",
             },
+           {
+  id: 8,
+  item: t("Career"),
+  link: "https://shiro.estate/career",
+  external: true,
+  target: "_blank",
+}
           ],
         },
       },

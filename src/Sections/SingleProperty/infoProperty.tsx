@@ -61,6 +61,7 @@ const InfoProperty: FC<InfoPropertyProps> = ({ item, employee, amenities, commer
   item?.property_category && `${t("for")} ${item.property_category}`,
   item?.community && `${t("in")} ${item.community}`,
   item?.sub_community && `, ${item.sub_community}`,
+  item?.property && `,  ${item.property}`,
 ]
   .filter(Boolean)
   .join(" ")}
@@ -100,18 +101,33 @@ const InfoProperty: FC<InfoPropertyProps> = ({ item, employee, amenities, commer
                             alt="Bedrooms icon"
                           />
                           <div className="text-center">
-                            <div className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
-                             {item?.bedrooms == "Studio"
-                      ? t("Studio")
-                      : `${item?.bedrooms} ${
-                          Number(item?.bedrooms) == 1
-                            ? t("Bedroom")
-                            : t("Bedrooms")
-                        }`}
-        
-                            </div>
-                            {/* <div className="text-xs text-gray-500">{t("Bedrooms")}</div> */}
-                          </div>
+  <div className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
+    {item?.property_type === "Residential Land" ? (
+      "-"
+    ) : (() => {
+        const bedrooms = item?.bedrooms;
+        const numBedrooms = Number(bedrooms);
+
+        if (
+          bedrooms === 0 ||
+          bedrooms === "0" ||
+          bedrooms === "Studio" ||
+          bedrooms === "studio"
+        ) {
+          return t("Studio");
+        }
+
+        if (!Number.isFinite(numBedrooms) || numBedrooms <= 0) {
+          return "-";
+        }
+
+        return numBedrooms === 1
+          ? `1 ${t("Bedroom")}`
+          : `${numBedrooms} ${t("Bedrooms")}`;
+      })()}
+  </div>
+</div>
+
                         </div>
                         <div className="flex items-center gap-2">
                           <img
@@ -121,11 +137,22 @@ const InfoProperty: FC<InfoPropertyProps> = ({ item, employee, amenities, commer
                           />
                           <div className="text-center">
                             <div className="py-2 rounded-lg text-sm transition-all duration-200 text-[#0b4a35]">
-                            {Number(item?.bathrooms) === 1
-                      ? `1 ${t("Bathroom")}`
-                      : `${item?.bathrooms} ${t("Bathrooms")}`}
-        
-                            </div>
+  {item?.property_type === "Residential Land" ? (
+    "-"
+  ) : (() => {
+      const bathrooms = item?.bathrooms;
+      const numBathrooms = Number(bathrooms);
+
+      if (!Number.isFinite(numBathrooms) || numBathrooms <= 0) {
+        return "-";
+      }
+
+      return numBathrooms === 1
+        ? `1 ${t("Bathroom")}`
+        : `${numBathrooms} ${t("Bathrooms")}`;
+    })()}
+</div>
+
                             {/* <div className="text-xs text-gray-500">
                               {t("Bathrooms")}
                             </div> */}

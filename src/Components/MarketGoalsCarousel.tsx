@@ -20,32 +20,32 @@ const slides: Slide[] = [
   {
     title: "Strengthening Market Leadership",
     desc: "To become the unquestioned benchmark of trust and expertise in Dubai and international real estate.",
-    img: "client.avif",
+    img: "leadership.jpg",
   },
   {
     title: "Driving Innovation",
     desc: "Implementing advanced strategies and digital tools within the property sector.",
-    img: "developing.avif",
+    img: "driving.jpg",
   },
   {
     title: "Shaping the Future of the Market",
     desc: "Actively contributing to the development of new standards in quality, transparency, and service across the region.",
-    img: "driving.avif",
+    img: "future.jpg",
   },
   {
     title: "Expanding Our Client Network",
     desc: "Building strong, long-term relationships through consistently successful transactions.",
-    img: "exclusive.avif",
+    img: "expand.jpg",
   },
   {
     title: "Developing a Strategic Partner Network",
     desc: "Through a mutually beneficial referral program, we empower professionals with new income opportunities while strengthening our market presence.",
-    img: "future.avif",
+    img: "developing.jpg",
   },
   {
     title: "Access to Exclusive Opportunities",
     desc: "Providing clients with privileged access to the most liquid and high-yield investment assets.",
-    img: "leadership.avif",
+    img: "access.jpg",
   },
 ];
 

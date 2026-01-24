@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import employeeImagesUrl from "@/helpers/employeeImagesURL";
+import empImagesUrl from "@/helpers/empImagesURL";
 import { useTranslation } from "react-i18next";
 
 type Founder = {
@@ -64,24 +65,26 @@ const MessageFromFounder: React.FC = () => {
     <section className="change_border border border-primary/20 bg-white shadow-sm">
       <div className="px-[20px] py-[20px] sm:px-[20px] sm:py-[20px] md:px-[20px] md:py-[20px] lg:px-[45px] lg:py-[45px]">
         {/* ✅ FORCE mobile stack using flex, switch to grid only on lg */}
-        <div className="flex flex-col gap-2 lg:gap-3 lg:grid lg:grid-cols-[2.3fr_1fr] lg:items-center">
+        <div className="flex flex-col gap-2 lg:gap-3 lg:grid lg:grid-cols-[2.3fr_1fr]">
           
           {/* IMAGE (mobile top, desktop right) */}
-          <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
-            <div className="w-[200px] sm:w-[240px] lg:w-[270px] aspect-square rounded-full overflow-hidden bg-gray-100 shadow-sm">
-              {!loading && founder?.image ? (
-                <img
-                  src={employeeImagesUrl(founder.image)}
-                  alt={founder.position}
-                  className="w-full h-full object-cover transition-transform duration-300 lg:hover:scale-105"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-primary/60">
-                  {loading ? "Loading image..." : "No image available"}
-                </div>
-              )}
-            </div>
-          </div>
+         <div className="order-1 lg:order-2 flex justify-center lg:justify-end items-start">
+  <div className="w-[230px] sm:w-[270px] lg:w-[300px] h-[230px] sm:h-[270px] lg:h-[300px] rounded-full overflow-hidden bg-[#d6cdc9] shadow-sm flex-shrink-0">
+    {!loading && founder?.image ? (
+      <img
+        src={empImagesUrl(founder.image)}
+        alt={founder.position}
+        style={{height: 330, width: 330}}
+        className="w-full h-full object-cover object-center"
+      />
+    ) : (
+      <div className="w-full h-full flex items-center justify-center text-primary/60">
+        {loading ? "Loading image..." : "No image available"}
+      </div>
+    )}
+  </div>
+</div>
+
 
           {/* TEXT (mobile below image, desktop left) */}
           <div className="order-2 lg:order-1 flex items-center">

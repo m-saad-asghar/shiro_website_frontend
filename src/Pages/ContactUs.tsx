@@ -29,7 +29,7 @@ const ContactUs = () => {
       <>
       <div className="relative w-full h-[91vh] overflow-hidden developer_listing_styling">
         <img
-          src={ImagesUrl("contact_us_main_page.jpg")}
+          src={ImagesUrl("contact_us_main_image.jpg")}
           alt="Services Banner"
           className="w-full h-full object-cover"
         />

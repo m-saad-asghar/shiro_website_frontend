@@ -8,107 +8,35 @@ import { useTranslation } from "react-i18next";
 const HeaderForSmallScreenItem = () => {
   const { t } = useTranslation();
 
-  const { data: filterDeveloper } = useQueryGet(
-    ["filterDeveloper"],
-    DevelopersServices.developer
-  );
-  const { data } = useContext(TypesContext);
-  const filteredData = (name: string) => {
-    const data1 = data?.types?.filter((item) => item.name == name);
-    return {
-      ...data1,
-    };
-  };
+  // keeping these since you already had them (even if not used in Data right now)
+  useQueryGet(["filterDeveloper"], DevelopersServices.developer);
+  useContext(TypesContext);
+
   const Data: HeaderItemType[] = useMemo(
     () => [
+      { id: 1, li: t("Buy"), link: "/buy/properties-for-sale" },
+      { id: 2, li: t("Rent"), link: "/rent/properties-for-rent" },
+      { id: 3, li: t("Developers"), link: "/developers" },
+      { id: 3, li: t("Projects"), link: "/projects" },
+      { id: 4, li: t("Areas"), link: "/areas" },
+      { id: 5, li: t("List With Us"), link: "/list-your-property" },
+      { id: 6, li: t("About Shiro"), link: "/about" },
+      { id: 7, li: t("Services"), link: "/property-services" },
+      { id: 8, li: t("Meet The Team"), link: "/team" },
+      { id: 9, li: t("Contact Us"), link: "/contact" },
+
+      // ✅ Career (external new tab)
       {
-        id: 1,
-        li: t("Buy"),
-        link: `/buy/properties-for-sale`,
+        id: 10,
+        li: t("Career"),
+        link: "https://shiro.estate/career",
+        external: true,
+        target: "_blank",
       },
-      {
-        id: 2,
-        li: t("Rent"),
-        link: `/rent/properties-for-rent`,
-      },
-      {
-        id: 3,
-        li: t("Developers"),
-        link: `/developers`,
-      },
-      {
-        id: 4,
-        li: t("Areas"),
-        link: `/areas`,
-      },
-       {
-        id: 5,
-        li: t("List With Us"),
-        link: "/list-your-property",
-      },
-       {
-        id: 6,
-        li: t("About Shiro"),
-        link: `/about`,
-      },
-       {
-        id: 7,
-        li: t("Services"),
-        link: "/property-services",
-      },
-       {
-        id: 8,
-        li: t("Meet The Team"),
-        link: "/team",
-      },
-      {
-        id: 9,
-        li: t("Contact Us"),
-        link: "/contact",
-      },
-      // {
-      //   id: 3,
-      //   li: t("Projects"),
-      //   link: `/new-projects`,
-      // },
-      // {
-      //   id: 5,
-      //   li: t("Areas"),
-      //   link: "/area-guides",
-      // },
-      // {
-      //   id: 6,
-      //   li: t("About Us"),
-      //   link: "/about",
-      // },
-      // {
-      //   id: 7,
-      //   li: t("Services"),
-      //   link: "/property-services",
-      // },
-      // {
-      //   id: 8,
-      //   li: t("Meet The Team"),
-      //   link: "/team",
-      // },
-      // {
-      //   id: 9,
-      //   li: t("Blog"),
-      //   link: "/blog",
-      // },
-      // {
-      //   id: 10,
-      //   li: t("Testimonials"),
-      //   link: "/reviews",
-      // },
-      // {
-      //   id: 11,
-      //   li: t("Contact Us"),
-      //   link: "/contact",
-      // },
     ],
-    [filteredData, filterDeveloper, t]
+    [t]
   );
+
   return Data;
 };
 

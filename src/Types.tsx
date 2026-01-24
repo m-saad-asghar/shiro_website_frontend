@@ -11,7 +11,7 @@ export interface DataCustomerServicesType {
 }
 export interface ContactDataService {
   id: number;
-  icon: ReactNode;
+  img: ReactNode;
   title: string;
   desc: string;
   
@@ -19,7 +19,7 @@ export interface ContactDataService {
 }
 export interface AboutDataService {
   id: number;
-  icon: ReactNode;
+  img: ReactNode;
   title: string;
   desc: string;
   link?: string;
