@@ -10,7 +10,7 @@ const ServicesContent: React.FC = () => {
           {/* LEFT: CONTENT */}
           <div>
             <h2 className="mb-8 hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
-              Shiro Estate — Your Trusted Partner in the UAE Real Estate
+              Your Trusted Real Estate Partner
             </h2>
 
             <p className="down_styling para_styling">

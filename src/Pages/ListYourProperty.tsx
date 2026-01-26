@@ -42,7 +42,7 @@ const ListYourProperty = () => {
               </h1>
 
               <p className="text-sm sm:text-base">
-                <span className="text-white text-xl">by</span>{" "}
+                {/* <span className="text-white text-xl">by</span>{" "} */}
                 <span className="font-semibold text-white text-xl">
                   {t("Fast. Profitable. Transparent.")}
                 </span>

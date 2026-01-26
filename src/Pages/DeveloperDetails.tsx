@@ -87,7 +87,7 @@ const DeveloperDetails = () => {
   // ✅ Fixed contact destinations (as you requested)
   const CALL_NUMBER = "+97145776496";
   const WHATSAPP_NUMBER = "+971588888461";
-  const EMAIL_TO = "info@shiroestate.ae";
+  const EMAIL_TO = "enquiry@shiroestate.ae";
   const EMAIL_SUBJECT = "Project Inquiry";
 
   const handleProjectClick = (projectSlug: string) => {

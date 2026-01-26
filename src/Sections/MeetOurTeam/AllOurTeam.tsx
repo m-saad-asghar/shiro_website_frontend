@@ -284,7 +284,7 @@ const AllOurTeam: FC = () => {
         {/* ✅ FIRST SECTION (DO NOT TOUCH) */}
         <div className="custom_container mx-auto px-4">
           <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
-            {t("Shiro Estate Professionals")}
+            {t("United for Your Success")}
           </h1>
           <p className="down_styling para_styling">
             {t(
@@ -293,10 +293,26 @@ const AllOurTeam: FC = () => {
           </p>
 
           <div className="mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 py-16">
-              {cards}
-            </div>
-          </div>
+  {/* MOBILE: ALL STACKED */}
+  <div className="flex flex-col items-center gap-8 py-16 md:hidden">
+    {cards}
+  </div>
+
+  {/* DESKTOP & UP */}
+  <div className="hidden md:block">
+    {/* FIRST ROW – 2 CENTERED */}
+   <div className="flex justify-around gap-6 md:gap-8 py-16">
+      {cards.slice(0, 2)}
+    </div>
+
+    {/* REMAINING CARDS – NORMAL GRID */}
+    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 pb-16">
+      {cards.slice(2)}
+    </div>
+  </div>
+</div>
+
+
         </div>
 
         {/* ✅ SECOND SECTION (NOW WITH IMAGES FROM AGENTS) */}

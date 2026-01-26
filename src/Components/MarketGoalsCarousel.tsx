@@ -65,7 +65,7 @@ const MarketGoalsCarousel: React.FC = () => {
       </h1>
        <p className="down_styling para_styling">
                 {t(
-            "Your Success Is Our Priority."
+            "Your success is our priority. From the first consultation to post-purchase support, we make the process smooth, transparent, and rewarding, so you achieve a result that truly works for you."
           )}
 </p>
 
