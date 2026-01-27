@@ -148,7 +148,6 @@ const ExploreProperty = () => {
       AllProperties?.data?.featured_listings ||
       [];
 
-      console.log("allProperties", allProperties);
 
     // Filter properties: only show if is_home = true AND is_sale = true
     const properties = allProperties.filter(

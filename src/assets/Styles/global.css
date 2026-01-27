@@ -679,6 +679,12 @@ video {
   border-right: 1px solid transparent;
 }
 
+@media(max-width: 1550px) {
+ .message_font {
+  font-size: 18px !important;
+}
+}
+
 @media(max-width: 1199px) {
 
   .project_text {

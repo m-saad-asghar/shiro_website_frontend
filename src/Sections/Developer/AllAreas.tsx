@@ -87,7 +87,7 @@ const AllAreas: FC<AllAreasProps> = ({
         transition={{ duration: 0.6 }}
         className="mb-6"
       >
-        <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+        <h1 style={{paddingBottom: 15}} className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
           {t("Dubai’s Top Areas")}
         </h1>
 

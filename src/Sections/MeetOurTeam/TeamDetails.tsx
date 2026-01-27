@@ -190,7 +190,7 @@ export default function TeamDetails() {
 
           {/* TEXT */}
           <div className="col-span-12 md:col-span-9 mt-8 md:mt-0 md:pl-4">
-            <h3 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+            <h3 style={{paddingBottom: 15}} className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
               About {employee.name}
             </h3>
 

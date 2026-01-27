@@ -19,7 +19,7 @@ const Details: FC = () => {
     <>
     <section className="py-10 lg:py-20">
       <div className="custom_container mx-auto px-4">
-         <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+         <h1 style={{paddingBottom: 15}} className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
         {t("Need Assistance?")}
       </h1>
        <p className="down_styling para_styling">
@@ -31,7 +31,7 @@ const Details: FC = () => {
       </div>
 
       <div className="custom_container py-10 lg:py-15">
-         <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+         <h1 style={{paddingBottom: 15}} className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
         {t("Your Success Begins with a Personal Meeting")}
       </h1>
        <p className="down_styling para_styling">
@@ -47,7 +47,7 @@ const Details: FC = () => {
       </div>
 
       <div className="custom_container mx-auto px-4">
-         <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+         <h1 style={{paddingBottom: 15}} className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
         {t("Discover Shiro Estate")}
       </h1>
        <p className="down_styling para_styling">

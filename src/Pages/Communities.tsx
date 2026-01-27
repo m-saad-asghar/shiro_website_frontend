@@ -102,7 +102,7 @@ const Communities = () => {
   if (error) {
     return (
       <div className="w-full min-h-screen flex items-center justify-center bg-gray-50">
-        <span className="text-red-500 text-lg">Error: {error}</span>
+        <span style={{color: "#9f8151"}} className="text-lg">Error: {error}</span>
       </div>
     );
   }

@@ -45,7 +45,7 @@ export default function UniqueSellingPointsSection({
           {/* RIGHT: Content */}
           <div className="w-full text-white">
             {title && (
-             <h1 className="mb-8 hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold !text-white drop-shadow-lg tracking-wide leading-tight content_general">
+             <h1 style={{paddingBottom: 15}} className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold !text-white drop-shadow-lg tracking-wide leading-tight content_general">
                {title}
               </h1>
               //  <h1 className="heading_space font-semibold text-4xl">

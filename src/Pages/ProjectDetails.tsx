@@ -141,7 +141,7 @@ const ProjectDetails = () => {
     { id: "gallery", label: t("Gallery") },
     { id: "floorPlans", label: t("Floor Plans") },
     { id: "amenities", label: t("Amenities") },
-    { id: "paymentPlans", label: t("Payment Plans") },
+    { id: "paymentPlan", label: t("Payment Plan") },
   ];
 
   const handleClick = (projectSlug: string) => {
@@ -180,7 +180,7 @@ const ProjectDetails = () => {
   if (error) {
     return (
       <div className="w-full min-h-screen flex items-center justify-center bg-gray-50">
-        <span className="text-red-500 text-lg">Error: {error}</span>
+        <span style={{color: "#9f8151"}} className="text-lg">Error: {error}</span>
       </div>
     );
   }
@@ -295,8 +295,8 @@ const ProjectDetails = () => {
         <section className="py-10 md:py-14 lg:py-16">
           {/* DETAILS */}
           <div id="details" className="scroll-mt-28 custom_container">
-           <div className="mb-8">
-             <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+           <div>
+             <h1 style={{paddingBottom: 15}} className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
                {t("About the Project")}
               </h1>
            </div>
@@ -453,10 +453,10 @@ const ProjectDetails = () => {
           </div>
 
           {/* PAYMENT PLANS */}
-             <div id="paymentPlans" className="scroll-mt-28 custom_container">
+             <div id="paymentPlan" className="scroll-mt-28 custom_container">
            <div className="mt-8 ">
              <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
-                {localizedName} {t("Payment Plans")}
+                {localizedName} {t("Payment Plan")}
               </h1>
            </div>
           <div className="grid grid-cols-12 items-start">

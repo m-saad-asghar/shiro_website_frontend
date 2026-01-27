@@ -124,6 +124,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ project_name, display_name })
                 type="button"
                 onClick={() => onClick(item?.title, String(item.desc || ""))}
                 className="hover:text-[#9f8151] transition-colors duration-200"
+                style={{textAlign: "left"}}
               >
                 {isWhatsapp ? formattedMain : isEmail || isLocation ? String(item.desc || "") : String(item.desc || "")}
               </button>

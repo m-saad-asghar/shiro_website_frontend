@@ -4,7 +4,7 @@ import arada from "../../Images/developer-logos/arada.png";
 import azizi from "../../Images/developer-logos/azizi.png";
 import binghatti from "../../Images/developer-logos/binghatti.png";
 import damac from "../../Images/developer-logos/damac.png";
-import dar from "../../Images/developer-logos/dar.svg";
+import dar from "../../Images/developer-logos/dar.png";
 import ellington from "../../Images/developer-logos/ellington.png";
 import emaar from "../../Images/developer-logos/emaar.png";
 import hre from "../../Images/developer-logos/hre.png";

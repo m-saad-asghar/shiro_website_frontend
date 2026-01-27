@@ -154,7 +154,7 @@ const ProjectsByCommunity = ({ community_name, title }: ProjectsByCommunityProps
   if (error) {
     return (
       <div className="w-full py-10 flex items-center justify-center">
-        <span className="text-red-500 text-lg">
+        <span style={{color: "#9f8151"}} className="text-lg">
           {t("Error")}: {error}
         </span>
       </div>

@@ -110,7 +110,7 @@ const ShiroServices = () => {
         <div className="custom_container mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <h2 className="hidden md:block text-[24px] sm:text-[28px] md:text-[32px] lg:text-[40px] font-bold text-white tracking-wide leading-tight content_general">
+            <h2 style={{paddingBottom: 15}} className="hidden md:block text-[24px] sm:text-[28px] md:text-[32px] lg:text-[40px] font-bold text-white tracking-wide leading-tight content_general">
               {t("Our Services")}
             </h2>
             <p className="down_styling para_styling">

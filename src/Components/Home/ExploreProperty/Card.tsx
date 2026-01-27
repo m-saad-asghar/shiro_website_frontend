@@ -212,20 +212,34 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
         {item?.images && item.images.length > 0 ? (
           <Carousel className="w-full h-full relative">
             <CarouselContent className="m-0 p-0 h-full">
-              {(item?.images || []).map((imageUrl: any, index: number) => (
-                <CarouselItem key={index} className="p-0 m-0 h-full">
-                  <img
-                    src={ListingImagesUrl(imageUrl)}
-                    className="w-full h-[400px] object-cover"
-                    alt={item?.title || "Property image"}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src =
-                        "/src/assets/Images/Property/placeholder-property.jpg";
-                    }}
-                  />
-                </CarouselItem>
-              ))}
+            {(item?.images || []).map((imageUrl: any, index: number) => {
+  const src = ListingImagesUrl(imageUrl);
+
+  // ✅ Images WITHOUT text (real photos) are from S3
+  const isImageWithoutText =
+    typeof src === "string" &&
+    src.includes("listing.s3");
+
+  return (
+    <CarouselItem key={index} className="p-0 m-0 h-full">
+      <img
+        src={src}
+        className={
+          isImageWithoutText
+            ? "w-full h-[400px] object-cover"
+            : "w-full h-full object-contain bg-[#0b4a35]/5"
+        }
+        alt={item?.title || "Property image"}
+        onError={(e) => {
+          const target = e.target as HTMLImageElement;
+          target.src =
+            "/src/assets/Images/Property/placeholder-property.jpg";
+        }}
+      />
+    </CarouselItem>
+  );
+})}
+
             </CarouselContent>
 
             {item.images.length > 1 && (

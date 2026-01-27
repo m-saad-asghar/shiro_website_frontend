@@ -283,7 +283,7 @@ const AllOurTeam: FC = () => {
       <section className="py-10 lg:py-20 pb-10 lg:pb-20">
         {/* ✅ FIRST SECTION (DO NOT TOUCH) */}
         <div className="custom_container mx-auto px-4">
-          <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+          <h1 style={{paddingBottom: 15}} className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
             {t("United for Your Success")}
           </h1>
           <p className="down_styling para_styling">
@@ -317,7 +317,7 @@ const AllOurTeam: FC = () => {
 
         {/* ✅ SECOND SECTION (NOW WITH IMAGES FROM AGENTS) */}
         <div className="custom_container mx-auto px-4">
-          <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+          <h1 style={{paddingBottom: 15}} className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
             {t("A Team That Speaks Your Language")}
           </h1>
           <p className="down_styling para_styling">{t("Our consultants are fluent in multiple languages, including English, Arabic, and other international languages. This allows us to work seamlessly with clients from around the world. Wherever you are and whatever language you speak, we ensure clear, comfortable, and barrier-free communication.")}</p>
@@ -330,7 +330,7 @@ const AllOurTeam: FC = () => {
         </div>
 
         <div className="custom_container mx-auto px-4">
-          <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+          <h1 style={{paddingBottom: 15}} className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
             {t("Proven Professionalism")}
           </h1>
           <p 

@@ -266,7 +266,7 @@ const ListYourProperty = () => {
             viewport={{ once: true }}
             className="mb-12"
           >
-            <h2 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+            <h2 style={{paddingBottom: 15}} className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
               {t("Why Choose Shiro Estate?")}
             </h2>
             <p className="down_styling para_styling">

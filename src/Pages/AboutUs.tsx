@@ -89,7 +89,7 @@ const AboutUs = () => {
           </section>
 
           <div className="custom_container py-15 lg:py-20 !pb-0">
-         <h1 className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+         <h1 style={{paddingBottom: 15}} className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
         {t("A Winning Strategy Built on Growth and Trust")}
       </h1>
        <p className="down_styling para_styling">
