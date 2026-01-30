@@ -133,19 +133,21 @@ const ExplorePropertyWithType = ({
         setPropertiesStatus("pending");
 
         const base = (import.meta as any).env?.VITE_API_URL || "";
-        const url = `${base.replace(/\/$/, "")}/show_featured_properties_with_type`;
 
-        const payload = {
-          reference,
-          property_category,
-          project_status,
-        };
 
-        const res = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
+const params = new URLSearchParams({
+reference,
+property_category,
+project_status,
+});
+
+
+const url = `${base.replace(/\/$/, "")}/show_featured_properties_with_type?${params.toString()}`;
+
+
+const res = await fetch(url, {
+method: "GET",
+});
 
         const json = await res.json();
 

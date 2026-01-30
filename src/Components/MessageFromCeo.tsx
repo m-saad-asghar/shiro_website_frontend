@@ -27,14 +27,28 @@ const MessageFromceo: React.FC = () => {
         setLoading(true);
         setError(null);
 
-        const res = await fetch(`${API_URL}/fetch_message_from_founder`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({ name: "Ali Sulaiman" }),
-        });
+        const params = new URLSearchParams({
+  name: "Ali Sulaiman",
+});
+
+const res = await fetch(
+  `${API_URL}/fetch_message_from_founder?${params.toString()}`,
+  {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+    },
+  }
+);
+
+        // const res = await fetch(`${API_URL}/fetch_message_from_founder`, {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //     Accept: "application/json",
+        //   },
+        //   body: JSON.stringify({ name: "Ali Sulaiman" }),
+        // });
 
         const json = await res.json();
 

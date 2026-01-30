@@ -250,14 +250,30 @@ const AreaSearch: FC<SearchProps> = ({
         if (searchValues.length > 0) {
           const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-          const res = await fetch(`${API_BASE_URL}/resolve_search_slugs`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            body: JSON.stringify({ search: searchValues }),
-          });
+const params = new URLSearchParams();
+searchValues.forEach((slug: string) => {
+  params.append("search[]", slug);
+});
+
+const res = await fetch(
+  `${API_BASE_URL}/resolve_search_slugs?${params.toString()}`,
+  {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+    },
+  }
+);
+          // const API_BASE_URL = import.meta.env.VITE_API_URL;
+
+          // const res = await fetch(`${API_BASE_URL}/resolve_search_slugs`, {
+          //   method: "POST",
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //     Accept: "application/json",
+          //   },
+          //   body: JSON.stringify({ search: searchValues }),
+          // });
 
           const json = await res.json();
           const data = Array.isArray(json?.data) ? json.data : [];
@@ -324,22 +340,48 @@ const AreaSearch: FC<SearchProps> = ({
 
     const tmr = setTimeout(async () => {
       try {
-        setIsTypingLoading(true);
-        const API_BASE_URL = import.meta.env.VITE_API_URL;
+setIsTypingLoading(true);
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-        const res = await fetch(`${API_BASE_URL}/get_listing_options`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({ search_text: text }),
-          signal: controller.signal,
-        });
 
-        const json = await res.json();
-        setListingOptions(Array.isArray(json?.data) ? json.data : []);
-      } catch (e: any) {
+const params = new URLSearchParams({
+search_text: text,
+});
+
+
+const res = await fetch(
+`${API_BASE_URL}/get_listing_options?${params.toString()}`,
+{
+method: "GET",
+headers: {
+Accept: "application/json",
+},
+signal: controller.signal,
+}
+);
+
+
+const json = await res.json();
+setListingOptions(Array.isArray(json?.data) ? json.data : []);
+}
+      // try {
+      //   setIsTypingLoading(true);
+      //   const API_BASE_URL = import.meta.env.VITE_API_URL;
+
+      //   const res = await fetch(`${API_BASE_URL}/get_listing_options`, {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Accept: "application/json",
+      //     },
+      //     body: JSON.stringify({ search_text: text }),
+      //     signal: controller.signal,
+      //   });
+
+      //   const json = await res.json();
+      //   setListingOptions(Array.isArray(json?.data) ? json.data : []);
+      // } 
+      catch (e: any) {
         if (e?.name !== "AbortError") console.error("get_listing_options error:", e);
         setListingOptions([]);
       } finally {

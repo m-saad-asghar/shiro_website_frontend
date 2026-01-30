@@ -83,7 +83,6 @@ useEffect(() => {
   return () => controller.abort();
 }, []);
 
-  // ✅ ONLY API CALL on typing: POST /api/get_listing_options with { search_text }
   useEffect(() => {
     const text = (values?.search || "").trim();
 
@@ -96,21 +95,47 @@ useEffect(() => {
 
     const tmr = setTimeout(async () => {
       try {
-        setIsTypingLoading(true);
-      const API_BASE_URL = import.meta.env.VITE_API_URL;
-        const res = await fetch(`${API_BASE_URL}/get_listing_options`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({ search_text: text }),
-          signal: controller.signal,
-        });
+setIsTypingLoading(true);
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-        const json = await res.json();
-        setListingOptions(Array.isArray(json?.data) ? json.data : []);
-      } catch (e: any) {
+
+const params = new URLSearchParams({
+search_text: text,
+});
+
+
+const res = await fetch(
+`${API_BASE_URL}/get_listing_options?${params.toString()}`,
+{
+method: "GET",
+headers: {
+Accept: "application/json",
+},
+signal: controller.signal,
+}
+);
+
+
+const json = await res.json();
+setListingOptions(Array.isArray(json?.data) ? json.data : []);
+}
+      // try {
+      //   setIsTypingLoading(true);
+      // const API_BASE_URL = import.meta.env.VITE_API_URL;
+      //   const res = await fetch(`${API_BASE_URL}/get_listing_options`, {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Accept: "application/json",
+      //     },
+      //     body: JSON.stringify({ search_text: text }),
+      //     signal: controller.signal,
+      //   });
+
+      //   const json = await res.json();
+      //   setListingOptions(Array.isArray(json?.data) ? json.data : []);
+      // } 
+      catch (e: any) {
         if (e?.name !== "AbortError") {
           console.error("get_listing_options error:", e);
         }

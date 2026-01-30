@@ -248,16 +248,33 @@ const Search: FC<SearchProps> = ({
 
       try {
         if (searchValues.length > 0) {
+
           const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-          const res = await fetch(`${API_BASE_URL}/resolve_search_slugs`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            body: JSON.stringify({ search: searchValues }),
-          });
+const params = new URLSearchParams();
+searchValues.forEach((slug: string) => {
+  params.append("search[]", slug);
+});
+
+const res = await fetch(
+  `${API_BASE_URL}/resolve_search_slugs?${params.toString()}`,
+  {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+    },
+  }
+);
+          // const API_BASE_URL = import.meta.env.VITE_API_URL;
+
+          // const res = await fetch(`${API_BASE_URL}/resolve_search_slugs`, {
+          //   method: "POST",
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //     Accept: "application/json",
+          //   },
+          //   body: JSON.stringify({ search: searchValues }),
+          // });
 
           const json = await res.json();
           const data = Array.isArray(json?.data) ? json.data : [];
@@ -327,15 +344,30 @@ const Search: FC<SearchProps> = ({
         setIsTypingLoading(true);
         const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-        const res = await fetch(`${API_BASE_URL}/get_listing_options`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({ search_text: text }),
-          signal: controller.signal,
-        });
+        const params = new URLSearchParams({
+  search_text: text,
+});
+
+const res = await fetch(
+  `${API_BASE_URL}/get_listing_options?${params.toString()}`,
+  {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+    },
+    signal: controller.signal,
+  }
+);
+
+        // const res = await fetch(`${API_BASE_URL}/get_listing_options`, {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //     Accept: "application/json",
+        //   },
+        //   body: JSON.stringify({ search_text: text }),
+        //   signal: controller.signal,
+        // });
 
         const json = await res.json();
         setListingOptions(Array.isArray(json?.data) ? json.data : []);

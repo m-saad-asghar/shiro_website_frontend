@@ -38,14 +38,28 @@ const ListingBySlug = ({ community_name }: ListingBySlugProps) => {
         setStatus("pending");
 
         const base = (import.meta as any).env?.VITE_API_URL || "";
-        const url = `${base.replace(/\/$/, "")}/listings_by_slug`;
 
-        const res = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          // ✅ send community_name with same key
-          body: JSON.stringify({ community_name }),
-        });
+const params = new URLSearchParams({
+  community_name,
+});
+
+const url = `${base.replace(/\/$/, "")}/listings_by_slug?${params.toString()}`;
+
+const res = await fetch(url, {
+  method: "GET",
+  headers: {
+    Accept: "application/json",
+  },
+});
+
+        // const base = (import.meta as any).env?.VITE_API_URL || "";
+        // const url = `${base.replace(/\/$/, "")}/listings_by_slug`;
+
+        // const res = await fetch(url, {
+        //   method: "POST",
+        //   headers: { "Content-Type": "application/json" },
+        //   body: JSON.stringify({ community_name }),
+        // });
 
         const json = await res.json();
         setApiData(json);

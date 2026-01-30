@@ -143,23 +143,54 @@ const Buy = () => {
       setApiStatus("pending");
 
       const base = (import.meta as any).env?.VITE_API_URL || "";
-      // IMPORTANT: if your backend is underscore, change to /show_sale_properties
-      const url = `${base.replace(/\/$/, "")}/show_sale_properties`;
 
-      const payload: any = {
-        page: pageToLoad,
-        per_page: PER_PAGE,
-        ...urlFilters, // ✅ ONLY available params are included
-      };
+const params = new URLSearchParams();
 
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+// pagination
+params.append("page", String(pageToLoad));
+params.append("per_page", String(PER_PAGE));
+
+// filters (supports arrays like bedrooms[], search[], etc.)
+Object.entries(urlFilters || {}).forEach(([key, value]) => {
+  if (value === null || value === undefined || value === "") return;
+
+  if (Array.isArray(value)) {
+    value.forEach(v => {
+      if (v !== null && v !== undefined && v !== "") {
+        params.append(`${key}[]`, String(v));
+      }
+    });
+  } else {
+    params.append(key, String(value));
+  }
+});
+
+const url = `${base.replace(/\/$/, "")}/show_sale_properties?${params.toString()}`;
+
+const res = await fetch(url, {
+  method: "GET",
+  headers: {
+    Accept: "application/json",
+  },
+});
+
+      // const base = (import.meta as any).env?.VITE_API_URL || "";
+      // const url = `${base.replace(/\/$/, "")}/show_sale_properties`;
+
+      // const payload: any = {
+      //   page: pageToLoad,
+      //   per_page: PER_PAGE,
+      //   ...urlFilters, // ✅ ONLY available params are included
+      // };
+
+      // const res = await fetch(url, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Accept: "application/json",
+      //   },
+      //   body: JSON.stringify(payload),
+      // });
 
       const json = await res.json();
 

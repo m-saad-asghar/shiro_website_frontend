@@ -13,12 +13,18 @@ type ProjectsByCommunityProps = {
 const ProjectsByCommunityServices = {
   async fetchProjectsByCommunityName(community_name: string) {
     const baseUrl = import.meta.env.VITE_API_URL;
-    const url = `${baseUrl.replace(/\/$/, "")}/fetch_projects_from_community`;
+
+    const params = new URLSearchParams({
+      community_name,
+    });
+
+    const url = `${baseUrl.replace(/\/$/, "")}/fetch_projects_from_community?${params.toString()}`;
 
     const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ community_name }), // ✅ send same key
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
     });
 
     if (!response.ok) {
@@ -30,6 +36,27 @@ const ProjectsByCommunityServices = {
     return await response.json();
   },
 };
+
+// const ProjectsByCommunityServices = {
+//   async fetchProjectsByCommunityName(community_name: string) {
+//     const baseUrl = import.meta.env.VITE_API_URL;
+//     const url = `${baseUrl.replace(/\/$/, "")}/fetch_projects_from_community`;
+
+//     const response = await fetch(url, {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ community_name }), // ✅ send same key
+//     });
+
+//     if (!response.ok) {
+//       throw new Error(
+//         `Failed to fetch projects, Status Code: ${response.status}`
+//       );
+//     }
+
+//     return await response.json();
+//   },
+// };
 
 const getLocalizedValue = (value: any, lang: string, fallbackLang = "en") => {
   if (!value) return "";
