@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import employeeImagesUrl from "@/helpers/employeeImagesURL";
+import empImagesUrl from "@/helpers/empImagesURL";
 import AgentProperties from "../Home/AgentProperties";
 
 type Employee = {
@@ -90,7 +91,7 @@ export default function TeamDetails() {
 
   const imgSrc = useMemo(() => {
     if (!employee?.profile_picture) return PLACEHOLDER;
-    return employeeImagesUrl(employee.profile_picture);
+    return empImagesUrl(employee.profile_picture);
   }, [employee?.profile_picture, PLACEHOLDER]);
 
   if (loading) return null;
