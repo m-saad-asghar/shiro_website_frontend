@@ -34,6 +34,10 @@ const AllOurTeam: FC = () => {
   const EMPLOYEE_IMG_BASE = `${import.meta.env.VITE_IMAGE_URL || ""}`; // optional
   const PLACEHOLDER = empImagesUrl("default_employee.png");
 
+  // ✅ reduced circle size (only applies where used)
+  const AGENT_AVATAR_CLASS = "w-[210px] h-[210px]"; // desktop
+  const AGENT_AVATAR_CLASS_MOBILE = "w-[160px] h-[160px]"; // mobile
+
   useEffect(() => {
     let mounted = true;
 
@@ -53,8 +57,6 @@ const AllOurTeam: FC = () => {
 
         if (res.ok && json?.status === 1) {
           // ✅ KEEP FIRST SECTION WORKING (do not touch structure)
-          // if backend returns array at json.data -> setTeam(json.data)
-          // if backend returns single object at json.data -> put in array
           if (Array.isArray(json?.data)) {
             setTeam(json.data);
           } else if (json?.data && typeof json.data === "object") {
@@ -63,7 +65,7 @@ const AllOurTeam: FC = () => {
             setTeam([]);
           }
 
-          // ✅ NEW: SECOND SECTION from json.agents
+          // ✅ SECOND SECTION from json.agents
           if (Array.isArray(json?.agents)) {
             setAgents(json.agents);
           } else {
@@ -93,59 +95,53 @@ const AllOurTeam: FC = () => {
   }, [API_URL, t]);
 
   // ✅ FIRST SECTION CARDS (UNCHANGED)
- const cards = useMemo(() => {
-  return team.map((m) => {
-    const imgSrc = m.profile_picture
-      ? empImagesUrl(m.profile_picture)
-      : PLACEHOLDER;
+  const cards = useMemo(() => {
+    return team.map((m) => {
+      const imgSrc = m.profile_picture ? empImagesUrl(m.profile_picture) : PLACEHOLDER;
 
-    const hasDescription =
-      typeof m.description === "string" && m.description.trim() !== "";
+      const hasDescription =
+        typeof m.description === "string" && m.description.trim() !== "";
 
-    const ImageWrapper = ({ children }: { children: React.ReactNode }) =>
-      hasDescription ? (
-        <Link to={`/team/${m.slug}`} aria-label={`View ${m.name} profile`}>
-          {children}
-        </Link>
-      ) : (
-        <>{children}</>
+      const ImageWrapper = ({ children }: { children: React.ReactNode }) =>
+        hasDescription ? (
+          <Link to={`/team/${m.slug}`} aria-label={`View ${m.name} profile`}>
+            {children}
+          </Link>
+        ) : (
+          <>{children}</>
+        );
+
+      return (
+        <div key={m.id} className="flex flex-col items-center text-center">
+          <ImageWrapper>
+            <div className="w-[300px] h-[300px] rounded-full overflow-hidden bg-gray-100 shadow-sm cursor-pointer">
+              <img
+                src={imgSrc}
+                alt={m.name}
+                style={{ height: 330, width: 330 }}
+                className="w-full h-full object-cover transition-transform ease-in-out hover:scale-105"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = PLACEHOLDER;
+                }}
+                loading="lazy"
+              />
+            </div>
+          </ImageWrapper>
+
+          <h3 className="mt-6 font-semibold text-primary text-2xl">{m.name}</h3>
+
+          <p className="mt-1 font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
+            {m.position}
+          </p>
+        </div>
       );
+    });
+  }, [team, PLACEHOLDER]);
 
-    return (
-      <div key={m.id} className="flex flex-col items-center text-center">
-        <ImageWrapper>
-          <div className="w-[300px] h-[300px] rounded-full overflow-hidden bg-gray-100 shadow-sm cursor-pointer">
-            <img
-              src={imgSrc}
-              alt={m.name}
-              style={{height: 330, width: 330}}
-              className="w-full h-full object-cover transition-transform ease-in-out hover:scale-105"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).src = PLACEHOLDER;
-              }}
-              loading="lazy"
-            />
-          </div>
-        </ImageWrapper>
-
-        <h3 className="mt-6 font-semibold text-primary text-2xl">
-          {m.name}
-        </h3>
-
-        <p className="mt-1 font-semibold rounded-lg text-sm transition-all duration-200 mb-1 text-[#9f8151]">
-          {m.position}
-        </p>
-      </div>
-    );
-  });
-}, [team, PLACEHOLDER]);
-
-  // ✅ SECOND SECTION CARDS (NEW: agents with images)
- const agentCards = useMemo(() => {
+  // ✅ SECOND SECTION CARDS (agents) — circle retained + reduced size
+const agentCards = useMemo(() => {
   return agents.map((a) => {
-    const imgSrc = a.profile_picture
-      ? empImagesUrl(a.profile_picture)
-      : PLACEHOLDER;
+    const imgSrc = a.profile_picture ? empImagesUrl(a.profile_picture) : PLACEHOLDER;
 
     const hasDescription =
       typeof a.description === "string" && a.description.trim() !== "";
@@ -162,11 +158,11 @@ const AllOurTeam: FC = () => {
     return (
       <div key={a.id} className="flex flex-col items-center text-center">
         <ImageWrapper>
-          <div className="w-[300px] h-[300px] rounded-full overflow-hidden bg-gray-100 shadow-sm cursor-pointer">
+          {/* ✅ MUST be square + overflow-hidden + rounded-full */}
+          <div className="w-[170px] md:w-[230px] lg:w-[230px] aspect-square rounded-full overflow-hidden bg-gray-100 shadow-sm cursor-pointer">
             <img
               src={imgSrc}
               alt={a.name}
-               style={{height: 330, width: 330}}
               className="w-full h-full object-cover transition-transform ease-in-out hover:scale-105"
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src = PLACEHOLDER;
@@ -176,13 +172,9 @@ const AllOurTeam: FC = () => {
           </div>
         </ImageWrapper>
 
-        <h3 className="mt-6 font-semibold text-primary text-2xl">
-          {a.name}
-        </h3>
+        <h3 className="mt-6 font-semibold text-primary text-2xl">{a.name}</h3>
 
-        <p className="mt-1 font-semibold text-sm mb-1 text-[#9f8151]">
-          {a.position}
-        </p>
+        <p className="mt-1 font-semibold text-sm mb-1 text-[#9f8151]">{a.position}</p>
 
         {/* CONTACT ICONS */}
         <div className="w-full flex justify-center">
@@ -242,6 +234,7 @@ const AllOurTeam: FC = () => {
   });
 }, [agents, PLACEHOLDER]);
 
+
   if (loading) {
     return (
       <section className="w-full py-12 md:py-16 lg:py-20">
@@ -283,7 +276,10 @@ const AllOurTeam: FC = () => {
       <section className="py-10 lg:py-20 pb-10 lg:pb-20">
         {/* ✅ FIRST SECTION (DO NOT TOUCH) */}
         <div className="custom_container mx-auto px-4">
-          <h1 style={{paddingBottom: 15}} className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+          <h1
+            style={{ paddingBottom: 15 }}
+            className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general"
+          >
             {t("United for Your Success")}
           </h1>
           <p className="down_styling para_styling">
@@ -293,68 +289,77 @@ const AllOurTeam: FC = () => {
           </p>
 
           <div className="mx-auto">
-  {/* MOBILE: ALL STACKED */}
-  <div className="flex flex-col items-center gap-8 py-16 md:hidden">
-    {cards}
-  </div>
+            {/* MOBILE: ALL STACKED */}
+            <div className="flex flex-col items-center gap-8 py-16 md:hidden">
+              {cards}
+            </div>
 
-  {/* DESKTOP & UP */}
-  <div className="hidden md:block">
-    {/* FIRST ROW – 2 CENTERED */}
-   <div className="flex justify-around gap-6 md:gap-8 py-16">
-      {cards.slice(0, 2)}
-    </div>
+            {/* DESKTOP & UP */}
+            <div className="hidden md:block">
+              {/* FIRST ROW – 2 CENTERED */}
+              <div className="flex justify-around gap-6 md:gap-8 py-16">
+                {cards.slice(0, 2)}
+              </div>
 
-    {/* REMAINING CARDS – NORMAL GRID */}
-    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 pb-16">
-      {cards.slice(2)}
-    </div>
-  </div>
-</div>
-
-
+              {/* REMAINING CARDS – NORMAL GRID */}
+              <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 pb-16">
+                {cards.slice(2)}
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* ✅ SECOND SECTION (NOW WITH IMAGES FROM AGENTS) */}
+        {/* ✅ SECOND SECTION (ONLY THIS LAYOUT CHANGED) */}
         <div className="custom_container mx-auto px-4">
-          <h1 style={{paddingBottom: 15}} className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+          <h1
+            style={{ paddingBottom: 15 }}
+            className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general"
+          >
             {t("A Team That Speaks Your Language")}
           </h1>
-          <p className="down_styling para_styling">{t("Our consultants are fluent in multiple languages, including English, Arabic, and other international languages. This allows us to work seamlessly with clients from around the world. Wherever you are and whatever language you speak, we ensure clear, comfortable, and barrier-free communication.")}</p>
+          <p className="down_styling para_styling">
+            {t(
+              "Our consultants are fluent in multiple languages, including English, Arabic, and other international languages. This allows us to work seamlessly with clients from around the world. Wherever you are and whatever language you speak, we ensure clear, comfortable, and barrier-free communication."
+            )}
+          </p>
 
+          {/* ✅ Agent cards grid:
+              - Mobile: 2 columns
+              - Desktop: 5 columns */}
           <div className="mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 py-16">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8 py-16">
               {agentCards}
             </div>
           </div>
         </div>
 
         <div className="custom_container mx-auto px-4">
-          <h1 style={{paddingBottom: 15}} className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general">
+          <h1
+            style={{ paddingBottom: 15 }}
+            className="hidden md:block w-full lg:w-[100%] text-[28px] sm:text-[32px] md:text-[40px] lg:text-[64px] font-bold text-white drop-shadow-lg tracking-wide leading-tight content_general"
+          >
             {t("Proven Professionalism")}
           </h1>
-          <p 
-          className="down_styling para_styling">{t("Our advantage is real-world experience and up-to-date market knowledge. We continuously analyse market dynamics, track emerging trends, and invest in ongoing team education to stay ahead.")}
-          </p><br/>
-          <p 
-          className="down_styling para_styling">{t("You are Always Our Top Priority.")}
-          </p><br/>
-           <p 
-          className="down_styling para_styling">{t("We value trust and focus on building long-term relationships. For us, it’s not just about closing a deal — it’s about helping you achieve your goals.")}
-          </p><br/>
-          <p 
-          className="down_styling para_styling">{t("With Shiro Estate, You Receive:")}
-          </p><br/>
+          <p className="down_styling para_styling">
+            {t(
+              "Our advantage is real-world experience and up-to-date market knowledge. We continuously analyse market dynamics, track emerging trends, and invest in ongoing team education to stay ahead."
+            )}
+          </p>
+          <br />
+          <p className="down_styling para_styling">{t("You are Always Our Top Priority.")}</p>
+          <br />
+          <p className="down_styling para_styling">
+            {t(
+              "We value trust and focus on building long-term relationships. For us, it’s not just about closing a deal — it’s about helping you achieve your goals."
+            )}
+          </p>
+          <br />
+          <p className="down_styling para_styling">{t("With Shiro Estate, You Receive:")}</p>
+          <br />
           <ul className="down_styling para_styling">
-            <li>
-              ✓ A dedicated personal manager guiding you from initial consultation to deal completion
-            </li>
-            <li>
-              ✓ A tailored strategy designed around your goals
-            </li>
-            <li>
-              ✓ Full transparency at every stage and seamless collaboration from our expert team
-            </li>
+            <li>✓ A dedicated personal manager guiding you from initial consultation to deal completion</li>
+            <li>✓ A tailored strategy designed around your goals</li>
+            <li>✓ Full transparency at every stage and seamless collaboration from our expert team</li>
           </ul>
         </div>
       </section>
