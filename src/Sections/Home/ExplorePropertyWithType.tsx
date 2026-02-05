@@ -177,9 +177,6 @@ method: "GET",
     AllProperties?.data?.data?.featured_listings ||
     [];
 
-  console.log("ALL properties from API:", allProperties);
-  console.log("Count:", allProperties.length);
-
   if (!Array.isArray(allProperties) || allProperties.length === 0) {
     return (
       <CarouselItem className="w-full">

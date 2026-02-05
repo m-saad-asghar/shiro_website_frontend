@@ -27,6 +27,9 @@ const ListYourProperty = () => {
               src={ImagesUrl("list_with_us_main_image.avif")}
               alt="List Your Property Main Banner"
               className="w-full h-full object-cover"
+              loading="eager"
+  decoding="async"
+  fetchPriority="high"
             />
 
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-transparent" />

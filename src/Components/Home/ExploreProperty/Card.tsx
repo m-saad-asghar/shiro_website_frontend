@@ -222,21 +222,40 @@ const Card: FC<CardType> = ({ item, viewMode = "grid" }) => {
 
   return (
     <CarouselItem key={index} className="p-0 m-0 h-full">
-      <img
-        src={src}
-        className={
-          isImageWithoutText
-            ? "w-full h-[400px] object-cover"
-            : "w-full h-full object-contain bg-[#0b4a35]/5"
-        }
-        alt={item?.title || "Property image"}
-        onError={(e) => {
-          const target = e.target as HTMLImageElement;
-          target.src =
-            "/src/assets/Images/Property/placeholder-property.jpg";
-        }}
-      />
-    </CarouselItem>
+  <img
+    src={src}
+    alt={item?.title || "Property image"}
+    className={
+      isImageWithoutText
+        ? "w-full h-[400px] object-cover"
+        : "w-full h-full object-contain bg-[#0b4a35]/5"
+    }
+    loading={index === 0 ? "eager" : "lazy"}
+    decoding="async"
+    fetchPriority={index === 0 ? "high" : "low"}
+    onError={(e) => {
+      const target = e.currentTarget as HTMLImageElement;
+      target.src = "/src/assets/Images/Property/placeholder-property.jpg";
+    }}
+  />
+</CarouselItem>
+
+    // <CarouselItem key={index} className="p-0 m-0 h-full">
+    //   <img
+    //     src={src}
+    //     className={
+    //       isImageWithoutText
+    //         ? "w-full h-[400px] object-cover"
+    //         : "w-full h-full object-contain bg-[#0b4a35]/5"
+    //     }
+    //     alt={item?.title || "Property image"}
+    //     onError={(e) => {
+    //       const target = e.target as HTMLImageElement;
+    //       target.src =
+    //         "/src/assets/Images/Property/placeholder-property.jpg";
+    //     }}
+    //   />
+    // </CarouselItem>
   );
 })}
 

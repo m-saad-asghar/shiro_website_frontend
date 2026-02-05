@@ -123,7 +123,9 @@ const AllOurTeam: FC = () => {
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).src = PLACEHOLDER;
                 }}
-                loading="lazy"
+                loading="eager"
+  decoding="async"
+  fetchPriority="high"
               />
             </div>
           </ImageWrapper>

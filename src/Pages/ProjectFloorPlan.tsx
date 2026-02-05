@@ -104,11 +104,17 @@ export default function ProjectFloorPlan({
               <div className="fp-imageCard">
                 {src ? (
                   <img
-                    src={src}
+      src={src}
                     alt={p.title || "Floorplan"}
                     className="fp-image"
-                    loading="lazy"
-                  />
+  loading="lazy"
+/>
+                  // <img
+                  //   src={src}
+                  //   alt={p.title || "Floorplan"}
+                  //   className="fp-image"
+                  //   loading="lazy"
+                  // />
                 ) : (
                   <div className="fp-empty">{t("No floorplan image")}</div>
                 )}
@@ -149,10 +155,16 @@ export default function ProjectFloorPlan({
             <div className="fp-modalCard">
               {activePlan?.value ? (
                 <img
-                  src={resolveSrc(activePlan.value)}
+   src={resolveSrc(activePlan.value)}
                   alt={activePlan?.title || "Floorplan"}
                   className="fp-modalImg"
-                />
+  loading="lazy"
+/>
+                // <img
+                //   src={resolveSrc(activePlan.value)}
+                //   alt={activePlan?.title || "Floorplan"}
+                //   className="fp-modalImg"
+                // />
               ) : (
                 <div className="fp-empty">{t("No floorplan image")}</div>
               )}

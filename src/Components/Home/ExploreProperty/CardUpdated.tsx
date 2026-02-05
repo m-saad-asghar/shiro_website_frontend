@@ -195,14 +195,17 @@ const CardUpdated: FC<CardType> = ({ item, viewMode = "grid" }) => {
             key={index}
           >
             <img
-              src={ListingImagesUrl(imageUrl)}
-              className="w-full h-[300px] sm:h-[300px] md:h-[300px] lg:h-[300px] object-cover"
-              alt={item?.title || "Property image"}
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = "/src/assets/Images/Property/placeholder-property.jpg";
-              }}
-            />
+    src={ListingImagesUrl(imageUrl)}
+    alt={item?.title || "Property image"}
+    className="w-full h-[300px] sm:h-[300px] md:h-[300px] lg:h-[300px] object-cover"
+    loading={index === 0 ? "eager" : "lazy"}
+    decoding="async"
+    fetchPriority={index === 0 ? "high" : "low"}
+    onError={(e) => {
+      const target = e.currentTarget as HTMLImageElement;
+      target.src = "/src/assets/Images/Property/placeholder-property.jpg";
+    }}
+  />
           </CarouselItem>
         ))}
 

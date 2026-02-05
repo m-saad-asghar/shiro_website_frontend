@@ -48,11 +48,19 @@ export default function Gallery({ images }: GalleryProps) {
               onClick={() => handleOpen(i)}
             >
               <img
+   src={ProjectImagesUrl(src)}
+                alt={`Gallery image ${i + 1}`}
+                className="gallery-image gallery_image_mobile"
+  loading="eager"
+  decoding="async"
+  fetchPriority="high"
+/>
+              {/* <img
                  src={ProjectImagesUrl(src)}
                 alt={`Gallery image ${i + 1}`}
                 className="gallery-image gallery_image_mobile"
                 loading="lazy"
-              />
+              /> */}
             </button>
           ))}
         </div>

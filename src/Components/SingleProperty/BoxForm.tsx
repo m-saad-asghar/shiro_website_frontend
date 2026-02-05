@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import ImagesUrl from "@/helpers/ImagesURL";
 import { motion } from "framer-motion";
 import employeeImagesUrl from "@/helpers/employeeImagesURL";
+import empImagesUrl from "@/helpers/empImagesURL";
 import contactAgentValidationSchema from "@/Utils/Validations/contactAgentValidation";
 import ArrayInputsContact from "@/assets/Data/Home/ArrayInputsContact";
 import { Form } from "../../Components/Home";
@@ -33,7 +34,7 @@ const initialValues = {
 const BoxForm: FC<BoxFormProps> = ({ item, employee, agents }) => {
   const { t } = useTranslation();
 
-  const imageSrc = employeeImagesUrl(
+  const imageSrc = empImagesUrl(
     agents?.profile_picture?.trim()
       ? agents.profile_picture
       : employee?.profile_picture?.trim()
@@ -128,6 +129,9 @@ const BoxForm: FC<BoxFormProps> = ({ item, employee, agents }) => {
                 src={imageSrc}
                 className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition rounded-full"
                 alt={imageAlt}
+                loading="eager"
+  decoding="async"
+  fetchPriority="high"
               />
             </a>
           ) : (

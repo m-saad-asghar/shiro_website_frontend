@@ -261,6 +261,9 @@ const ProjectsByCommunity = ({ community_name, title }: ProjectsByCommunityProps
                       src={imgSrc}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       alt={projectName || "Project image"}
+                      loading="eager"
+                      decoding="async"
+                      fetchPriority="high"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src =

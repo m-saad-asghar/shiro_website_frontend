@@ -62,6 +62,9 @@ const ShiroServices = () => {
           src={ImagesUrl("services_main_image.jpg")}
           alt="Services Banner"
           className="w-full h-full object-cover"
+          loading="eager"
+  decoding="async"
+  fetchPriority="high"
         />
 
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-transparent" />
@@ -133,6 +136,7 @@ const ShiroServices = () => {
                 <img
                   src={ServiceImagesUrl(service.bgImage)}
                   alt={service.title}
+                   loading="lazy"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
 
@@ -146,6 +150,7 @@ const ShiroServices = () => {
                     alt={`${service.title} overlay`}
                     className="max-w-[100%] max-h-[100%] object-contain"
                     draggable={false}
+                    loading="lazy"
                   />
                 </div>
 

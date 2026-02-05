@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { LoaderPage } from "@/Components";
 import employeeImagesUrl from "@/helpers/employeeImagesURL";
+import empImagesUrl from "@/helpers/empImagesURL";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -29,7 +30,7 @@ const AllOurTeamCarausal: FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const API_URL = `${import.meta.env.VITE_API_URL}/fetch_employees`;
-  const PLACEHOLDER = employeeImagesUrl("default_employee.png");
+  const PLACEHOLDER = empImagesUrl("default_employee.png");
 
   useEffect(() => {
     let mounted = true;
@@ -129,7 +130,7 @@ const AllOurTeamCarausal: FC = () => {
           <CarouselContent className="py-16">
             {items.map((m) => {
               const imgSrc = m.profile_picture
-                ? employeeImagesUrl(m.profile_picture)
+                ? empImagesUrl(m.profile_picture)
                 : PLACEHOLDER;
 
               return (

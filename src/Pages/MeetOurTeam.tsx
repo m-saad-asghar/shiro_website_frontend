@@ -39,8 +39,11 @@ const MeetOurTeam = () => {
        <div className="relative w-full h-[91vh] overflow-hidden developer_listing_styling">
         <img
           src={ImagesUrl("meet_the_team_main_image.jpeg")}
-          alt="Services Banner"
+          alt="Meet Our Team Banner"
           className="w-full h-full object-cover"
+          loading="eager"
+  decoding="async"
+  fetchPriority="high"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-transparent"></div>
         <div

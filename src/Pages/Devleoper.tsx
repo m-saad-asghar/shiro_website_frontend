@@ -27,10 +27,19 @@ const Devleoper = () => {
       </Helmet>
        <div className="relative w-full h-[91vh] overflow-hidden developer_listing_styling">
         <img
+  src={ImagesUrl("our_developers_main_image.jpg")}
+  alt="Services Banner"
+  className="w-full h-full object-cover"
+  loading="eager"
+  decoding="async"
+  fetchPriority="high"
+/>
+
+        {/* <img
           src={ImagesUrl("our_developers_main_image.jpg")}
           alt="Services Banner"
           className="w-full h-full object-cover"
-        />
+        /> */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-transparent"></div>
         <div
           className="

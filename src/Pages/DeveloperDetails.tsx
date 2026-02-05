@@ -269,6 +269,33 @@ const DeveloperDetails = () => {
                       >
                         <div className="relative overflow-hidden w-full h-[300px]">
                           {project?.project_main_image ? (
+  <img
+    src={ImagesUrl(project.project_main_image)}
+    alt={projectName || "Project image"}
+    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+    loading="eager"
+    decoding="async"
+    fetchPriority="high"
+    onError={(e) => {
+      const target = e.currentTarget as HTMLImageElement;
+      target.src = "/src/assets/Images/Property/placeholder-property.jpg";
+    }}
+  />
+) : (
+  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+    <div className="text-center">
+      <Icons.IoImageOutline
+        size={48}
+        className="text-gray-400 mx-auto mb-2"
+      />
+      <p className="text-gray-500 text-sm">
+        {t("No images available")}
+      </p>
+    </div>
+  </div>
+)}
+
+                          {/* {project?.project_main_image ? (
                             <img
                               src={ImagesUrl(project.project_main_image)}
                               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -291,7 +318,7 @@ const DeveloperDetails = () => {
                                 </p>
                               </div>
                             </div>
-                          )}
+                          )} */}
 
                           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 

@@ -42,7 +42,7 @@ type ApiResponse = {
 
 export default function TeamDetails() {
   const { slug } = useParams<{ slug: string }>();
-  const PLACEHOLDER = employeeImagesUrl("default_employee.png");
+  const PLACEHOLDER = empImagesUrl("default_employee.png");
 
   const [employee, setEmployee] = useState<Employee | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);

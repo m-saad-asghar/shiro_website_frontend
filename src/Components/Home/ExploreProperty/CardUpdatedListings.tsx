@@ -190,20 +190,38 @@ const CardUpdatedListings: FC<CardType> = ({ item, viewMode = "grid" }) => {
       <CarouselContent className="relative m-0 p-0 h-full">
         
         {item.images.map((imageUrl: any, index: number) => (
-          <CarouselItem 
-            className="p-0 m-0 h-[300px] sm:h-[300px] md:h-[300px] lg:h-[300px]" 
-            key={index}
-          >
-            <img
-              src={ListingImagesUrl(imageUrl)}
-              className="w-full h-[300px] sm:h-[300px] md:h-[300px] lg:h-[300px] object-cover"
-              alt={item?.title || "Property image"}
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = "/src/assets/Images/Property/placeholder-property.jpg";
-              }}
-            />
-          </CarouselItem>
+          <CarouselItem
+  key={index}
+  className="p-0 m-0 h-[300px] sm:h-[300px] md:h-[300px] lg:h-[300px]"
+>
+  <img
+    src={ListingImagesUrl(imageUrl)}
+    alt={item?.title || "Property image"}
+    className="w-full h-[300px] sm:h-[300px] md:h-[300px] lg:h-[300px] object-cover"
+    loading={index === 0 ? "eager" : "lazy"}
+    decoding="async"
+    fetchPriority={index === 0 ? "high" : "low"}
+    onError={(e) => {
+      const target = e.currentTarget as HTMLImageElement;
+      target.src = "/src/assets/Images/Property/placeholder-property.jpg";
+    }}
+  />
+</CarouselItem>
+
+          // <CarouselItem 
+          //   className="p-0 m-0 h-[300px] sm:h-[300px] md:h-[300px] lg:h-[300px]" 
+          //   key={index}
+          // >
+          //   <img
+          //     src={ListingImagesUrl(imageUrl)}
+          //     className="w-full h-[300px] sm:h-[300px] md:h-[300px] lg:h-[300px] object-cover"
+          //     alt={item?.title || "Property image"}
+          //     onError={(e) => {
+          //       const target = e.target as HTMLImageElement;
+          //       target.src = "/src/assets/Images/Property/placeholder-property.jpg";
+          //     }}
+          //   />
+          // </CarouselItem>
         ))}
 
       </CarouselContent>

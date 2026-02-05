@@ -35,10 +35,16 @@ export default function UniqueSellingPointsSection({
          <div className="w-full h-full">
   <div className="h-full overflow-hidden change_border shadow-xl">
     <img
+   src={ProjectImagesUrl(main_image)}
+      alt={title || "Unique Selling Points"}
+      className="h-full w-full object-cover"
+  loading="lazy"
+/>
+    {/* <img
       src={ProjectImagesUrl(main_image)}
       alt={title || "Unique Selling Points"}
       className="h-full w-full object-cover"
-    />
+    /> */}
   </div>
 </div>
 

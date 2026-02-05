@@ -47,12 +47,18 @@ const AreaCard: FC<AreaCardProps> = ({ item }) => {
       {/* Image Section */}
       <div className="relative h-60 overflow-hidden border-radius bg-gray-100">
         {imageSrc ? (
-          <img
-            src={imageSrc}
+           <img
+   src={imageSrc}
             alt={item?.name}
-            loading="lazy"
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-          />
+  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+  loading="lazy"
+/>
+          // <img
+          //   src={imageSrc}
+          //   alt={item?.name}
+          //   loading="lazy"
+          //   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          // />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
             {t("No Image")}

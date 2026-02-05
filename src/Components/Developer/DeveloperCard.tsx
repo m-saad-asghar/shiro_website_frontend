@@ -47,10 +47,18 @@ const DeveloperCard: FC<DeveloperCardProps> = ({ item }) => {
       {/* Image Section */}
       <div className="relative h-60 overflow-hidden border-radius">
         <img
+   src={ImagesUrl(item?.thumbnail)}
+          alt={item?.name}
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+  loading="eager"
+  decoding="async"
+  fetchPriority="high"
+/>
+        {/* <img
          src={ImagesUrl(item?.thumbnail)}
           alt={item?.name}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-        />
+        /> */}
 
         {/* Logo Badge */}
         <motion.div
@@ -60,10 +68,19 @@ const DeveloperCard: FC<DeveloperCardProps> = ({ item }) => {
           className="absolute bottom-4 left-4 bg-white backdrop-blur-sm border-radius p-2"
         >
           <img
+   src={ImagesUrl(item?.logo)}
+            alt={`${item?.name} logo`}
+            className="w-22 h-8 object-contain pl-[6px] pr-[6px]"
+  loading="eager"
+  decoding="async"
+  fetchPriority="high"
+/>
+
+          {/* <img
             src={ImagesUrl(item?.logo)}
             alt={`${item?.name} logo`}
             className="w-22 h-8 object-contain pl-[6px] pr-[6px]"
-          />
+          /> */}
         </motion.div>
 
         {/* Overlay */}

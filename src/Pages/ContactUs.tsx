@@ -30,8 +30,11 @@ const ContactUs = () => {
       <div className="relative w-full h-[91vh] overflow-hidden developer_listing_styling">
         <img
           src={ImagesUrl("contact_us_main_image.jpg")}
-          alt="Services Banner"
+          alt="Contact Us Banner"
           className="w-full h-full object-cover"
+          loading="eager"
+  decoding="async"
+  fetchPriority="high"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-transparent"></div>
         <div
