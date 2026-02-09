@@ -135,6 +135,21 @@ const EnquireNowReactModal: React.FC<EnquireNowReactModalProps> = ({
     return cleaned.startsWith("+") ? cleaned : `+${cleaned}`;
   };
 
+    const sendEmail = async (payload: any) => {
+  try {
+    const BASE_URL = import.meta.env.VITE_API_URL;
+    await fetch(`${BASE_URL}/send-email-notification`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+  } catch (error) {
+    console.error("Email sending failed:", error);
+  }
+};
+
   // ✅ E.164 (same as reference)
   const toE164 = (rawPhoneDigits: string, iso2?: string) => {
     if (!rawPhoneDigits) return "";
@@ -291,6 +306,7 @@ const EnquireNowReactModal: React.FC<EnquireNowReactModalProps> = ({
         setPhoneMeta({ iso2: "", dialCode: "", countryName: "" });
 
         if (closeOnSuccess) close();
+        sendEmail(payload);
       } else {
         if (showErrorToast) toast.error(errorMessage);
         onError?.({ error: data, values });

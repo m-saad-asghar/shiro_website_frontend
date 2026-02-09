@@ -242,6 +242,22 @@ const Form: React.FC<FormProps> = ({ project_name = "", display_name= "" }) => {
     return cleaned.startsWith("+") ? cleaned : `+${cleaned}`;
   };
 
+  const sendEmail = async (payload: any) => {
+  try {
+    const BASE_URL = import.meta.env.VITE_API_URL;
+    await fetch(`${BASE_URL}/send-email-notification`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+  } catch (error) {
+    console.error("Email sending failed:", error);
+  }
+};
+
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -332,6 +348,7 @@ const Form: React.FC<FormProps> = ({ project_name = "", display_name= "" }) => {
         });
 
         setPhoneMeta({ iso2: "", dialCode: "", countryName: "" });
+        sendEmail(payload);
       } else {
         toast.error("Something went wrong. Please try again.");
       }

@@ -366,7 +366,7 @@ const res = await fetch(url, {
                   viewMode={"list"}
                   page={page}
                   setPage={setPage}
-                  display_name="callback-form-via-sales-page-of-website"
+                  display_name="callback-form-via-buy-page-of-website"
                 />
               </div>
             )}
