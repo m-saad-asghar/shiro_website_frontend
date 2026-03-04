@@ -31,37 +31,26 @@ const SingleProjectServices = {
   },
 };
 
-// Helper to get text in current language (JSON or plain string)
-const getLocalizedValue = (value: any, lang: string, fallbackLang = "en") => {
+export function getLocalizedValue(
+  value: any,
+  currentLang: string,
+  fallbackLang: string = "en"
+): string {
   if (!value) return "";
 
-  if (typeof value === "object") {
-    return (
-      value[lang] ||
-      value[fallbackLang] ||
-      (Object.values(value)[0] as string) ||
-      ""
-    );
+  // If already plain string → return directly
+  if (typeof value === "string") {
+    return value;
   }
 
-  if (typeof value === "string") {
-    try {
-      const parsed = JSON.parse(value);
-      if (typeof parsed === "object" && parsed !== null) {
-        return (
-          parsed[lang] ||
-          parsed[fallbackLang] ||
-          (Object.values(parsed)[0] as string) ||
-          ""
-        );
-      }
-    } catch {
-      return value;
-    }
+  // If it's object → return localized
+  if (typeof value === "object") {
+    return value[currentLang] || value[fallbackLang] || "";
   }
 
   return "";
-};
+}
+
 
 /** ✅ Sticky Tabs Component (like screenshot) */
 const StickySectionTabs = ({
